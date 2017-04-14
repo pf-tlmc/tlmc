@@ -1,0 +1,26 @@
+{
+  "name": "tlmc",
+  "version": "0.0.0",
+  "description": "Touhou Lossless Music Collection",
+  "author": {
+    "name": "Markus Tran",
+    "email": "thebluepillow@gmail.com",
+    "url": "http://pillowfication.com"
+  },
+  "homepage": "https://github.com/pillowfication/tlmc",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/pillowfication/tlmc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pillowfication/tlmc/issues"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "cue-parser": "0.0.4"
+  },
+  "devDependencies": {
+    "eslint": "^3.18.0",
+    "eslint-config-pf": "^1.0.6"
+  }
+}
