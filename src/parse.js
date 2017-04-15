@@ -33,7 +33,7 @@ class Directory {
     if (!(file instanceof Directory) && !(file instanceof File)) {
       throw new TypeError('tried to add something that was not a Directory or File')
     }
-    if (file.parent) {
+    if (file._parent) {
       throw new TypeError('file already has a parent Directory')
     }
     this._fileNames.push(file.name)
@@ -97,7 +97,7 @@ function parseDirectory(name, parent) {
     const stat = fs.statSync(path.join(directory.path, name))
 
     if (stat.isDirectory()) {
-      directory.add(parseDirectory(name, directory))
+      parseDirectory(name, directory)
     }
     else if (stat.isFile()) {
       directory.add(new File(name))
