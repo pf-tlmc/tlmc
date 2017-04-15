@@ -30,7 +30,7 @@ class Directory {
   }
 
   add(file) {
-    if (!(file instanceof Directory) || !(file instanceof File)) {
+    if (!(file instanceof Directory) && !(file instanceof File)) {
       throw new TypeError('tried to add something that was not a Directory or File')
     }
     if (file.parent) {
@@ -103,7 +103,7 @@ function parseDirectory(name, parent) {
       directory.add(new File(name))
     }
     else {
-      console.log(`Unknown file type found: ${filePath}`)
+      console.log(`Unknown file type found: ${path.join(directory.path, name)}`)
     }
   }
 
