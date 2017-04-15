@@ -4,6 +4,10 @@ const cueParser = require('cue-parser')
 
 const TLMC_PATH = process.env.TLMC_PATH || '/mnt/tlmc'
 
+function pad(num) {
+  return ('0' + num).slice(-2)
+}
+
 class Directory {
   constructor(name) {
     this._fileNames = []
@@ -82,28 +86,42 @@ class MusicFile extends File {
   get track() { return this._track }
 }
 
-function parseDirectory(name, parent) {
+function parseDirectory(name, _path, _music) {
   const directory = new Directory(name)
-  if (parent) {
-    parent.add(directory)
+
+  const fileNames = fs.readdirSync(_path)
+  let cueSheet = fileNames.find(name => path.extname(name) === '.cue')
+  let cueTracks
+  if (cueSheet) {
+    cueSheet = cueParser.parse(path.join(_path, cueSheet))
+    cueTracks = {}
+    for (const file of cueSheet.files) {
+      for (const track of file.tracks) {
+        cueTracks[`${pad(track.number)}. ${track.title}.mp3`] = track
+      }
+    }
   }
 
-  const fileNames = fs.readdirSync(directory.path)
-  const cueSheet = fileNames.find(name => path.extname(name) === '.cue')
-  if (cueSheet)
-    console.log('CUE FOUND')
-
   for (const name of fileNames) {
-    const stat = fs.statSync(path.join(directory.path, name))
+    const stat = fs.statSync(path.join(_path, name))
 
     if (stat.isDirectory()) {
-      parseDirectory(name, directory)
+      directory.add(parseDirectory(name, path.join(_path, name)))
     }
+
     else if (stat.isFile()) {
-      directory.add(new File(name))
+      if (cueTracks && cueTracks[name]) {
+        const music = new MusicFile(name, cueSheet, cueTracks[name])
+        directory.add(music)
+        _music.push(music)
+      }
+      else {
+        directory.add(new File(name))
+      }
     }
+
     else {
-      console.log(`Unknown file type found: ${path.join(directory.path, name)}`)
+      throw new TypeError(`Unknown file type found: ${path.join(_path, name)}`)
     }
   }
 
@@ -111,5 +129,9 @@ function parseDirectory(name, parent) {
 }
 
 module.exports = function parse(tlmcPath = TLMC_PATH) {
-  return parseDirectory(tlmcPath, null)
+  const tracks = []
+  return {
+    tlmc: parseDirectory(tlmcPath, null),
+    tracks
+  }
 }
