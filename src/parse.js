@@ -86,52 +86,53 @@ class MusicFile extends File {
   get track() { return this._track }
 }
 
-function parseDirectory(name, _path, _music) {
-  const directory = new Directory(name)
-  const fileNames = fs.readdirSync(_path)
-
-  let cueSheet = fileNames.find(name => path.extname(name) === '.cue')
-  let cueTracks
-  if (cueSheet) {
-    cueSheet = cueParser.parse(path.join(_path, cueSheet))
-    cueTracks = {}
-    for (const file of cueSheet.files) {
-      for (const track of file.tracks) {
-        cueTracks[`${pad(track.number)}. ${track.title}.mp3`] = track
-      }
-    }
-  }
-
-  for (const name of fileNames) {
-    const stat = fs.statSync(path.join(_path, name))
-
-    if (stat.isDirectory()) {
-      directory.add(parseDirectory(name, path.join(_path, name)))
-    }
-
-    else if (stat.isFile()) {
-      if (cueTracks && cueTracks[name]) {
-        const music = new MusicFile(name, cueSheet, cueTracks[name])
-        directory.add(music)
-        _music.push(music)
-      }
-      else {
-        directory.add(new File(name))
-      }
-    }
-
-    else {
-      throw new TypeError(`Unknown file type found: ${path.join(_path, name)}`)
-    }
-  }
-
-  return directory
-}
-
 module.exports = function parse(tlmcPath = TLMC_PATH) {
-  const tracks = []
+  const musics = []
+
+  function parseDirectory(name, _path) {
+    const directory = new Directory(name)
+    const fileNames = fs.readdirSync(_path)
+
+    let cueSheet = fileNames.find(name => path.extname(name) === '.cue')
+    let cueTracks
+    if (cueSheet) {
+      cueSheet = cueParser.parse(path.join(_path, cueSheet))
+      cueTracks = {}
+      for (const file of cueSheet.files) {
+        for (const track of file.tracks) {
+          cueTracks[`${pad(track.number)}. ${track.title}.mp3`] = track
+        }
+      }
+    }
+
+    for (const name of fileNames) {
+      const stat = fs.statSync(path.join(_path, name))
+
+      if (stat.isDirectory()) {
+        directory.add(parseDirectory(name, path.join(_path, name)))
+      }
+
+      else if (stat.isFile()) {
+        if (cueTracks && cueTracks[name]) {
+          const music = new MusicFile(name, cueSheet, cueTracks[name])
+          directory.add(music)
+          musics.push(music)
+        }
+        else {
+          directory.add(new File(name))
+        }
+      }
+
+      else {
+        throw new TypeError(`Unknown file type found: ${path.join(_path, name)}`)
+      }
+    }
+
+    return directory
+  }
+
   return {
-    tlmc: parseDirectory(tlmcPath, tlmcPath, []),
-    tracks
+    tlmc: parseDirectory(tlmcPath, tlmcPath),
+    musics
   }
 }
