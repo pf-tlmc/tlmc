@@ -88,8 +88,8 @@ class MusicFile extends File {
 
 function parseDirectory(name, _path, _music) {
   const directory = new Directory(name)
-
   const fileNames = fs.readdirSync(_path)
+
   let cueSheet = fileNames.find(name => path.extname(name) === '.cue')
   let cueTracks
   if (cueSheet) {
@@ -131,7 +131,7 @@ function parseDirectory(name, _path, _music) {
 module.exports = function parse(tlmcPath = TLMC_PATH) {
   const tracks = []
   return {
-    tlmc: parseDirectory(tlmcPath, null),
+    tlmc: parseDirectory(tlmcPath, tlmcPath, []),
     tracks
   }
 }
