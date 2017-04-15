@@ -18,7 +18,7 @@ class Directory {
   get parent() { return this._parent }
   get path() {
     return this._parent
-      ? path.join(this._parent, this._name)
+      ? path.join(this._parent.path, this._name)
       : this._name
   }
 
@@ -66,7 +66,7 @@ class File {
   get parent() { return this._parent }
   get path() {
     return this._parent
-      ? path.join(this._parent, this._name)
+      ? path.join(this._parent.path, this._name)
       : this._name
   }
 }
