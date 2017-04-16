@@ -2,137 +2,62 @@ const fs = require('fs')
 const path = require('path')
 const cueParser = require('cue-parser')
 
-const TLMC_PATH = process.env.TLMC_PATH || '/mnt/tlmc'
+function ls(dirPath, dirName = path.sep) {
+  const files = []
+  const cues = []
 
-function pad(num) {
-  return ('0' + num).slice(-2)
-}
+  fs.readdirSync(dirPath).forEach(fileName => {
+    const filePath = path.join(dirPath, fileName)
+    const fileStat = fs.statSync(filePath)
 
-class Directory {
-  constructor(name) {
-    this._fileNames = []
-    this._files = {}
-    this._name = name
-    this._parent = null
-  }
-
-  get files() { return this._fileNames }
-  get length() { return this._fileNames.length }
-  get name() { return this._name }
-  get parent() { return this._parent }
-  get path() {
-    return this._parent
-      ? path.join(this._parent.path, this._name)
-      : this._name
-  }
-
-  get(name) {
-    return this._files[name]
-  }
-  getIndex(index) {
-    return this._files[this._fileNames[index]]
-  }
-
-  add(file) {
-    if (!(file instanceof Directory) && !(file instanceof File)) {
-      throw new TypeError('tried to add something that was not a Directory or File')
+    if (fileStat.isDirectory()) {
+      files.push(ls(filePath, fileName))
     }
-    if (file._parent) {
-      throw new TypeError('file already has a parent Directory')
-    }
-    this._fileNames.push(file.name)
-    this._files[file.name] = file
-    file._parent = this
-  }
 
-  [Symbol.iterator]() {
-    let index = -1
-    let fileNames = this._fileNames
-    let files = this._files
-
-    return {
-      next() {
-        return ++index < fileNames.length
-          ? {done: false, value: files[fileNames[index]]}
-          : {done: true, value: undefined}
+    else if (fileStat.isFile()) {
+      if (path.extname(fileName) === '.cue') {
+        cues.push(cueParser.parse(filePath))
       }
+      files.push(fileName)
     }
-  }
+
+    else {
+      throw new TypeError(`unknown file type found: ${filePath}`)
+    }
+  })
+
+  return cues.length
+    ? {name: dirName, files, cues}
+    : {name: dirName, files}
 }
 
-class File {
-  constructor(name) {
-    this._name = name
-    this._parent = null
-  }
-
-  get name() { return this._name }
-  get parent() { return this._parent }
-  get path() {
-    return this._parent
-      ? path.join(this._parent.path, this._name)
-      : this._name
-  }
+function formatTrack(track) {
+  return `${('00' + track.number).slice(-2)}. ${track.title}.mp3`
 }
 
-class MusicFile extends File {
-  constructor(name, cueSheet, track) {
-    super(name)
-    this._cueSheet = cueSheet
-    this._track = track
-  }
+function enumSongs(dir) {
+  const songs = []
 
-  get cueSheet() { return this._cueSheet }
-  get track() { return this._track }
-}
-
-module.exports = function parse(tlmcPath = TLMC_PATH) {
-  const musics = []
-
-  function parseDirectory(name, _path) {
-    const directory = new Directory(name)
-    const fileNames = fs.readdirSync(_path)
-
-    let cueSheet = fileNames.find(name => path.extname(name) === '.cue')
-    let cueTracks
-    if (cueSheet) {
-      cueSheet = cueParser.parse(path.join(_path, cueSheet))
-      cueTracks = {}
-      for (const file of cueSheet.files) {
-        for (const track of file.tracks) {
-          cueTracks[`${pad(track.number)}. ${track.title}.mp3`] = track
+  function _enum(dir, dirPath) {
+    if (dir.cues) {
+      for (const cue of dir.cues) {
+        for (const file of cue.files) {
+          for (const track of file.tracks) {
+            songs.push(path.join(dirPath, formatTrack(track)))
+          }
         }
       }
     }
 
-    for (const name of fileNames) {
-      const stat = fs.statSync(path.join(_path, name))
-
-      if (stat.isDirectory()) {
-        directory.add(parseDirectory(name, path.join(_path, name)))
-      }
-
-      else if (stat.isFile()) {
-        if (cueTracks && cueTracks[name]) {
-          const music = new MusicFile(name, cueSheet, cueTracks[name])
-          directory.add(music)
-          musics.push(music)
-        }
-        else {
-          directory.add(new File(name))
-        }
-      }
-
-      else {
-        throw new TypeError(`Unknown file type found: ${path.join(_path, name)}`)
+    for (const file of dir.files) {
+      if (typeof file === 'object') {
+        _enum(file, path.join(dirPath, file.name))
       }
     }
-
-    return directory
   }
 
-  return {
-    tlmc: parseDirectory(tlmcPath, tlmcPath),
-    musics
-  }
+  _enum(dir, '')
+  return songs
 }
+
+module.exports = {ls, enumSongs}
