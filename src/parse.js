@@ -10,7 +10,8 @@ const SANITIZE_MAP = {
   ':': '-',
   '|': '-',
   '<': '_',
-  '>': '_'
+  '>': '_',
+  '\t': '_'
 }
 for (const key in SANITIZE_MAP) {
   // http://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript/3561711#3561711
@@ -24,7 +25,7 @@ function sanitize(title) {
   for (const key in SANITIZE_MAP) {
     title = title.replace(...SANITIZE_MAP[key])
   }
-  title = title.replace(/(^\s+|\s+$)/g, '_')
+  // title = title.replace(/(^\s+|\s+$)/g, '_')
   return title
 }
 
