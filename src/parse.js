@@ -2,6 +2,21 @@ const fs = require('fs')
 const path = require('path')
 const cueParser = require('cue-parser')
 
+const SANITIZE_MAP = {
+  '/': '-',
+  '?': '',
+  '*': 'x',
+  '<': '_',
+  '>': '_'
+}
+
+function sanitize(fileName) {
+  for (const key in SANITIZE_MAP) {
+    fileName = fileName.replace(new RegExp(key, 'g'), SANITIZE_MAP[key])
+  }
+  return fileName
+}
+
 function ls(dirPath, dirName = path.sep) {
   const files = []
   const cues = []
@@ -37,7 +52,7 @@ function ls(dirPath, dirName = path.sep) {
 }
 
 function formatTrack(track) {
-  return `${('00' + track.number).slice(-2)}. ${track.title}.mp3`
+  return sanitize(`${('00' + track.number).slice(-2)}. ${track.title}.mp3`)
 }
 
 function enumSongs(dir) {
