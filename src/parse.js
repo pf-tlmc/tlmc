@@ -16,7 +16,12 @@ function ls(dirPath, dirName = path.sep) {
 
     else if (fileStat.isFile()) {
       if (path.extname(fileName) === '.cue') {
-        cues.push(cueParser.parse(filePath))
+        try {
+          cues.push(cueParser.parse(filePath))
+        }
+        catch (error) {
+          throw new TypeError(`could not parse ${filePath}`)
+        }
       }
       files.push(fileName)
     }
