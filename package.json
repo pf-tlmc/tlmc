@@ -17,7 +17,7 @@
   },
   "main": "index.js",
   "dependencies": {
-    "cue-parser": "0.0.4",
+    "cue-parser": "git://github.com/pillowfication/cue-parser.git#master",
     "express": "^4.15.2"
   },
   "devDependencies": {
