@@ -25,7 +25,6 @@ function sanitize(title) {
   for (const key in SANITIZE_MAP) {
     title = title.replace(...SANITIZE_MAP[key])
   }
-  // title = title.replace(/(^\s+|\s+$)/g, '_')
   return title
 }
 

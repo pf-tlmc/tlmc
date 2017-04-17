@@ -1,9 +1,12 @@
 const fs = require('fs')
 const path = require('path')
+const express = require('express')
 const parse = require('./parse')
 
-const TLMC_PATH = process.argv[2] || process.env.TLMC_PATH || '/mnt/tlmc'
+const PORT = process.argv[2] || process.env.TLMC_PORT || 80
+const TLMC_PATH = process.argv[3] || process.env.TLMC_PATH || '/mnt/tlmc'
 
+/* eslint-disable no-console */
 console.log('Reading TLMC directory...')
 const directory = parse.ls(TLMC_PATH)
 const songs = parse.enumSongs(directory)
@@ -26,3 +29,17 @@ if (failed.length) {
 else {
   console.log('All OK!')
 }
+
+const app = express()
+const directoryString = JSON.stringify(directory)
+
+app.use('/tlmc', express.static(TLMC_PATH))
+app.get('/ls', (req, res) => {
+  res.setHeader('Content-Type', 'application/json')
+  res.send(directoryString)
+})
+
+app.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`)
+})
+/* eslint-enable no-console */
