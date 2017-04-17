@@ -4,19 +4,25 @@ const cueParser = require('cue-parser')
 
 const SANITIZE_MAP = {
   '/': '-',
+  '\\': '-',
   '?': '',
   '*': 'x',
+  ':': '-',
+  '|': '-',
   '<': '_',
   '>': '_'
+}
+for (const key in SANITIZE_MAP) {
+  // http://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript/3561711#3561711
+  SANITIZE_MAP[key] = [
+    new RegExp(key.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'),
+    SANITIZE_MAP[key]
+  ]
 }
 
 function sanitize(fileName) {
   for (const key in SANITIZE_MAP) {
-    // http://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript/3561711#3561711
-    fileName = fileName.replace(
-      new RegExp(key.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'),
-      SANITIZE_MAP[key]
-    )
+    fileName = fileName.replace(...SANITIZE_MAP[key])
   }
   return fileName
 }
