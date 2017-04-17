@@ -20,11 +20,12 @@ for (const key in SANITIZE_MAP) {
   ]
 }
 
-function sanitize(fileName) {
+function sanitize(title) {
   for (const key in SANITIZE_MAP) {
-    fileName = fileName.replace(...SANITIZE_MAP[key])
+    title = title.replace(...SANITIZE_MAP[key])
   }
-  return fileName
+  title = title.replace(/(^\s+|\s+$)/g, '_')
+  return title
 }
 
 function ls(dirPath, dirName = path.sep) {
@@ -61,8 +62,11 @@ function ls(dirPath, dirName = path.sep) {
     : {name: dirName, files}
 }
 
-function formatTrack(track) {
-  return sanitize(`${('00' + track.number).slice(-2)}. ${track.title}.mp3`)
+function formatTrack(track, file) {
+  const title = track.title
+    ? sanitize(track.title)
+    : path.parse(file.name).name
+  return `${('00' + track.number).slice(-2)}. ${title}.mp3`
 }
 
 function enumSongs(dir) {
@@ -73,7 +77,7 @@ function enumSongs(dir) {
       for (const cue of dir.cues) {
         for (const file of cue.files) {
           for (const track of file.tracks) {
-            songs.push(path.join(dirPath, formatTrack(track)))
+            songs.push(path.join(dirPath, formatTrack(track, file)))
           }
         }
       }
