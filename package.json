@@ -20,8 +20,7 @@
     "compression": "^1.6.2",
     "cue-parser": "git://github.com/pillowfication/cue-parser.git#master",
     "express": "^4.15.2",
-    "request": "^2.81.0",
-    "request-promise-native": "^1.0.3"
+    "request": "^2.81.0"
   },
   "devDependencies": {
     "eslint": "^3.18.0",
