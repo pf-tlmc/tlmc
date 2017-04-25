@@ -14,7 +14,7 @@ function removeNull(obj) {
     if (val === null && !Array.isArray(obj)) {
       delete obj[key];
     }
-    if (typeof val === 'object') {
+    else if (typeof val === 'object') {
       removeNull(val);
     }
   }
