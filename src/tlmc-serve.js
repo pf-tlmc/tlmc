@@ -8,6 +8,7 @@ const TLMC_PATH = process.argv[3] || process.env.TLMC_PATH || '/mnt/TouhouBox/tl
 
 /* eslint-disable no-console */
 console.log('Reading TLMC directory...');
+const start = Date.now();
 const directory = parse.ls(TLMC_PATH);
 const songs = parse.enumSongs(directory);
 
@@ -29,6 +30,7 @@ if (failed.length) {
 else {
   console.log('All OK!');
 }
+console.log(`Time: ${Date.now() - start | 0}s`);
 
 const app = express();
 const directoryString = JSON.stringify(directory);
