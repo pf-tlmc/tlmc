@@ -17,13 +17,23 @@
   },
   "main": "index.js",
   "dependencies": {
+    "browser-request": "^0.3.3",
     "compression": "^1.6.2",
     "cue-parser": "git://github.com/pillowfication/cue-parser.git#master",
     "express": "^4.15.2",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-router-dom": "^4.1.1",
     "request": "^2.81.0"
   },
   "devDependencies": {
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-preset-env": "^1.4.0",
+    "babel-preset-react": "^6.24.1",
     "eslint": "^3.18.0",
-    "eslint-config-pf": "1.0.7"
+    "eslint-config-pf": "1.0.7",
+    "eslint-plugin-react": "^6.10.3",
+    "webpack": "^2.4.1"
   }
 }

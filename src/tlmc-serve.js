@@ -8,18 +8,6 @@ const parse = require('./parse');
 const PORT = process.argv[2] || process.env.TLMC_PORT || 80;
 const TLMC_PATH = process.argv[3] || process.env.TLMC_PATH || '/mnt/TouhouBox/tlmc';
 
-function removeNull(obj) {
-  for (const key in obj) {
-    const val = obj[key];
-    if (val === null) {
-      obj[key] = undefined;
-    }
-    else if (typeof val === 'object') {
-      removeNull(val);
-    }
-  }
-}
-
 /* eslint-disable no-console */
 console.log('Reading TLMC directory...');
 const start = Date.now();
