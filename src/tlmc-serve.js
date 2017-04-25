@@ -11,8 +11,8 @@ const TLMC_PATH = process.argv[3] || process.env.TLMC_PATH || '/mnt/TouhouBox/tl
 function removeNull(obj) {
   for (const key in obj) {
     const val = obj[key];
-    if (val === null && !Array.isArray(obj)) {
-      delete obj[key];
+    if (val === null) {
+      obj[key] = undefined;
     }
     else if (typeof val === 'object') {
       removeNull(val);
