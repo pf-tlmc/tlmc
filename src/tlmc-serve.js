@@ -23,7 +23,7 @@ function removeNull(obj) {
 /* eslint-disable no-console */
 console.log('Reading TLMC directory...');
 const start = Date.now();
-const directory = removeNull(parse.ls(TLMC_PATH));
+const directory = parse.ls(TLMC_PATH);
 const songs = parse.enumSongs(directory);
 
 console.log('Checking file paths...');
