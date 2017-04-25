@@ -30,7 +30,7 @@ if (failed.length) {
 else {
   console.log('All OK!');
 }
-console.log(`Time: ${Date.now() - start | 0}s`);
+console.log(`Time: ${(Date.now() - start)/1000 | 0}s`);
 
 const app = express();
 const directoryString = JSON.stringify(directory);
