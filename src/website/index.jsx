@@ -1,11 +1,14 @@
-import React from 'react';
+import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import {BrowserRouter, Route} from 'react-router-dom';
 import request from 'browser-request';
+import {object} from 'prop-types';
+
+import List from './components/List.jsx';
 
 const TLMC_URL = window.location.origin;
 
-class App extends React.Component {
+class App extends Component {
   constructor() {
     super();
     this.state = {
@@ -25,6 +28,7 @@ class App extends React.Component {
   }
 
   render() {
+    console.log(this);
     if (this.state.loading) {
       return <div>Loading...</div>;
     }
@@ -32,9 +36,13 @@ class App extends React.Component {
       return <div>Error!</div>;
     }
 
-    return <div>Hello, World!</div>;
+    return <List dir={this.state.directory} pathname={this.props.location.pathname}/>;
   }
 }
+
+App.propTypes = {
+  location: object
+};
 
 ReactDOM.render(
   <BrowserRouter>
