@@ -8,6 +8,9 @@
   "env": {
     "browser": true
   },
+  "rules": {
+    "react/prefer-es6-class": [2]
+  },
   "plugins": ["react"],
   "extends": ["plugin:react/recommended"]
 }

@@ -1,2 +1,6 @@
 *.log
-/node_modules
+node_modules
+
+src/ls.cache.json
+
+src/website/public

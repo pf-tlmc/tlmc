@@ -4,9 +4,22 @@ import {BrowserRouter, Route} from 'react-router-dom';
 import request from 'browser-request';
 import {object} from 'prop-types';
 
+import FontAwesome from 'react-fontawesome';
 import List from './components/List.jsx';
 
+import './main.scss';
+
 const TLMC_URL = window.location.origin;
+
+class Loading extends Component {
+  render() {
+    return (
+      <div>
+        <FontAwesome name="refresh" spin/>
+      </div>
+    );
+  }
+}
 
 class App extends Component {
   constructor() {
@@ -28,9 +41,8 @@ class App extends Component {
   }
 
   render() {
-    console.log(this);
     if (this.state.loading) {
-      return <div>Loading...</div>;
+      return <Loading/>;
     }
     if (!this.state.directory) {
       return <div>Error!</div>;
