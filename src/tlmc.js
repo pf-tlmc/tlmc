@@ -7,7 +7,7 @@ const ProgressBar = require('progress');
 const parse = require('./parse');
 
 const PORT = process.argv[2] || process.env.TLMC_PORT || 80;
-const TLMC_SERVE_URL = process.argv[3] || process.env.TLMC_SERVE_URL || 'http://home.pf-n.co';
+const TLMC_SERVE_URL = process.argv[3] || process.env.TLMC_SERVE_URL || 'http://192.168.1.62:8080';
 const WEBSITE_PATH = path.join(__dirname, 'website', 'index.html');
 const PUBLIC_PATH = path.join(__dirname, 'website', 'public');
 const CACHE_PATH = path.join(__dirname, 'ls.cache.json');

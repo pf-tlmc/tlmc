@@ -18,6 +18,7 @@
   "main": "index.js",
   "dependencies": {
     "browser-request": "^0.3.3",
+    "bson": "^1.0.4",
     "compression": "^1.6.2",
     "cue-parser": "git://github.com/pillowfication/cue-parser.git#master",
     "express": "^4.15.2",
