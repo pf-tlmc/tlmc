@@ -1,16 +1,16 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import {object, string} from 'prop-types';
+import {object, string, arrayOf} from 'prop-types';
 
 class List extends Component {
   render() {
-    const path = this.props.pathname.replace(/^\/+|\/+$/g, '').split(/\/+/);
     let location = this.props.dir;
 
-    if (path[0] !== '') {
-      for (const segment of path) {
+    if (this.props.path) {
+      for (const segment of this.props.path) {
+        const decoded = decodeURIComponent(segment);
         location = location && location.files && location.files.find(file =>
-          typeof file === 'object' && file.name === segment || file === segment
+          typeof file === 'object' && file.name === decoded || file === decoded
         );
       }
     }
@@ -20,14 +20,14 @@ class List extends Component {
     }
 
     if (typeof location === 'object') {
-      const basePath = path[0] === '' ? '' : `/${path.join('/')}`;
       return (
         <ul>
           {location.files.map(file => {
             const fileName = typeof file === 'object' ? file.name : file;
+            const path = `${this.props.pathname}/${encodeURIComponent(fileName)}`;
             return (
               <li key={fileName}>
-                <Link to={`${basePath}/${fileName}`}>{fileName}</Link>
+                <Link to={path}>{fileName}</Link>
               </li>
             );
           })}
@@ -41,7 +41,8 @@ class List extends Component {
 
 List.propTypes = {
   dir: object.isRequired,
-  pathname: string.isRequired
+  pathname: string.isRequired,
+  path: arrayOf(string)
 };
 
 export default List;

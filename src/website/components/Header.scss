@@ -1,0 +1,13 @@
+#nav {
+  .menu-text {
+    color: white;
+  }
+
+  a {
+    color: white;
+    transition: background-color .15s linear;
+  }
+  a:hover {
+    background-color: darken($primary-color, 10%);
+  }
+}

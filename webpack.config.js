@@ -26,6 +26,8 @@ module.exports = {
         loader: 'css-loader'
       }, {
         loader: 'sass-loader'
+      }, {
+        loader: 'import-glob-loader'
       }]
     }, {
       test: /\.woff2?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
