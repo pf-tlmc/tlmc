@@ -20,7 +20,7 @@
     "compression": "^1.6.2",
     "cue-parser": "git://github.com/pillowfication/cue-parser.git#master",
     "express": "^4.15.2",
-    "ls-serialize": "^0.0.4",
+    "ls-serialize": "^0.0.5",
     "progress": "^2.0.0",
     "request": "^2.81.0"
   },
