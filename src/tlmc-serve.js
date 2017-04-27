@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const compression = require('compression');
-const BSON = require('bson');
 
 const parse = require('./parse');
 
@@ -25,8 +24,7 @@ let songs;
 if (!cacheExists) {
   console.log('No cache found. Creating directory structure...');
   const directory = parse.ls(TLMC_PATH);
-  const bson = new BSON();
-  fs.writeFileSync(CACHE_PATH, bson.serialize(directory));
+  fs.writeFileSync(CACHE_PATH, JSON.stringify(directory));
   songs = parse.enumSongs(directory);
 }
 else {
