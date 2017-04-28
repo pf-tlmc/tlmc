@@ -73,7 +73,11 @@ function createServer() {
   // });
 
   app.get(/^\/tlmc\/(.+)/, (req, res) => {
-    request.get(`${TLMC_SERVE_URL}${req.url}`).pipe(res);
+    request.get(`${TLMC_SERVE_URL}${req.url}`, err => {
+      if (err) {
+        res.sendStatus(503);
+      }
+    }).pipe(res);
   });
 
   app.use('/public', express.static(PUBLIC_PATH));
