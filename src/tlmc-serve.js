@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
-// const compression = require('compression');
+const compression = require('compression');
 const ls = require('ls-serialize');
 
 const PORT = process.argv[2] || process.env.TLMC_PORT || 80;
@@ -45,7 +45,7 @@ catch (err) {
 
 const app = express();
 
-// app.use(compression({level: 9}));
+app.use(compression({level: 9}));
 
 app.use('/tlmc', express.static(TLMC_PATH));
 
