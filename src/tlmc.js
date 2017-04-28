@@ -9,8 +9,8 @@ const ProgressBar = require('progress');
 
 const PORT = process.argv[2] || process.env.TLMC_PORT || 80;
 const TLMC_SERVE_URL = process.argv[3] || process.env.TLMC_SERVE_URL || 'http://home.pf-n.co';
-// const WEBSITE_PATH = path.join(__dirname, 'website', 'index.html');
-// const PUBLIC_PATH = path.join(__dirname, 'website', 'public');
+const WEBSITE_PATH = path.join(__dirname, 'website', 'index.html');
+const PUBLIC_PATH = path.join(__dirname, 'website', 'public');
 const LS_CACHE_PATH = path.join(__dirname, 'ls.cache');
 
 try {
@@ -78,11 +78,11 @@ function createServer() {
     request.get(`${TLMC_SERVE_URL}/tlmc/${tlmcPath}`).pipe(res);
   });
 
-  // app.use('/public', express.static(PUBLIC_PATH));
-  //
-  // app.get('*', (req, res) => {
-  //   res.sendFile(WEBSITE_PATH);
-  // });
+  app.use('/public', express.static(PUBLIC_PATH));
+
+  app.get('*', (req, res) => {
+    res.sendFile(WEBSITE_PATH);
+  });
 
   app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);

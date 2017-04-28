@@ -3,8 +3,10 @@ import ReactDOM from 'react-dom';
 import {BrowserRouter, Route} from 'react-router-dom';
 import request from 'browser-request';
 import {object} from 'prop-types';
+import deserialize from 'ls-serialize/src/deserialize';
 
 import Header from './components/Header.jsx';
+import Breadcrumbs from './components/Breadcrumbs.jsx';
 import List from './components/List.jsx';
 
 import './main.scss';
@@ -14,7 +16,7 @@ const TLMC_URL = window.location.origin;
 class App extends Component {
   constructor() {
     super();
-    this.state = {loading: true, directory: null};
+    this.state = {loading: true, root: null};
 
     this.makeRequest = this.makeRequest.bind(this);
   }
@@ -25,16 +27,29 @@ class App extends Component {
 
   makeRequest() {
     this.setState({loading: true, directory: null});
-    request.get({url: `${TLMC_URL}/tlmc/ls`, json: true}, (err, res, body) => {
+    request.get(`${TLMC_URL}/tlmc/ls`, (err, res, body) => {
       if (err) {
         console.log(err); // eslint-disable-line no-console
       }
-      this.setState({loading: false, directory: body});
+
+      let root;
+      try {
+        root = deserialize(body);
+      }
+      catch (err) {
+        console.log(err); // eslint-disable-line no-console
+      }
+
+      this.setState({loading: false, root});
     });
   }
 
   render() {
     let content;
+    const _path = this.props.location.pathname.replace(/^\/+|\/+$/g, '').split(/\/+/);
+    const [path, pathname] = _path[0]
+      ? [_path, `/${_path.join('/')}`]
+      : [null, ''];
 
     if (this.state.loading) {
       content = (
@@ -44,7 +59,7 @@ class App extends Component {
       );
     }
 
-    else if (!this.state.directory) {
+    else if (!this.state.root) {
       content = (
         <div id="error">
           <div>
@@ -60,18 +75,17 @@ class App extends Component {
     }
 
     else {
-      const _path = this.props.location.pathname.replace(/^\/+|\/+$/g, '').split(/\/+/);
-      const [path, pathname] = _path[0]
-        ? [_path, `/${_path.join('/')}`]
-        : [null, ''];
       content = (
-        <List dir={this.state.directory} path={path} pathname={pathname}/>
+        <List root={this.state.root} path={path} pathname={pathname}/>
       );
     }
 
     return (
       <div id="app">
-        <header><Header/></header>
+        <header>
+          <Header/>
+          <Breadcrumbs path={path}/>
+        </header>
         <main>{content}</main>
       </div>
     );

@@ -1,29 +1,27 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
+import {Directory} from 'ls-serialize/src/structures';
 import {object, string, arrayOf} from 'prop-types';
 
 class List extends Component {
   render() {
-    let location = this.props.dir;
+    let currDir = this.props.root;
 
     if (this.props.path) {
       for (const segment of this.props.path) {
         const decoded = decodeURIComponent(segment);
-        location = location && location.files && location.files.find(file =>
-          typeof file === 'object' && file.name === decoded || file === decoded
-        );
+        currDir = currDir && currDir.get(decoded);
       }
     }
 
-    if (!location) {
+    if (!currDir) {
       return <h1>404</h1>;
     }
 
-    if (typeof location === 'object') {
+    if (currDir instanceof Directory) {
       return (
-        <ul>
-          {location.files.map(file => {
-            const fileName = typeof file === 'object' ? file.name : file;
+        <ul id="list">
+          {Array.from(currDir).map(([fileName]) => {
             const path = `${this.props.pathname}/${encodeURIComponent(fileName)}`;
             return (
               <li key={fileName}>
@@ -35,14 +33,14 @@ class List extends Component {
       );
     }
 
-    return <h1>{location}</h1>;
+    return <h1>{currDir.name}</h1>;
   }
 }
 
 List.propTypes = {
-  dir: object.isRequired,
+  root: object.isRequired,
   pathname: string.isRequired,
-  path: arrayOf(string)
+  path: arrayOf(string.isRequired)
 };
 
 export default List;
