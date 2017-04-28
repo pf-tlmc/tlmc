@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
-import {instanceOf} from 'prop-types';
 import {File} from 'ls-serialize';
 import request from 'browser-request';
-
-const TLMC_URL = window.location.origin;
+import {string, instanceOf} from 'prop-types';
 
 class TextView extends Component {
   constructor() {
@@ -19,7 +17,7 @@ class TextView extends Component {
 
   makeRequest() {
     this.setState({loading: true, text: null});
-    request.get(`${TLMC_URL}/${this.props.file.pathURIEncoded}`, (err, res, body) => {
+    request.get(this.props.fileURL, (err, res, body) => {
       if (err) {
         console.log(err); // eslint-disable-line no-console
       }
@@ -46,7 +44,8 @@ class TextView extends Component {
 }
 
 TextView.propTypes = {
-  file: instanceOf(File).isRequired
+  file: instanceOf(File).isRequired,
+  fileURL: string.isRequired
 };
 
 export default TextView;
