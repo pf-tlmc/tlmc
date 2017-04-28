@@ -7,6 +7,9 @@ module.exports = {
     filename: 'bundle.js',
     publicPath: '/public'
   },
+  node: {
+    fs: 'empty'
+  },
   module: {
     rules: [{
       test: /\.jsx?$/,

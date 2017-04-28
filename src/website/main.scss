@@ -31,16 +31,6 @@ html, body {
   }
 }
 
-#loading {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-  font-size: 10rem;
-  color: $primary-color;
-}
-
 #error {
   display: flex;
   width: 100%;

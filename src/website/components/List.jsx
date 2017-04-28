@@ -3,6 +3,15 @@ import {Link} from 'react-router-dom';
 import {Directory} from 'ls-serialize/src/structures';
 import {object, string, arrayOf} from 'prop-types';
 
+import FileView from './FileView.jsx';
+
+const iconMap = {
+  '.cue': 'file-text-o',
+  '.jpg': 'file-image-o',
+  '.mp3': 'file-audio-o',
+  '.tta': 'file-audio-o'
+};
+
 class List extends Component {
   render() {
     let currDir = this.props.root;
@@ -21,11 +30,19 @@ class List extends Component {
     if (currDir instanceof Directory) {
       return (
         <ul id="list">
-          {Array.from(currDir).map(([fileName]) => {
+          {Array.from(currDir).map(([fileName, file]) => {
             const path = `${this.props.pathname}/${encodeURIComponent(fileName)}`;
+            const extension = fileName.match(/\.[^\.]+$/);
+            const icon = file instanceof Directory
+              ? 'folder-o'
+              : (extension && iconMap[extension[0].toLowerCase()]) || 'file-o';
+
             return (
               <li key={fileName}>
-                <Link to={path}>{fileName}</Link>
+                <Link to={path}>
+                  <i className={`fa fa-${icon} fa-lg fa-fw`}/>&nbsp;
+                  {fileName}
+                </Link>
               </li>
             );
           })}
@@ -33,7 +50,7 @@ class List extends Component {
       );
     }
 
-    return <h1>{currDir.name}</h1>;
+    return <FileView file={currDir}/>;
   }
 }
 

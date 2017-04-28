@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom';
 import {BrowserRouter, Route} from 'react-router-dom';
 import request from 'browser-request';
 import {object} from 'prop-types';
-import deserialize from 'ls-serialize/src/deserialize';
+import {deserialize} from 'ls-serialize';
 
+import Loading from './components/Loading.jsx';
 import Header from './components/Header.jsx';
 import Breadcrumbs from './components/Breadcrumbs.jsx';
 import List from './components/List.jsx';
@@ -52,11 +53,7 @@ class App extends Component {
       : [null, ''];
 
     if (this.state.loading) {
-      content = (
-        <div id="loading">
-          <i className="fa fa-circle-o-notch fa-spin"/>
-        </div>
-      );
+      content = <Loading/>;
     }
 
     else if (!this.state.root) {

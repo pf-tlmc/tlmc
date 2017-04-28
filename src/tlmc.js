@@ -73,8 +73,7 @@ function createServer() {
   // });
 
   app.get(/^\/tlmc\/(.+)/, (req, res) => {
-    const [tlmcPath] = req.params;
-
+    const tlmcPath = encodeURI(req.params[0]);
     request.get(`${TLMC_SERVE_URL}/tlmc/${tlmcPath}`).pipe(res);
   });
 

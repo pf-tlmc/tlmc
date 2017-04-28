@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import {string, arrayOf} from 'prop-types';
 
-class Header extends Component {
+class Breadcrumbs extends Component {
   render() {
     const crumbs = [{displayName: 'TLMC', pathname: '/'}];
     let currPath = '';
@@ -30,8 +30,8 @@ class Header extends Component {
   }
 }
 
-Header.propTypes = {
+Breadcrumbs.propTypes = {
   path: arrayOf(string.isRequired)
 };
 
-export default Header;
+export default Breadcrumbs;
