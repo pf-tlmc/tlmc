@@ -8,6 +8,7 @@ import FileView from './FileView.jsx';
 const iconMap = {
   '.cue': 'file-text-o',
   '.jpg': 'file-image-o',
+  '.log': 'file-text-o',
   '.mp3': 'file-audio-o',
   '.tta': 'file-audio-o'
 };

@@ -8,7 +8,8 @@ import ImageView from './ImageView.jsx';
 const TLMC_URL = window.location.origin;
 const viewMap = {
   '.cue': TextView,
-  '.jpg': ImageView
+  '.jpg': ImageView,
+  '.log': TextView
   // '.mp3': MP3View
 };
 
