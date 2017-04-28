@@ -1,15 +1,21 @@
 import React, {Component} from 'react';
 import {instanceOf} from 'prop-types';
-import {File} from 'ls-serialize/src/structures';
+import {File} from 'ls-serialize';
 
-class ImageView extends Component {
+const TLMC_URL = window.location.origin;
+
+class TextView extends Component {
   render() {
-    return <span>Image View</span>;
+    return (
+      <div className="image-view">
+        <img src={`${TLMC_URL}/${this.props.file.pathURIEncoded}`}/>
+      </div>
+    );
   }
 }
 
-ImageView.propTypes = {
+TextView.propTypes = {
   file: instanceOf(File).isRequired
 };
 
-export default ImageView;
+export default TextView;

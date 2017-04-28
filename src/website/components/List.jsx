@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import {Directory} from 'ls-serialize/src/structures';
+import {Directory} from 'ls-serialize';
 import {object, string, arrayOf} from 'prop-types';
 
 import FileView from './FileView.jsx';

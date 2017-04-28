@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import {instanceOf} from 'prop-types';
-import {File} from 'ls-serialize/src/structures';
+import {File} from 'ls-serialize';
 import request from 'browser-request';
-
-import Loading from './Loading.jsx';
 
 const TLMC_URL = window.location.origin;
 
@@ -21,7 +19,7 @@ class TextView extends Component {
 
   makeRequest() {
     this.setState({loading: true, text: null});
-    request.get(`${TLMC_URL}/${this.props.file.path}`, (err, res, body) => {
+    request.get(`${TLMC_URL}/${this.props.file.pathURIEncoded}`, (err, res, body) => {
       if (err) {
         console.log(err); // eslint-disable-line no-console
       }
@@ -32,7 +30,7 @@ class TextView extends Component {
 
   render() {
     if (this.state.loading) {
-      return <Loading/>;
+      return <span>Fetching...</span>;
     }
 
     if (!this.state.text) {

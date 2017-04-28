@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {instanceOf} from 'prop-types';
-import {File} from 'ls-serialize/src/structures';
+import {File} from 'ls-serialize';
 
-import ImageView from './ImageView.jsx';
 import TextView from './TextView.jsx';
+import ImageView from './ImageView.jsx';
 
 const viewMap = {
   '.cue': TextView,
