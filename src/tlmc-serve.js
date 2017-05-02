@@ -47,7 +47,7 @@ const CUE_CACHE_PATH = path.join(__dirname, 'cue.cache');
   let failed = songs.filter(song => {
     let parts = song.path.split(path.sep);
     for (let index = 0, currDir = directory; index < parts - 1; ++index) {
-      currDir = Array.from(currDir.files)[index];
+      currDir = Array.from(currDir.files)[parts[index]];
       parts[index] = currDir.base;
     }
 
@@ -56,15 +56,12 @@ const CUE_CACHE_PATH = path.join(__dirname, 'cue.cache');
       return false;
     }
     catch (err) {
+      console.log(`- ${path.join(TLMC_PATH, ...parts)}`);
       return true;
     }
   });
 
-  if (failed.length) {
-    console.log(`${failed.length} songs not found:`);
-    console.log(failed.map(fail => `- ${fail.path}`).join('\n'));
-  }
-  else {
+  if (!failed.length) {
     console.log('All OK!');
   }
 }
