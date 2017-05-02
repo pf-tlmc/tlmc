@@ -20,7 +20,7 @@ function readCues(root, rootPath) {
 
   function _readCues(currFile) {
     if (currFile instanceof File && currFile.ext.toLowerCase() === '.cue') {
-      const cue = cueParser.parse(rootPath + currFile);
+      const cue = cueParser.parse(rootPath + currFile.path);
       cue.dir = currFile.dir;
       cues.push(cue);
     }
