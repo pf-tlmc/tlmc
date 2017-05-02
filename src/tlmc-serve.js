@@ -34,16 +34,17 @@ catch (err) {
   console.log('No cue-cache found. Reading directory structure...');
   const directory = ls.deserialize(fs.readFileSync(LS_CACHE_PATH).toString());
   const cues = readCues(directory, TLMC_PATH);
-  const cuesString = csv.stringify(cues, {header: true});
+  const songs = parseCues(cues);
+  const songsString = csv.stringify(songs, {header: true});
   // const cuesString = JSON.stringify(cues);
-  fs.writeFileSync(CUE_CACHE_PATH, cuesString);
+  fs.writeFileSync(CUE_CACHE_PATH, songsString);
 }
 
 {
   console.log('Checking file paths...');
-  const cues = csv.parse(fs.readFileSync(CUE_CACHE_PATH).toString());
+  const songs = csv.parse(fs.readFileSync(CUE_CACHE_PATH).toString());
   // const cues = JSON.parse(fs.readFileSync(CUE_CACHE_PATH).toString());
-  let failed = parseCues(cues).filter(song => {
+  let failed = songs.filter(song => {
     try {
       fs.accessSync(path.join(TLMC_PATH, song.path));
       return false;
