@@ -4,8 +4,8 @@ import {BrowserRouter, Route} from 'react-router-dom';
 import request from 'browser-request';
 import {object} from 'prop-types';
 import {deserialize} from 'ls-serialize';
+import csvParse from 'csv-parse/lib/sync';
 
-import 'path';
 import './path'; // TODO: `path.parse` mock
 
 import Loading from './components/Loading.jsx';
@@ -21,7 +21,10 @@ const TLMC_URL = window.location.origin;
 class App extends Component {
   constructor() {
     super();
-    this.state = {loading: true, root: null};
+    this.state = {
+      root: {loading: true, data: null},
+      cues: {loading: true, data: null}
+    };
     this.makeRequest = this.makeRequest.bind(this);
   }
 
@@ -30,7 +33,11 @@ class App extends Component {
   }
 
   makeRequest() {
-    this.setState({loading: true, directory: null});
+    this.setState({
+      root: {loading: true, data: null},
+      cues: {loading: true, data: null}
+    });
+
     request.get(`${TLMC_URL}/tlmc/ls`, (err, res, body) => {
       if (err) {
         console.log(err); // eslint-disable-line no-console
@@ -38,13 +45,29 @@ class App extends Component {
 
       let root;
       try {
-        root = deserialize(body);
+        root = body && deserialize(body);
       }
       catch (err) {
         console.log(err); // eslint-disable-line no-console
       }
 
-      this.setState({loading: false, root});
+      this.setState({root: {loading: false, data: root}});
+    });
+
+    request.get(`${TLMC_URL}/tlmc/cue`, (err, res, body) => {
+      if (err) {
+        console.log(err); // eslint-disable-line no-console
+      }
+
+      let cues;
+      try {
+        cues = body && csvParse(body);
+      }
+      catch (err) {
+        console.log(err); // eslint-disable-line no-console
+      }
+
+      this.setState({cues: {loading: false, data: cues}});
     });
   }
 
@@ -55,11 +78,11 @@ class App extends Component {
       ? [_path, `/${_path.join('/')}`]
       : [null, ''];
 
-    if (this.state.loading) {
+    if (this.state.root.loading || this.state.cues.loading) {
       content = <Loading/>;
     }
 
-    else if (!this.state.root) {
+    else if (!this.state.root.data || !this.state.cues.data) {
       content = (
         <div id="error">
           <div>
@@ -77,7 +100,7 @@ class App extends Component {
     else {
       content = (
         <div className="expanded row">
-          <List root={this.state.root} path={path} pathname={pathname}/>
+          <List root={this.state.root.data} path={path} pathname={pathname}/>
           <MusicPlayer/>
         </div>
       );

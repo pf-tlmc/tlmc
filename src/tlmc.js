@@ -5,48 +5,50 @@ const express = require('express');
 const request = require('request');
 const compression = require('compression');
 const ProgressBar = require('progress');
-// const parse = require('./parse');
 
 const PORT = process.argv[2] || process.env.TLMC_PORT || 80;
 const TLMC_SERVE_URL = process.argv[3] || process.env.TLMC_SERVE_URL || 'http://home.pf-n.co';
 const WEBSITE_PATH = path.join(__dirname, 'website', 'index.html');
 const PUBLIC_PATH = path.join(__dirname, 'website', 'public');
 const LS_CACHE_PATH = path.join(__dirname, 'ls.cache');
+const CUE_CACHE_PATH = path.join(__dirname, 'cue.cache');
 
-try {
-  fs.accessSync(LS_CACHE_PATH);
-  console.log('Cache found. Reading from cache.');
-  createServer();
-}
+{
+  function fetch(url, path) {
+    return new Promise((resolve, reject) => {
+      try {
+        fs.accessSync(path);
+        resolve('cached');
+      }
 
-catch (err) {
-  console.log('No cache found. Fetching directory structure...');
-  request.get(`${TLMC_SERVE_URL}/ls`)
-    .on('response', res => {
-      var bar = new ProgressBar(
-        `${TLMC_SERVE_URL}/ls [:bar] :rate/bps :percent :etas`,
-        {
-          complete: '=',
-          incomplete: ' ',
-          width: 20,
-          total: +res.headers['content-length']
-        }
-      );
+      catch (err) {
+        request.get(url)
+          .on('response', res => {
+            var bar = new ProgressBar(
+              `${url} [:bar] :rate/bps :percent :etas`,
+              {
+                complete: '=',
+                incomplete: ' ',
+                width: 20,
+                total: +res.headers['content-length']
+              }
+            );
+            res.on('data', chunk => {
+              bar.tick(chunk.length);
+            });
+            res.on('end', () => resolve());
+          })
+          .on('error', err => reject(err))
+          .pipe(fs.createWriteStream(path));
+      }
+    });
+  }
 
-      res.on('data', chunk => {
-        bar.tick(chunk.length);
-      });
-
-      res.on('end', () => {
-        console.log('Directory fetched.');
-        createServer();
-      });
-    })
-    .on('error', err => {
-      console.log(`Could not fetch \`${TLMC_SERVE_URL}/ls\`. Please make sure tlmc-serve is running, or try again.`);
-      console.log(err);
-    })
-    .pipe(fs.createWriteStream(LS_CACHE_PATH));
+  fetch(`${TLMC_SERVE_URL}/ls`, LS_CACHE_PATH)
+    .then(cached => cached && console.log('ls-cache found. Using cache.'))
+    .then(() => fetch(`${TLMC_SERVE_URL}/cue`, CUE_CACHE_PATH))
+    .then(cached => cached && console.log('cue-cache found. Using cache.'))
+    .then(createServer);
 }
 
 function createServer() {
@@ -55,10 +57,13 @@ function createServer() {
   const directoryString = fs.readFileSync(LS_CACHE_PATH);
   const app = express();
 
-  app.use(compression());
+  app.use(compression({level: 9}));
 
   app.get('/tlmc/ls', (req, res) => {
-    res.send(directoryString);
+    res.sendFile(LS_CACHE_PATH);
+  });
+  app.get('/tlmc/cue', (req, res) => {
+    res.sendFile(CUE_CACHE_PATH);
   });
 
   // app.get('/tlmc/id/:id', (req, res) => {
