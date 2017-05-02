@@ -56,7 +56,7 @@ class List extends Component {
     }
 
     return (
-      <div id="list" className="medium-6 large-8 columns">
+      <div id="list" className="small-6 large-7 columns">
         {content}
       </div>
     );

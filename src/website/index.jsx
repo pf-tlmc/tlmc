@@ -78,9 +78,7 @@ class App extends Component {
       content = (
         <div className="expanded row">
           <List root={this.state.root} path={path} pathname={pathname}/>
-          <div className="medium-6 large-4 columns">
-            <MusicPlayer/>
-          </div>
+          <MusicPlayer/>
         </div>
       );
     }
