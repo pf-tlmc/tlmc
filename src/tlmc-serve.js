@@ -4,7 +4,7 @@ const path = require('path');
 const express = require('express');
 const compression = require('compression');
 const ls = require('ls-serialize');
-// const csv = require('csv');
+const csv = require('csv');
 const {readCues, parseCues} = require('./readCues');
 
 const PORT = process.argv[2] || process.env.TLMC_PORT || 80;
@@ -34,15 +34,15 @@ catch (err) {
   console.log('No cue-cache found. Reading directory structure...');
   const directory = ls.deserialize(fs.readFileSync(LS_CACHE_PATH).toString());
   const cues = readCues(directory, TLMC_PATH);
-  // const cuesString = csv.stringify(cues, {header: true});
-  const cuesString = JSON.stringify(cues);
+  const cuesString = csv.stringify(cues, {header: true});
+  // const cuesString = JSON.stringify(cues);
   fs.writeFileSync(CUE_CACHE_PATH, cuesString);
 }
 
 {
   console.log('Checking file paths...');
-  // const cues = csv.parse(fs.readFileSync(CUE_CACHE_PATH).toString());
-  const cues = JSON.parse(fs.readFileSync(CUE_CACHE_PATH).toString());
+  const cues = csv.parse(fs.readFileSync(CUE_CACHE_PATH).toString());
+  // const cues = JSON.parse(fs.readFileSync(CUE_CACHE_PATH).toString());
   let failed = parseCues(cues).filter(song => {
     try {
       fs.accessSync(path.join(TLMC_PATH, song.path));
@@ -55,7 +55,7 @@ catch (err) {
 
   if (failed.length) {
     console.log(`${failed.length} songs not found:`);
-    console.log(failed.join('\n'));
+    console.log(failed.map(fail => ` - ${fail.path}`).join('\n'));
   }
   else {
     console.log('All OK!');
