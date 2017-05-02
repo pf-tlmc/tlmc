@@ -6,7 +6,7 @@ const compression = require('compression');
 const ls = require('ls-serialize');
 const csvStringify = require('csv-stringify/lib/sync');
 const csvParse = require('csv-parse/lib/sync');
-const {readCues, parseCues} = require('./readCues');
+const readCues = require('./readCues');
 
 const PORT = process.argv[2] || process.env.TLMC_PORT || 80;
 const TLMC_PATH = process.argv[3] || process.env.TLMC_PATH || '/mnt/TouhouBox/tlmc';
@@ -35,21 +35,27 @@ const CUE_CACHE_PATH = path.join(__dirname, 'cue.cache');
   catch (err) {
     console.log('No cue-cache found. Reading directory structure...');
     const directory = ls.deserialize(fs.readFileSync(LS_CACHE_PATH).toString());
-    const cues = readCues(directory, TLMC_PATH);
-    const songs = parseCues(cues);
+    const songs = readCues(directory, TLMC_PATH);
     const songsString = csvStringify(songs, {header: true});
     fs.writeFileSync(CUE_CACHE_PATH, songsString);
   }
 
   // Check songs found
   console.log('Checking file paths...');
+  const directory = ls.deserialize(fs.readFileSync(LS_CACHE_PATH).toString());
   const songs = csvParse(fs.readFileSync(CUE_CACHE_PATH).toString(), {columns: true});
   let failed = songs.filter(song => {
+    let parts = song.path.split(path.sep);
+    for (let index = 0, currDir = directory; index < parts - 1; ++index) {
+      currDir = Array.from(currDir.files)[index];
+      parts[index] = currDir.base;
+    }
+
     try {
-      fs.accessSync(path.join(TLMC_PATH, song.path));
+      fs.accessSync(path.join(TLMC_PATH, ...parts));
       return false;
     }
-    catch (error) {
+    catch (err) {
       return true;
     }
   });

@@ -15,54 +15,38 @@ const SANITIZE_MAP = [
   ['\t', '_']
 ];
 
-function readCues(root, rootPath) {
-  const cues = [];
+module.exports = function readCues(root, rootPath) {
+  const songs = [];
 
-  function _readCues(currFile) {
+  function _readCues(currFile, shortPath) {
     if (currFile instanceof File && currFile.ext.toLowerCase() === '.cue') {
       const cue = cueParser.parse(rootPath + currFile.path);
-      cue.dir = currFile.dir;
-      cues.push(cue);
+      for (const file of cue.files) {
+        for (const track of file.tracks) {
+          const number = ('00' + track.number).slice(-2);
+          const title = track.title || path.parse(file.name).name;
+          const filename = sanitizeFilename(`${number}. ${title}.mp3`, {replacementMap: SANITIZE_MAP});
+          songs.push({
+            path: path.join(shortPath, filename),
+            cuePerformer: cue.performer,
+            cueSongwriter: cue.songWriter,
+            cueTitle: cue.title,
+            number: track.number,
+            title: track.title,
+            performer: track.performer,
+            songWriter: track.songWriter
+          });
+        }
+      }
     }
 
     else if (currFile instanceof Directory) {
-      Array.from(currFile.files)
-        .sort((a, b) => a.base.localeCompare(b.base))
-        .forEach(_readCues);
+      Array.from(currFile.files).forEach((file, index) => {
+        _readCues(file, path.join(shortPath, `${index}`));
+      });
     }
   }
 
-  _readCues(root);
-  return cues;
-}
-
-function parseCues(cues) {
-  const songs = [];
-
-  for (const cue of cues) {
-    for (const file of cue.files) {
-      for (const track of file.tracks) {
-        const number = ('00' + track.number).slice(-2);
-        const title = track.title || path.parse(file.name).name;
-        const filename = sanitizeFilename(`${number}. ${title}.mp3`, {replacementMap: SANITIZE_MAP});
-        songs.push({
-          path: path.join(cue.dir, filename),
-          cuePerformer: cue.performer,
-          cueSongwriter: cue.songWriter,
-          cueTitle: cue.title,
-          number: track.number,
-          title: track.title,
-          performer: track.performer,
-          songWriter: track.songWriter
-        });
-      }
-    }
-  }
-
+  _readCues(root, '');
   return songs;
-}
-
-module.exports = {
-  readCues,
-  parseCues
 };
