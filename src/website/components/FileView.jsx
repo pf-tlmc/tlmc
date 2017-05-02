@@ -21,9 +21,13 @@ class DefaultView extends Component {
 
 class FileView extends Component {
   render() {
-    const extension = this.props.file.name.match(/\.[^\.]+$/);
-    const View = (extension && viewMap[extension[0].toLowerCase()]) || DefaultView;
-    const fileURL = `${TLMC_URL}/${this.props.file.pathURIEncoded}`;
+    const View = (viewMap[this.props.file.ext.toLowerCase()]) || DefaultView;
+    let currFile = this.props.file;
+    let fileURL = encodeURIComponent(currFile.base);
+    while (currFile = currFile.parent) {
+      fileURL = `${encodeURIComponent(currFile.base)}/` + fileURL;
+    }
+    fileURL = `${TLMC_URL}/${fileURL}`;
 
     return (
       <div className="file-view">

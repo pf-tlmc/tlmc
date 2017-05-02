@@ -31,18 +31,17 @@ class List extends Component {
     if (currDir instanceof Directory) {
       return (
         <ul id="list">
-          {Array.from(currDir).map(([fileName, file]) => {
-            const path = `${this.props.pathname}/${encodeURIComponent(fileName)}`;
-            const extension = fileName.match(/\.[^\.]+$/);
+          {Array.from(currDir).map(file => {
+            const path = `${this.props.pathname}/${encodeURIComponent(file.base)}`;
             const icon = file instanceof Directory
               ? 'folder-o'
-              : (extension && iconMap[extension[0].toLowerCase()]) || 'file-o';
+              : iconMap[file.ext.toLowerCase()] || 'file-o';
 
             return (
-              <li key={fileName}>
+              <li key={file.base}>
                 <Link to={path}>
                   <i className={`fa fa-${icon} fa-lg fa-fw`}/>&nbsp;
-                  {fileName}
+                  {file.base}
                 </Link>
               </li>
             );
