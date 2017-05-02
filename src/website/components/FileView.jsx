@@ -4,13 +4,14 @@ import {File} from 'ls-serialize';
 
 import TextView from './TextView.jsx';
 import ImageView from './ImageView.jsx';
+import MP3View from './MP3View.jsx';
 
 const TLMC_URL = window.location.origin;
 const viewMap = {
   '.cue': TextView,
   '.jpg': ImageView,
-  '.log': TextView
-  // '.mp3': MP3View
+  '.log': TextView,
+  '.mp3': MP3View
 };
 
 class DefaultView extends Component {
@@ -22,6 +23,7 @@ class DefaultView extends Component {
 class FileView extends Component {
   render() {
     const View = (viewMap[this.props.file.ext.toLowerCase()]) || DefaultView;
+
     let currFile = this.props.file;
     let fileURL = encodeURIComponent(currFile.base);
     while (currFile = currFile.parent) {

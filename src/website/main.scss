@@ -25,9 +25,10 @@ html, body {
   & > header {
     flex-shrink: 0;
   }
-  & > main {
+  & > main, & > main > div {
     height: 100%;
-    overflow-y: auto;
+    max-height: 100%;
+    overflow: hidden;
   }
 }
 

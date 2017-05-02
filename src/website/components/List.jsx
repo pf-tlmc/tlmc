@@ -16,6 +16,7 @@ const iconMap = {
 class List extends Component {
   render() {
     let currDir = this.props.root;
+    let content;
 
     if (this.props.path) {
       for (const segment of this.props.path) {
@@ -25,12 +26,12 @@ class List extends Component {
     }
 
     if (!currDir) {
-      return <h1>404</h1>;
+      content = <h1>404</h1>;
     }
 
-    if (currDir instanceof Directory) {
-      return (
-        <ul id="list">
+    else if (currDir instanceof Directory) {
+      content = (
+        <ul>
           {Array.from(currDir).map(file => {
             const path = `${this.props.pathname}/${encodeURIComponent(file.base)}`;
             const icon = file instanceof Directory
@@ -50,7 +51,15 @@ class List extends Component {
       );
     }
 
-    return <FileView file={currDir}/>;
+    else {
+      content = <FileView file={currDir}/>;
+    }
+
+    return (
+      <div id="list" className="medium-6 large-8 columns">
+        {content}
+      </div>
+    );
   }
 }
 

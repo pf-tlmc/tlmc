@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {string} from 'prop-types';
 
-class TextView extends Component {
+class ImageView extends Component {
   render() {
     return (
       <div className="image-view">
@@ -11,8 +11,8 @@ class TextView extends Component {
   }
 }
 
-TextView.propTypes = {
+ImageView.propTypes = {
   fileURL: string.isRequired
 };
 
-export default TextView;
+export default ImageView;

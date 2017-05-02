@@ -12,6 +12,7 @@ import Loading from './components/Loading.jsx';
 import Header from './components/Header.jsx';
 import Breadcrumbs from './components/Breadcrumbs.jsx';
 import List from './components/List.jsx';
+import MusicPlayer from './components/MusicPlayer.jsx';
 
 import './main.scss';
 
@@ -21,7 +22,6 @@ class App extends Component {
   constructor() {
     super();
     this.state = {loading: true, root: null};
-
     this.makeRequest = this.makeRequest.bind(this);
   }
 
@@ -76,7 +76,12 @@ class App extends Component {
 
     else {
       content = (
-        <List root={this.state.root} path={path} pathname={pathname}/>
+        <div className="expanded row">
+          <List root={this.state.root} path={path} pathname={pathname}/>
+          <div className="medium-6 large-4 columns">
+            <MusicPlayer/>
+          </div>
+        </div>
       );
     }
 
