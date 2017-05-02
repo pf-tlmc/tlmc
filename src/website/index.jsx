@@ -5,6 +5,9 @@ import request from 'browser-request';
 import {object} from 'prop-types';
 import {deserialize} from 'ls-serialize';
 
+import 'path';
+import './path'; // TODO: `path.parse` mock
+
 import Loading from './components/Loading.jsx';
 import Header from './components/Header.jsx';
 import Breadcrumbs from './components/Breadcrumbs.jsx';

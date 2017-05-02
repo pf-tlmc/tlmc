@@ -8,7 +8,8 @@ module.exports = {
     publicPath: '/public'
   },
   node: {
-    fs: 'empty'
+    fs: 'empty',
+    path: true // See src/website/path.js for full patch
   },
   module: {
     rules: [{

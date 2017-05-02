@@ -16,11 +16,14 @@
     "url": "https://github.com/pillowfication/tlmc/issues"
   },
   "main": "index.js",
+  "scripts": {
+    "webpack": "webpack --watch --progress --colors"
+  },
   "dependencies": {
     "compression": "^1.6.2",
     "cue-parser": "git://github.com/pillowfication/cue-parser.git#master",
     "express": "^4.15.2",
-    "ls-serialize": "git://github.com/pillowfication/ls-serialize.git#master",
+    "ls-serialize": "^1.0.1",
     "progress": "^2.0.0",
     "request": "^2.81.0"
   },
