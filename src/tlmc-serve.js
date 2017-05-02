@@ -41,6 +41,7 @@ const CUE_CACHE_PATH = path.join(__dirname, 'cue.cache');
     fs.writeFileSync(CUE_CACHE_PATH, songsString);
   }
 
+  // Check songs found
   console.log('Checking file paths...');
   const songs = csvParse(fs.readFileSync(CUE_CACHE_PATH).toString(), {columns: true});
   let failed = songs.filter(song => {

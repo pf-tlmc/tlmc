@@ -43,11 +43,10 @@ function parseCues(cues) {
     for (const file of cue.files) {
       for (const track of file.tracks) {
         const number = ('00' + track.number).slice(-2);
-        const title = track.title
-          ? sanitizeFilename(track.title, SANITIZE_MAP)
-          : path.parse(file.name).name;
+        const title = track.title || path.parse(file.name).name;
+        const filename = sanitizeFilename(`${number}. ${title}.mp3`, SANITIZE_MAP);
         songs.push({
-          path: path.join(cue.dir, `${number}. ${title}.mp3`),
+          path: path.join(cue.dir, filename),
           cuePerformer: cue.performer,
           cueSongwriter: cue.songWriter,
           cueTitle: cue.title,
