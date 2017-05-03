@@ -13,7 +13,7 @@ import Loading from './components/Loading.jsx';
 import Header from './components/Header.jsx';
 import Breadcrumbs from './components/Breadcrumbs.jsx';
 import List from './components/List.jsx';
-import MusicPlayer from './components/MusicPlayer.jsx';
+import MusicPlayer from './components/musicPlayer/MusicPlayer.jsx';
 
 import './main.scss';
 
