@@ -27,9 +27,15 @@ module.exports = {
       use: [{
         loader: 'style-loader'
       }, {
-        loader: 'css-loader'
+        loader: 'css-loader',
+        options: {
+          sourceMap: true
+        }
       }, {
-        loader: 'sass-loader'
+        loader: 'sass-loader',
+        options: {
+          sourceMap: true
+        }
       }, {
         loader: 'import-glob-loader'
       }]

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import {Directory} from 'ls-serialize';
-import {object, string, arrayOf} from 'prop-types';
+import {object, string, func, arrayOf} from 'prop-types';
 
 import FileView from './FileView.jsx';
 
@@ -37,13 +37,18 @@ class List extends Component {
             const icon = file instanceof Directory
               ? 'folder-o'
               : iconMap[file.ext.toLowerCase()] || 'file-o';
+            const songIndex = this.props.getIndex(file);
 
             return (
-              <li key={file.base}>
+              <li key={file.base} className={songIndex !== -1 && 'has-mp3-index'}>
                 <Link to={path}>
                   <i className={`fa fa-${icon} fa-lg fa-fw`}/>&nbsp;
                   {file.base}
                 </Link>
+                {songIndex !== -1 &&
+                  <a className="mp3-index">
+                    <i className="fa fa-play"/>&nbsp;&nbsp;{songIndex + 1}
+                  </a>}
               </li>
             );
           })}
@@ -66,7 +71,8 @@ class List extends Component {
 List.propTypes = {
   root: object.isRequired,
   pathname: string.isRequired,
-  path: arrayOf(string.isRequired)
+  path: arrayOf(string.isRequired),
+  getIndex: func.isRequired
 };
 
 export default List;

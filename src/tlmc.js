@@ -52,9 +52,6 @@ const CUE_CACHE_PATH = path.join(__dirname, 'cue.cache');
 }
 
 function createServer() {
-  // const directory = JSON.parse(fs.readFileSync(LS_CACHE_PATH));
-  // const songs = parse.enumSongs(directory);
-  const directoryString = fs.readFileSync(LS_CACHE_PATH);
   const app = express();
 
   app.use(compression({level: 9}));

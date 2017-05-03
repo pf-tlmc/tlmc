@@ -6,6 +6,7 @@ import {object} from 'prop-types';
 import {deserialize} from 'ls-serialize';
 import csvParse from 'csv-parse/lib/sync';
 
+import path from 'path';
 import './path'; // TODO: `path.parse` mock
 
 import Loading from './components/Loading.jsx';
@@ -23,9 +24,10 @@ class App extends Component {
     super();
     this.state = {
       root: {loading: true, data: null},
-      cues: {loading: true, data: null}
+      songs: {loading: true, data: null}
     };
     this.makeRequest = this.makeRequest.bind(this);
+    this.getIndex = this.getIndex.bind(this);
   }
 
   componentDidMount() {
@@ -35,7 +37,7 @@ class App extends Component {
   makeRequest() {
     this.setState({
       root: {loading: true, data: null},
-      cues: {loading: true, data: null}
+      songs: {loading: true, data: null, dataByPath: null}
     });
 
     request.get(`${TLMC_URL}/tlmc/ls`, (err, res, body) => {
@@ -52,6 +54,7 @@ class App extends Component {
       }
 
       this.setState({root: {loading: false, data: root}});
+      window._tlmcRoot = root;
     });
 
     request.get(`${TLMC_URL}/tlmc/cue`, (err, res, body) => {
@@ -59,16 +62,43 @@ class App extends Component {
         console.log(err); // eslint-disable-line no-console
       }
 
-      let cues;
+      let songs, songsByPath;
       try {
-        cues = body && csvParse(body);
+        songs = body && csvParse(body, {columns: true});
+        songsByPath = {};
+        for (let index = 0; index < songs.length; ++index) {
+          const song = songs[index];
+          song._index = index;
+          songsByPath[song.path] = song;
+        }
       }
       catch (err) {
         console.log(err); // eslint-disable-line no-console
       }
 
-      this.setState({cues: {loading: false, data: cues}});
+      this.setState({songs: {loading: false, data: songs, dataByPath: songsByPath}});
+      window._tlmcSongs = songs;
+      window._tlmcSongsByPath = songsByPath;
     });
+  }
+
+  getIndex(file) {
+    if (file.ext.toLowerCase() !== '.mp3') {
+      return -1;
+    }
+
+    const parts = file.path.split(path.sep);
+    for (let index = 1, currDir = this.state.root.data; index < parts.length - 1; ++index) {
+      const segment = parts[index];
+      if (!currDir.has(segment)) {
+        return -1;
+      }
+      parts[index] = `${Array.from(currDir.fileNames).indexOf(segment)}`;
+      currDir = currDir.get(segment);
+    }
+
+    let song = this.state.songs.dataByPath[path.join(...parts)];
+    return song ? song._index : -1;
   }
 
   render() {
@@ -78,11 +108,11 @@ class App extends Component {
       ? [_path, `/${_path.join('/')}`]
       : [null, ''];
 
-    if (this.state.root.loading || this.state.cues.loading) {
+    if (this.state.root.loading || this.state.songs.loading) {
       content = <Loading/>;
     }
 
-    else if (!this.state.root.data || !this.state.cues.data) {
+    else if (!this.state.root.data || !this.state.songs.data) {
       content = (
         <div id="error">
           <div>
@@ -100,7 +130,12 @@ class App extends Component {
     else {
       content = (
         <div className="expanded row">
-          <List root={this.state.root.data} path={path} pathname={pathname}/>
+          <List
+            root={this.state.root.data}
+            path={path}
+            pathname={pathname}
+            getIndex={this.getIndex}
+          />
           <MusicPlayer/>
         </div>
       );
