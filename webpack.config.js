@@ -14,7 +14,6 @@ module.exports = {
   module: {
     rules: [{
       test: /\.jsx?$/,
-      exclude: /node_modules/,
       use: {
         loader: 'babel-loader',
         options: {
@@ -29,6 +28,7 @@ module.exports = {
       }, {
         loader: 'css-loader',
         options: {
+          minimize: true,
           sourceMap: true
         }
       }, {
@@ -58,5 +58,6 @@ module.exports = {
         }
       }]
     }]
-  }
+  },
+  devtool: 'source-map'
 };
