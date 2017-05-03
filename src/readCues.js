@@ -18,7 +18,7 @@ const SANITIZE_MAP = [
 module.exports = function readCues(root, rootPath) {
   const songs = [];
 
-  function _readCues(currFile, shortPath) {
+  function _readCues(currFile, shortPath, shortDir) {
     if (currFile instanceof File && currFile.ext.toLowerCase() === '.cue') {
       const cue = cueParser.parse(rootPath + currFile.path);
       for (const file of cue.files) {
@@ -27,7 +27,7 @@ module.exports = function readCues(root, rootPath) {
           const title = track.title || path.parse(file.name).name;
           const filename = sanitizeFilename(`${number}. ${title}.mp3`, {replacementMap: SANITIZE_MAP});
           songs.push({
-            path: path.join(shortPath, filename),
+            path: path.join(shortDir, filename),
             cuePerformer: cue.performer,
             cueSongwriter: cue.songWriter,
             cueTitle: cue.title,
@@ -42,11 +42,11 @@ module.exports = function readCues(root, rootPath) {
 
     else if (currFile instanceof Directory) {
       Array.from(currFile.files).forEach((file, index) => {
-        _readCues(file, path.join(shortPath, `${index}`));
+        _readCues(file, path.join(shortPath, `${index}`), shortPath);
       });
     }
   }
 
-  _readCues(root, '');
+  _readCues(root, '', '');
   return songs;
 };
