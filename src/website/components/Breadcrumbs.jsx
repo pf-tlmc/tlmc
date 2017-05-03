@@ -1,13 +1,14 @@
+import path from 'path';
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import {string, arrayOf} from 'prop-types';
 
 class Breadcrumbs extends Component {
   render() {
-    const crumbs = [{displayName: 'TLMC', pathname: '/'}];
-    let currPath = '';
-    for (const segment of (this.props.path || [])) {
-      currPath += `/${segment}`;
+    const crumbs = [{displayName: 'TLMC', pathname: path.sep}];
+    let currPath = path.sep;
+    for (const segment of this.props.pathSegments) {
+      currPath = path.join(currPath, segment);
       crumbs.push({
         displayName: decodeURIComponent(segment),
         pathname: currPath
@@ -18,8 +19,8 @@ class Breadcrumbs extends Component {
     return (
       <div id="breadcrumbs">
         <ul className="breadcrumbs">
-          {crumbs.map(crumb =>
-            <li key={crumb.displayName}>
+          {crumbs.map((crumb, index) =>
+            <li key={index}>
               <Link to={crumb.pathname}>{crumb.displayName}</Link>
             </li>
           )}
@@ -31,7 +32,7 @@ class Breadcrumbs extends Component {
 }
 
 Breadcrumbs.propTypes = {
-  path: arrayOf(string.isRequired)
+  pathSegments: arrayOf(string.isRequired).isRequired
 };
 
 export default Breadcrumbs;

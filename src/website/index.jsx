@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import {BrowserRouter, Route} from 'react-router-dom';
 import request from 'browser-request';
 import {object} from 'prop-types';
-import {deserialize} from 'ls-serialize';
+import {deserialize, File} from 'ls-serialize';
 import csvParse from 'csv-parse/lib/sync';
 
 import path from 'path';
@@ -18,6 +18,13 @@ import MusicPlayer from './components/musicPlayer/MusicPlayer.jsx';
 import './main.scss';
 
 const TLMC_URL = window.location.origin;
+
+const pathSepEscaped = path.sep.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+const trimPath = new RegExp(`^${pathSepEscaped}+|${pathSepEscaped}+$`, 'g');
+function splitPath(pathname) {
+  const trimmedPath = pathname.replace(trimPath, '');
+  return trimmedPath ? trimmedPath.split(path.sep) : [];
+}
 
 class App extends Component {
   constructor() {
@@ -54,7 +61,7 @@ class App extends Component {
       }
 
       this.setState({root: {loading: false, data: root}});
-      window._tlmcRoot = root;
+      /* TODO */ window._tlmcRoot = root;
     });
 
     request.get(`${TLMC_URL}/tlmc/cue`, (err, res, body) => {
@@ -77,24 +84,25 @@ class App extends Component {
       }
 
       this.setState({songs: {loading: false, data: songs, dataByPath: songsByPath}});
-      window._tlmcSongs = songs;
-      window._tlmcSongsByPath = songsByPath;
+      /* TODO */ window._tlmcSongs = songs;
+      /* TODO */ window._tlmcSongsByPath = songsByPath;
     });
   }
 
   getIndex(file) {
-    if (file.ext.toLowerCase() !== '.mp3') {
+    if (!(file instanceof File) || file.ext.toLowerCase() !== '.mp3') {
       return -1;
     }
 
     const parts = file.path.split(path.sep);
     for (let index = 1, currDir = this.state.root.data; index < parts.length - 1; ++index) {
       const segment = parts[index];
-      if (!currDir.has(segment)) {
+      const nextDir = currDir.get(segment);
+      if (!nextDir) {
         return -1;
       }
       parts[index] = `${Array.from(currDir.fileNames).indexOf(segment)}`;
-      currDir = currDir.get(segment);
+      currDir = nextDir;
     }
 
     let song = this.state.songs.dataByPath[path.join(...parts)];
@@ -102,11 +110,8 @@ class App extends Component {
   }
 
   render() {
+    const pathSegments = splitPath(this.props.location.pathname);
     let content;
-    const _path = this.props.location.pathname.replace(/^\/+|\/+$/g, '').split(/\/+/);
-    const [path, pathname] = _path[0]
-      ? [_path, `/${_path.join('/')}`]
-      : [null, ''];
 
     if (this.state.root.loading || this.state.songs.loading) {
       content = <Loading/>;
@@ -132,8 +137,7 @@ class App extends Component {
         <div className="expanded row">
           <List
             root={this.state.root.data}
-            path={path}
-            pathname={pathname}
+            pathSegments={pathSegments}
             getIndex={this.getIndex}
           />
           <MusicPlayer/>
@@ -145,7 +149,7 @@ class App extends Component {
       <div id="app">
         <header>
           <Header/>
-          <Breadcrumbs path={path}/>
+          <Breadcrumbs pathSegments={pathSegments}/>
         </header>
         <main>{content}</main>
       </div>

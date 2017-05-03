@@ -1,6 +1,7 @@
+import path from 'path';
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import {Directory} from 'ls-serialize';
+import {File, Directory} from 'ls-serialize';
 import {object, string, func, arrayOf} from 'prop-types';
 
 import FileView from './views/FileView.jsx';
@@ -18,22 +19,26 @@ class List extends Component {
     let currDir = this.props.root;
     let content;
 
-    if (this.props.path) {
-      for (const segment of this.props.path) {
-        const decoded = decodeURIComponent(segment);
-        currDir = currDir && currDir.get(decoded);
-      }
+    for (const segment of this.props.pathSegments) {
+      currDir = currDir
+        && (currDir instanceof Directory)
+        && currDir.get(decodeURIComponent(segment));
     }
 
     if (!currDir) {
       content = <h1>404</h1>;
     }
 
-    else if (currDir instanceof Directory) {
+    else if (currDir instanceof File) {
+      content = <FileView file={currDir}/>;
+    }
+
+    else {
+      const pathBase = path.join(path.sep, ...this.props.pathSegments);
       content = (
         <ul>
           {Array.from(currDir).map(file => {
-            const path = `${this.props.pathname}/${encodeURIComponent(file.base)}`;
+            const pathname = path.join(pathBase, encodeURIComponent(file.base));
             const icon = file instanceof Directory
               ? 'folder-o'
               : iconMap[file.ext.toLowerCase()] || 'file-o';
@@ -41,7 +46,7 @@ class List extends Component {
 
             return (
               <li key={file.base} className={songIndex !== -1 && 'has-mp3-index'}>
-                <Link to={path}>
+                <Link to={pathname}>
                   <i className={`fa fa-${icon} fa-lg fa-fw`}/>&nbsp;
                   {file.base}
                 </Link>
@@ -56,10 +61,6 @@ class List extends Component {
       );
     }
 
-    else {
-      content = <FileView file={currDir}/>;
-    }
-
     return (
       <div id="list" className="small-6 large-7 columns">
         {content}
@@ -70,8 +71,7 @@ class List extends Component {
 
 List.propTypes = {
   root: object.isRequired,
-  pathname: string.isRequired,
-  path: arrayOf(string.isRequired),
+  pathSegments: arrayOf(string.isRequired).isRequired,
   getIndex: func.isRequired
 };
 
