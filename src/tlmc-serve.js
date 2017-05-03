@@ -46,7 +46,7 @@ const CUE_CACHE_PATH = path.join(__dirname, 'cue.cache');
   const songs = csvParse(fs.readFileSync(CUE_CACHE_PATH).toString(), {columns: true});
   let failed = songs.filter(song => {
     let parts = song.path.split(path.sep);
-    for (let index = 0, currDir = directory; index < parts - 1; ++index) {
+    for (let index = 0, currDir = directory; index < parts.length - 1; ++index) {
       currDir = Array.from(currDir.files)[parts[index]];
       parts[index] = currDir.base;
     }
@@ -56,12 +56,15 @@ const CUE_CACHE_PATH = path.join(__dirname, 'cue.cache');
       return false;
     }
     catch (err) {
-      console.log(`- ${path.join(TLMC_PATH, ...parts)}`);
+      console.log(`- ${path.join(...parts)}`);
       return true;
     }
   });
 
-  if (!failed.length) {
+  if (failed.length) {
+    console.log(`${failed.length} songs not found.`);
+  }
+  else {
     console.log('All OK!');
   }
 }
