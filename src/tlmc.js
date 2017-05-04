@@ -5,6 +5,8 @@ const express = require('express');
 const request = require('request');
 const compression = require('compression');
 const ProgressBar = require('progress');
+const {deserialize} = require('ls-serialize');
+const csvParse = require('csv-parse/lib/sync');
 
 const PORT = process.argv[2] || process.env.TLMC_PORT || 80;
 const TLMC_SERVE_URL = process.argv[3] || process.env.TLMC_SERVE_URL || 'http://home.pf-n.co';
@@ -48,11 +50,36 @@ const CUE_CACHE_PATH = path.join(__dirname, 'cue.cache');
     .then(cached => cached && console.log('ls-cache found. Using cache.'))
     .then(() => fetch(`${TLMC_SERVE_URL}/cue`, CUE_CACHE_PATH))
     .then(cached => cached && console.log('cue-cache found. Using cache.'))
-    .then(createServer);
+    .then(createServer)
+    .catch(console.error);
 }
 
 function createServer() {
   const app = express();
+  const root = deserialize(fs.readFileSync(LS_CACHE_PATH).toString());
+  const songs = csvParse(fs.readFileSync(CUE_CACHE_PATH).toString(), {columns: true});
+
+  const parsePathMemo = {};
+  function parsePath(song, index) {
+    const cached = parsePathMemo[index];
+    if (cached) {
+      return cached;
+    }
+
+    const split = song.path.split('/');
+    let parsed = [];
+    for (let index = 0, currDir = root; index < split.length; ++index) {
+      const nextDir = index === split.length - 1
+        ? currDir.get(split[index])
+        : Array.from(currDir.files)[split[index]];
+      parsed.push(encodeURIComponent(nextDir.base));
+      currDir = nextDir;
+    }
+
+    parsed = parsed.join('/');
+    parsePathMemo[index] = parsed;
+    return parsed;
+  }
 
   app.use(compression({level: 9}));
 
@@ -63,16 +90,15 @@ function createServer() {
     res.sendFile(CUE_CACHE_PATH);
   });
 
-  // app.get('/tlmc/id/:id', (req, res) => {
-  //   const index = +req.params.id - 1;
-  //   const songPath = songs[index];
-  //   if (!songPath) {
-  //     return res.sendStatus(404);
-  //   }
-  //
-  //   const cleanPath = songPath.split('/').map(encodeURIComponent).join('/');
-  //   request.get(`${TLMC_SERVE_URL}/tlmc/${cleanPath}`).pipe(res);
-  // });
+  app.get('/tlmc/id/:id', (req, res) => {
+    const index = +req.params.id - 1;
+    const song = songs[index];
+    if (!song) {
+      return res.sendStatus(404);
+    }
+
+    request.get(`${TLMC_SERVE_URL}/tlmc/${parsePath(song, index)}`).pipe(res);
+  });
 
   app.get(/^\/tlmc\/(.+)/, (req, res) => {
     request.get(`${TLMC_SERVE_URL}${req.url}`, err => {
