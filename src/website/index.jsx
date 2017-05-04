@@ -1,3 +1,5 @@
+import path from 'path';
+import './path'; // TODO: `path.parse` mock
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import {BrowserRouter, Route} from 'react-router-dom';
@@ -5,9 +7,6 @@ import request from 'browser-request';
 import {object} from 'prop-types';
 import {deserialize, File} from 'ls-serialize';
 import csvParse from 'csv-parse/lib/sync';
-
-import path from 'path';
-import './path'; // TODO: `path.parse` mock
 
 import Loading from './components/Loading.jsx';
 import Header from './components/Header.jsx';
@@ -31,7 +30,7 @@ class App extends Component {
     super();
     this.state = {
       root: {loading: true, data: null},
-      songs: {loading: true, data: null}
+      songs: {loading: true, data: null, dataByPath: null}
     };
     this.makeRequest = this.makeRequest.bind(this);
     this.getIndex = this.getIndex.bind(this);
