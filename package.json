@@ -29,7 +29,7 @@
     "ls-serialize": "^1.0.1",
     "progress": "^2.0.0",
     "request": "^2.81.0",
-    "sanitize-filename": "git://github.com/pillowfication/node-sanitize-filename.git#master"
+    "sanitize-filename": "git://github.com/pillowfication/node-sanitize-filename.git#tlmc"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
