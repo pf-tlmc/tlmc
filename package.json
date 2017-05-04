@@ -17,8 +17,8 @@
   },
   "main": "index.js",
   "scripts": {
-    "build": "webpack --watch --progress --colors",
-    "build:prod": "webpack -p --progress --colors"
+    "build": "webpack --env=dev --watch --progress --colors",
+    "build:prod": "webpack --env=prod --progress --colors"
   },
   "dependencies": {
     "compression": "^1.6.2",
