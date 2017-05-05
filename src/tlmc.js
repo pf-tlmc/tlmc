@@ -100,6 +100,17 @@ function createServer() {
     request.get(`${TLMC_SERVE_URL}/tlmc/${parsePath(song, index)}`).pipe(res);
   });
 
+  app.get('/tlmc/info/:id', (req, res) => {
+    const index = +req.params.id - 1;
+    const song = songs[index];
+    if (!song) {
+      return res.sendStatus(404);
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(song));
+  });
+
   app.get(/^\/tlmc\/(.+)/, (req, res) => {
     request.get(`${TLMC_SERVE_URL}${req.url}`, err => {
       if (err) {
