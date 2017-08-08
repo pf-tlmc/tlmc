@@ -18,7 +18,8 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --env=dev --watch --progress --colors",
-    "build:prod": "webpack --env=prod --progress --colors"
+    "build:prod": "webpack --env=prod --progress",
+    "test": "node_modules/standard/bin/cmd.js"
   },
   "dependencies": {
     "compression": "^1.6.2",
@@ -38,9 +39,6 @@
     "babel-preset-react": "^6.24.1",
     "browser-request": "^0.3.3",
     "css-loader": "^0.28.0",
-    "eslint": "^3.18.0",
-    "eslint-config-pf": "1.0.7",
-    "eslint-plugin-react": "^6.10.3",
     "extract-text-webpack-plugin": "^2.1.0",
     "file-loader": "^0.11.1",
     "font-awesome": "^4.7.0",
@@ -52,6 +50,7 @@
     "react-dom": "^15.5.4",
     "react-router-dom": "^4.1.1",
     "sass-loader": "^6.0.3",
+    "standard": "^10.0.3",
     "style-loader": "^0.16.1",
     "url-loader": "^0.5.8",
     "webpack": "^2.4.1"

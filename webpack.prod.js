@@ -1,6 +1,6 @@
-const path = require('path');
-const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const path = require('path')
+const webpack = require('webpack')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
   entry: path.join(__dirname, 'src', 'website', 'index.jsx'),
@@ -19,7 +19,7 @@ module.exports = {
       use: {
         loader: 'babel-loader',
         options: {
-          presets: ['env', 'react'],
+          presets: [ 'env', 'react' ],
           cacheDirectory: true
         }
       }
@@ -80,4 +80,4 @@ module.exports = {
       comments: false
     })
   ]
-};
+}
