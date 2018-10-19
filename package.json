@@ -25,12 +25,10 @@
     "compression": "^1.6.2",
     "csv-parse": "^1.2.0",
     "csv-stringify": "^1.0.4",
-    "cue-parser": "git://github.com/pillowfication/cue-parser.git#master",
     "express": "^4.15.2",
     "ls-serialize": "^1.0.1",
     "progress": "^2.0.0",
-    "request": "^2.81.0",
-    "sanitize-filename": "git://github.com/pillowfication/node-sanitize-filename.git#tlmc"
+    "request": "^2.81.0"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
@@ -42,9 +40,9 @@
     "extract-text-webpack-plugin": "^2.1.0",
     "file-loader": "^0.11.1",
     "font-awesome": "^4.7.0",
-    "foundation-sites": "^6.3.1",
     "import-glob-loader": "^1.1.0",
     "node-sass": "^4.5.2",
+    "normalize.css": "^7.0.0",
     "prop-types": "^15.5.8",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",

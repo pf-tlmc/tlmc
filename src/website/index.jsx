@@ -8,22 +8,28 @@ import { BrowserRouter, Route } from 'react-router-dom'
 
 import './main.scss'
 
-// const TLMC_URL = process.env.NODE_ENV === 'production'
-//   ? 'http://tlmc.pf-n.co/'
-//   : window.location.origin
-//
-// const pathSepEscaped = path.sep.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
-// const trimPath = new RegExp(`^${pathSepEscaped}+|${pathSepEscaped}+$`, 'g')
-// function splitPath (pathname) {
-//   const trimmedPath = pathname.replace(trimPath, '')
-//   return trimmedPath ? trimmedPath.split(path.sep) : []
-// }
+import TopBar from './components/TopBar.jsx'
+
+const TLMC_URL = process.env.NODE_ENV === 'production'
+  ? 'http://tlmc.pf-n.co/'
+  : window.location.origin
+
+const trimPath = /^\/+|\/+$/g
+function splitPath (pathname) {
+  const trimmedPath = pathname.replace(trimPath, '')
+  return trimmedPath ? trimmedPath.split('/') : []
+}
 
 class App extends Component {
   render () {
     return (
       <div id='app'>
-        <main>Hello, World!</main>
+        <div id='nav-container'>
+          <TopBar />
+        </div>
+        <div id='main-container'>
+          Hello World
+        </div>
       </div>
     )
   }

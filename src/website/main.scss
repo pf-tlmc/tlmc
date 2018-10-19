@@ -1,16 +1,8 @@
+// normalize.css
+@import "~normalize.css/normalize.css";
+
+// Font Awesome
 $fa-font-path: "~font-awesome/fonts";
 @import "~font-awesome/scss/font-awesome";
 
-@import "~foundation-sites/scss/foundation";
-@import "foundation-settings";
-@include foundation-everything;
-
 // @import "components/**/*.scss";
-
-html, body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  border: 0;
-  padding: 0;
-}
