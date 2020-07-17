@@ -1,0 +1,32 @@
+{
+  "name": "tlmc",
+  "version": "0.0.0",
+  "description": "Touhou Lossless Music Collection",
+  "author": {
+    "name": "Markus Tran",
+    "email": "thebluepillow@gmail.com",
+    "url": "http://pillowfication.com"
+  },
+  "homepage": "https://github.com/pf-tlmc/tlmc",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/pf-tlmc/tlmc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pf-tlmc/tlmc/issues"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "next": "9.4.4",
+    "react": "16.13.1",
+    "react-dom": "16.13.1"
+  },
+  "devDependencies": {
+    "standard": "^14.3.4"
+  }
+}
