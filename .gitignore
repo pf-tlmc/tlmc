@@ -1,7 +1,0 @@
-*.log
-node_modules
-
-src/*.cache
-src/website/public
-
-src/website-old
