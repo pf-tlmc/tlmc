@@ -28,7 +28,7 @@ const App = ({ Component, pageProps }) => {
     window.localStorage.setItem('theme', theme)
   }, [theme])
 
-  const handleChangeTheme = () => {
+  const changeTheme = () => {
     setTheme(theme === 'light' ? 'dark' : 'light')
   }
 
@@ -40,7 +40,7 @@ const App = ({ Component, pageProps }) => {
       </Head>
       <ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
         <CssBaseline />
-        <ThemeChanger.Provider value={{ theme, handleChangeTheme }}>
+        <ThemeChanger.Provider value={{ theme, changeTheme }}>
           <Component {...pageProps} />
         </ThemeChanger.Provider>
       </ThemeProvider>
