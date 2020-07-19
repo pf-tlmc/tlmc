@@ -7,14 +7,19 @@ import { Directory } from 'ls-serialize/src/structures'
 import DirectoryViewer from '../../src/DirectoryViewer'
 import FileViewer from '../../src/FileViewer'
 
+let ls = null
+
 function fetchAndDeserialize (url) {
-  return fetch(url)
+  return ls || fetch(url)
     .then((res) => res.text())
-    .then((text) => deserialize(text, {
-      levelInd: ' ',
-      dirInd: '+',
-      fileInd: '-'
-    }))
+    .then((text) => {
+      ls = deserialize(text, {
+        levelInd: ' ',
+        dirInd: '+',
+        fileInd: '-'
+      })
+      return ls
+    })
 }
 
 const TLMC = () => {
