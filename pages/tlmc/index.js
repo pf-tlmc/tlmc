@@ -12,6 +12,7 @@ import Button from '@material-ui/core/Button'
 import Link from '../../src/Link'
 import DirectoryViewer from '../../src/DirectoryViewer'
 import FileViewer from '../../src/FileViewer'
+import Error404 from '../404'
 
 let ls = null
 
@@ -83,7 +84,7 @@ const TLMC = () => {
       if (node) {
         breadcrumbs.push(node)
       } else {
-        return <div>404</div>
+        return <Error404 />
       }
     }
   }
