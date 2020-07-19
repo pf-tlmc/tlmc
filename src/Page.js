@@ -2,10 +2,17 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
+import Grid from '@material-ui/core/Grid'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Breadcrumbs from '@material-ui/core/Breadcrumbs'
 import Button from '@material-ui/core/Button'
+import Switch from '@material-ui/core/Switch'
+import MuiLink from '@material-ui/core/Link'
+import PublicIcon from '@material-ui/icons/Public'
+import GitHubIcon from '@material-ui/icons/GitHub'
+import Brightness2Icon from '@material-ui/icons/Brightness2'
+import Brightness5Icon from '@material-ui/icons/Brightness5'
 import Link from './Link'
 
 const useStyles = makeStyles((theme) => ({
@@ -45,11 +52,34 @@ const Page = ({ contained, breadcrumbs, children }) => {
   return (
     <div className={classes.container}>
       <AppBar position='relative' elevation={0} className={classes.appBar}>
-        <Toolbar className={classes.toolbar}>
-          <Link href='/about'>
-            <Button variant='contained' color='primary' disableElevation>TLMC</Button>
-          </Link>
-        </Toolbar>
+        <Grid container justify='space-between' alignItems='center'>
+          <Grid item>
+            <Toolbar className={classes.toolbar}>
+              <Link href='/'>
+                <Button variant='contained' color='primary' disableElevation>
+                  TLMC
+                </Button>
+              </Link>
+            </Toolbar>
+          </Grid>
+          <Grid item>
+            <Toolbar className={classes.toolbar}>
+              <MuiLink href='http://www.tlmc.eu/search/label/TLMC'>
+                <Button variant='contained' color='primary' disableElevation startIcon={<PublicIcon />}>
+                  tlmc.eu
+                </Button>
+              </MuiLink>
+              <MuiLink href='https://github.com/pf-tlmc/tlmc'>
+                <Button variant='contained' color='primary' disableElevation startIcon={<GitHubIcon />}>
+                  GitHub
+                </Button>
+              </MuiLink>
+              <Brightness5Icon />
+              <Switch />
+              <Brightness2Icon />
+            </Toolbar>
+          </Grid>
+        </Grid>
         {breadcrumbs &&
           <Breadcrumbs className={classes.breadcrumbs}>
             {breadcrumbs}
