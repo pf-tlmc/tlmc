@@ -10,6 +10,9 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 0,
     '& li *': {
       verticalAlign: 'text-bottom'
+    },
+    '& a': {
+      display: 'block'
     }
   }
 }))

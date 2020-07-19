@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import Head from 'next/head'
 import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
-import Container from '@material-ui/core/Container'
 import theme from '../src/theme'
 
 // Polyfill the path.parse() function
@@ -27,9 +26,7 @@ const App = ({ Component, pageProps }) => {
       </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Container>
-          <Component {...pageProps} />
-        </Container>
+        <Component {...pageProps} />
       </ThemeProvider>
     </>
   )
