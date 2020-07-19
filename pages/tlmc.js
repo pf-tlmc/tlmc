@@ -1,21 +1,11 @@
 import React from 'react'
 import useSWR from 'swr'
-import fetch from 'isomorphic-fetch'
+import fetch from 'unfetch'
 import deserialize from 'ls-serialize/src/deserialize'
 import { Directory } from 'ls-serialize/src/structures'
 
-function fetchLS (url) {
-  return fetch(url)
-    .then((res) => res.text())
-    .then((text) => deserialize(text, {
-      levelInd: ' ',
-      dirInd: '+',
-      fileInd: '-'
-    }))
-}
-
 const TLMC = () => {
-  const { data, error } = useSWR('/api/ls', fetchLS)
+  const { data, error } = useSWR('/api/ls', (url) => fetch(url).then((res) => res.text()))
 
   if (error) {
     console.error(error)
@@ -26,11 +16,15 @@ const TLMC = () => {
     return <div>Loading...</div>
   }
 
-  // We have data!
-  console.log(data)
+  const root = deserialize(data, {
+    levelInd: ' ',
+    dirInd: '+',
+    fileInd: '-'
+  })
+
   return (
     <ol>
-      {[...data.files].map((file, index) => {
+      {[...root.files].map((file, index) => {
         if (file instanceof Directory) {
           return <li key={index}>{file.base}</li>
         } else {
