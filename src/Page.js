@@ -14,6 +14,7 @@ import GitHubIcon from '@material-ui/icons/GitHub'
 import Brightness2Icon from '@material-ui/icons/Brightness2'
 import Brightness5Icon from '@material-ui/icons/Brightness5'
 import Link from './Link'
+import { ThemeChanger } from '../pages/_app'
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -74,9 +75,18 @@ const Page = ({ contained, breadcrumbs, children }) => {
                   GitHub
                 </Button>
               </MuiLink>
-              <Brightness5Icon />
-              <Switch />
-              <Brightness2Icon />
+              <ThemeChanger.Consumer>
+                {({ theme, handleChangeTheme }) => (
+                  <>
+                    <Brightness5Icon />
+                    <Switch
+                      checked={theme === 'dark'}
+                      onChange={handleChangeTheme}
+                    />
+                    <Brightness2Icon />
+                  </>
+                )}
+              </ThemeChanger.Consumer>
             </Toolbar>
           </Grid>
         </Grid>
