@@ -1,22 +1,48 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import Link from '../src/Link'
+import useSWR from 'swr'
+import fetch from 'isomorphic-fetch'
+import deserialize from 'ls-serialize/src/deserialize'
+import { Directory } from 'ls-serialize/src/structures'
 
-const useStyles = makeStyles((theme) => ({
-  greeting: {
-    fontSize: 32,
-    fontWeight: 'bold'
-  }
-}))
+// Polyfill the path.parse() function
+import path from 'path'
+import pathParse from 'path-parse'
+path.parse = path.parse || pathParse
+
+function fetchLS (url) {
+  return fetch(url)
+    .then((res) => res.text())
+    .then((text) => deserialize(text, {
+      levelInd: ' ',
+      dirInd: '+',
+      fileInd: '-'
+    }))
+}
 
 const Index = () => {
-  const classes = useStyles()
+  const { data, error } = useSWR('/api/ls', fetchLS)
 
+  if (error) {
+    console.error(error)
+    return <div>Error</div>
+  }
+
+  if (!data) {
+    return <div>Loading...</div>
+  }
+
+  // We have data!
+  console.log(data)
   return (
-    <>
-      <div className={classes.greeting}>Hello, World!</div>
-      <Link href='/another-page'>Go to another page</Link>
-    </>
+    <ol>
+      {[...data.files].map((file, index) => {
+        if (file instanceof Directory) {
+          return <li key={index}>{file.base}</li>
+        } else {
+          return null
+        }
+      })}
+    </ol>
   )
 }
 
