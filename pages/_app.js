@@ -5,6 +5,11 @@ import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import theme from '../src/theme'
 
+// Polyfill the path.parse() function
+import path from 'path'
+import pathParse from 'path-parse'
+path.parse = path.parse || pathParse
+
 const App = ({ Component, pageProps }) => {
   useEffect(() => {
     const jssStyles = document.querySelector('#jss-server-side')
