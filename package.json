@@ -28,6 +28,8 @@
     "path-parse": "^1.0.6",
     "react": "16.13.1",
     "react-dom": "16.13.1",
+    "react-virtualized-auto-sizer": "^1.0.2",
+    "react-window": "^1.8.5",
     "swr": "^0.2.3",
     "unfetch": "^4.1.0"
   },
