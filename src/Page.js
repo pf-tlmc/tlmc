@@ -56,7 +56,7 @@ const Page = ({ contained, breadcrumbs, children }) => {
         <Grid container justify='space-between' alignItems='center'>
           <Grid item>
             <Toolbar className={classes.toolbar}>
-              <Link href='/'>
+              <Link href='/about'>
                 <Button variant='contained' color='primary' disableElevation>
                   TLMC
                 </Button>
@@ -76,12 +76,12 @@ const Page = ({ contained, breadcrumbs, children }) => {
                 </Button>
               </MuiLink>
               <ThemeChanger.Consumer>
-                {({ theme, handleChangeTheme }) => (
+                {({ theme, changeTheme }) => (
                   <>
                     <Brightness5Icon />
                     <Switch
                       checked={theme === 'dark'}
-                      onChange={handleChangeTheme}
+                      onChange={changeTheme}
                     />
                     <Brightness2Icon />
                   </>
