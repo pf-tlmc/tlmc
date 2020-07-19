@@ -1,8 +1,11 @@
 import React from 'react'
+import Page from '../src/Page'
 
 const Error404 = () => {
   return (
-    <h1>404</h1>
+    <Page contained>
+      <h1>404</h1>
+    </Page>
   )
 }
 
