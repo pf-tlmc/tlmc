@@ -2,9 +2,9 @@ const Index = () => {
   return null
 }
 
-Index.getInitialProps = ({ res }) => {
+Index.getInitialProps = ({ res, req }) => {
   if (res) {
-    res.writeHead(301, { Location: '/tlmc' })
+    res.writeHead(301, { Location: '/tlmc' + req.url })
     res.end()
   }
 
