@@ -1,5 +1,6 @@
 import React, { forwardRef } from 'react'
 import PropTypes from 'prop-types'
+import { makeStyles } from '@material-ui/core/styles'
 import { FixedSizeList as List } from 'react-window'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import ListItem from '@material-ui/core/ListItem'
@@ -8,6 +9,15 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Typography from '@material-ui/core/Typography'
 import Link from './Link'
 import FileIcon from './FileIcon'
+
+const useStyles = makeStyles((theme) => ({
+  listItem: {
+    padding: theme.spacing(0, 4)
+  },
+  listIcon: {
+    color: 'inherit'
+  }
+}))
 
 const ITEM_SIZE = 42
 const PADDING_TOP = 5
@@ -29,6 +39,7 @@ const paddedList = forwardRef(({ style, children }, ref) => {
 
 const DirectoryViewer = ({ directory }) => {
   const files = [...directory.files]
+  const classes = useStyles()
 
   function renderRow ({ index, style }) {
     const file = files[index]
@@ -40,8 +51,9 @@ const DirectoryViewer = ({ directory }) => {
             ...style,
             top: `${parseFloat(style.top) + PADDING_TOP}px`
           }}
+          className={classes.listItem}
         >
-          <ListItemIcon><FileIcon file={file} /></ListItemIcon>
+          <ListItemIcon className={classes.listIcon}><FileIcon file={file} /></ListItemIcon>
           <ListItemText><Typography noWrap>{file.base}</Typography></ListItemText>
         </ListItem>
       </Link>
