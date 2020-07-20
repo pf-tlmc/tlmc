@@ -2,13 +2,27 @@ import React from 'react'
 import useSWR from 'swr'
 import fetch from 'unfetch'
 import { useRouter } from 'next/router'
+import { makeStyles } from '@material-ui/core/styles'
 import deserialize from 'ls-serialize/src/deserialize'
 import { Directory } from 'ls-serialize/src/structures'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import Page from '../../src/Page'
 import Link from '../../src/Link'
 import DirectoryViewer from '../../src/DirectoryViewer'
 import FileViewer from '../../src/FileViewer'
 import Error404 from '../404'
+
+const useStyles = makeStyles((theme) => ({
+  loading: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: theme.spacing(5),
+    textAlign: 'center'
+  }
+}))
 
 let ls = null
 
@@ -28,6 +42,7 @@ function fetchAndDeserialize (url) {
 const TLMC = () => {
   const { data, error } = useSWR('/api/ls', fetchAndDeserialize)
   const router = useRouter()
+  const classes = useStyles()
 
   if (error) {
     console.error(error)
@@ -41,7 +56,9 @@ const TLMC = () => {
   if (!data) {
     return (
       <Page>
-        <div>Loading...</div>
+        <div className={classes.loading}>
+          <CircularProgress size={100} thickness={5} />
+        </div>
       </Page>
     )
   }
