@@ -47,8 +47,8 @@ const TLMC = () => {
   }
 
   let node = data
-  const breadcrumbs = [<Link key={0} href='/tlmc'>TLMC</Link>]
   const { tlmc_path: tlmcPath } = router.query
+  const breadcrumbs = [tlmcPath ? <Link key={0} href='/tlmc'>TLMC</Link> : <span key={0}>TLMC</span>]
 
   if (tlmcPath) {
     for (let i = 0; i < tlmcPath.length; ++i) {
