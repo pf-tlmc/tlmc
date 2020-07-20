@@ -1,8 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
-import Container from '@material-ui/core/Container'
-import Typography from '@material-ui/core/Typography'
+import Container from './Container'
 
 const useStyles = makeStyles((theme) => ({
   imageContainer: {
@@ -17,8 +16,7 @@ const ImageFileViewer = ({ file }) => {
   const classes = useStyles()
 
   return (
-    <Container>
-      <Typography variant='h5' gutterBottom>{file.base}</Typography>
+    <Container title={file.base}>
       <div className={classes.imageContainer}>
         <img src={'/api/tlmc' + file.path} className={classes.image} />
       </div>
