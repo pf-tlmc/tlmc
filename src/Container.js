@@ -16,7 +16,7 @@ const Container = ({ title, children }) => {
 
   return (
     <MuiContainer className={classes.container}>
-      <Typography variant='h5'>{title}</Typography>
+      <Typography variant='h5' gutterBottom>{title}</Typography>
       {children}
     </MuiContainer>
   )

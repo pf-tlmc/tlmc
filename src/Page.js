@@ -23,23 +23,17 @@ import { ThemeChanger } from '../pages/_app'
 const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
-    flexDirection: 'column',
-    flexWrap: 'nowrap',
-    alignItems: 'stretch',
-    width: '100vw',
     height: '100vh',
-    overflow: 'hidden'
+    flexFlow: 'column nowrap'
   },
-  appBar: {
-    flexShrink: 0
+  header: {
+    height: 'auto',
+    flex: '0 0 auto'
   },
   main: {
-    flex: '1 1 0',
-    height: '100%',
-    '& > div': {
-      height: '100%',
-      overflow: 'auto'
-    }
+    height: 'auto',
+    flex: '1 1 0px',
+    overflow: 'auto'
   },
   toolbar: {
     minHeight: 0
@@ -69,66 +63,66 @@ const Page = ({ contained, breadcrumbs, children }) => {
 
   return (
     <div className={classes.container}>
-      <AppBar position='relative' elevation={0} className={classes.appBar}>
-        <Grid container justify='space-between' alignItems='center'>
-          <Grid item>
-            <Toolbar className={classes.toolbar}>
-              <Link href='/about'>
-                <Button variant='contained' color='primary' disableElevation>
-                  TLMC
-                </Button>
-              </Link>
-            </Toolbar>
-          </Grid>
-          <Grid item>
-            <Toolbar className={classes.toolbar}>
-              {/*
-                <FormControl size='small'>
-                  <FilledInput
-                    disableUnderline
-                    startAdornment={<InputAdornment><SearchIcon /></InputAdornment>}
-                    placeholder='Search...'
-                    type='search'
-                    className={classes.search}
-                  />
-                </FormControl>
-              */}
-              <div className={classes.buttonContainer}>
-                <MuiLink href='http://www.tlmc.eu/search/label/TLMC'>
-                  <Button variant='contained' color='primary' disableElevation startIcon={<PublicIcon />}>
-                    tlmc.eu
+      <header className={classes.header}>
+        <AppBar position='relative' elevation={0} component='div'>
+          <Grid container justify='space-between' alignItems='center'>
+            <Grid item>
+              <Toolbar className={classes.toolbar}>
+                <Link href='/about'>
+                  <Button variant='contained' color='primary' disableElevation>
+                    TLMC
                   </Button>
-                </MuiLink>
-                <MuiLink href='https://github.com/pf-tlmc/tlmc'>
-                  <Button variant='contained' color='primary' disableElevation startIcon={<GitHubIcon />}>
-                    GitHub
-                  </Button>
-                </MuiLink>
-              </div>
-              <ThemeChanger.Consumer>
-                {({ theme, changeTheme }) => (
-                  <>
-                    <Brightness5Icon />
-                    <Switch
-                      checked={theme === 'dark'}
-                      onChange={changeTheme}
+                </Link>
+              </Toolbar>
+            </Grid>
+            <Grid item>
+              <Toolbar className={classes.toolbar}>
+                {/*
+                  <FormControl size='small'>
+                    <FilledInput
+                      disableUnderline
+                      startAdornment={<InputAdornment><SearchIcon /></InputAdornment>}
+                      placeholder='Search...'
+                      type='search'
+                      className={classes.search}
                     />
-                    <Brightness2Icon />
-                  </>
-                )}
-              </ThemeChanger.Consumer>
-            </Toolbar>
+                  </FormControl>
+                */}
+                <div className={classes.buttonContainer}>
+                  <MuiLink href='http://www.tlmc.eu/search/label/TLMC'>
+                    <Button variant='contained' color='primary' disableElevation startIcon={<PublicIcon />}>
+                      tlmc.eu
+                    </Button>
+                  </MuiLink>
+                  <MuiLink href='https://github.com/pf-tlmc/tlmc'>
+                    <Button variant='contained' color='primary' disableElevation startIcon={<GitHubIcon />}>
+                      GitHub
+                    </Button>
+                  </MuiLink>
+                </div>
+                <ThemeChanger.Consumer>
+                  {({ theme, changeTheme }) => (
+                    <>
+                      <Brightness5Icon />
+                      <Switch
+                        checked={theme === 'dark'}
+                        onChange={changeTheme}
+                      />
+                      <Brightness2Icon />
+                    </>
+                  )}
+                </ThemeChanger.Consumer>
+              </Toolbar>
+            </Grid>
           </Grid>
-        </Grid>
-        {breadcrumbs &&
-          <Breadcrumbs className={classes.breadcrumbs}>
-            {breadcrumbs}
-          </Breadcrumbs>}
-      </AppBar>
+          {breadcrumbs &&
+            <Breadcrumbs className={classes.breadcrumbs}>
+              {breadcrumbs}
+            </Breadcrumbs>}
+        </AppBar>
+      </header>
       <main className={classes.main}>
-        <div>
-          {contained ? <Container>{children}</Container> : children}
-        </div>
+        {contained ? <Container>{children}</Container> : children}
       </main>
     </div>
   )
