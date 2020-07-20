@@ -16,14 +16,14 @@ const Container = ({ title, children }) => {
 
   return (
     <MuiContainer className={classes.container}>
-      <Typography variant='h5' gutterBottom>{title}</Typography>
+      {title && <Typography variant='h5' gutterBottom>{title}</Typography>}
       {children}
     </MuiContainer>
   )
 }
 
 Container.propTypes = {
-  title: PropTypes.string.isRequired
+  title: PropTypes.string
 }
 
 export default Container

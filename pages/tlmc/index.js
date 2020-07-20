@@ -4,9 +4,9 @@ import { useAsync } from 'react-async'
 import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
 import deserialize from 'ls-serialize/src/deserialize'
+import Head from 'next/head'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Page from '../../src/Page'
-import Link from '../../src/Link'
 import DirectoryViewer from '../../src/DirectoryViewer'
 import FileViewer from '../../src/FileViewer'
 import Error404 from '../404'
@@ -62,17 +62,17 @@ const TLMC = () => {
   // Get the path from the URL and the corresponding node
   let node = data
   const { tlmc_path: tlmcPath } = router.query
-  const breadcrumbs = [tlmcPath ? <Link key={0} href='/tlmc'>TLMC</Link> : <span key={0}>TLMC</span>]
+  const breadcrumbs = [{ title: 'TLMC', href: '/tlmc' }]
 
   if (tlmcPath) {
     for (let i = 0; i < tlmcPath.length; ++i) {
       node = node.get(tlmcPath[i])
       if (node) {
-        if (i < tlmcPath.length - 1) {
-          breadcrumbs.push(<Link key={i} href='/tlmc/[...tlmc_path]' as={'/tlmc' + urlEncode(node.path)}>{node.base}</Link>)
-        } else {
-          breadcrumbs.push(<span key={i}>{node.base}</span>)
-        }
+        breadcrumbs.push({
+          title: node.base,
+          href: '/tlmc/[...tlmc_path]',
+          as: '/tlmc' + urlEncode(node.path)
+        })
       } else {
         return <Error404 />
       }
@@ -81,11 +81,16 @@ const TLMC = () => {
 
   // Path points to a valid node
   return (
-    <Page breadcrumbs={breadcrumbs}>
-      {node.isDirectory
-        ? <DirectoryViewer directory={node} />
-        : <FileViewer file={node} />}
-    </Page>
+    <>
+      <Head>
+        <title>{node.isRoot ? 'TLMC' : 'asdf'}</title>
+      </Head>
+      <Page breadcrumbs={breadcrumbs}>
+        {node.isDirectory
+          ? <DirectoryViewer directory={node} />
+          : <FileViewer file={node} />}
+      </Page>
+    </>
   )
 }
 

@@ -1,24 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
-import Container from '@material-ui/core/Container'
-import Grid from '@material-ui/core/Grid'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import Breadcrumbs from '@material-ui/core/Breadcrumbs'
-// import FormControl from '@material-ui/core/FormControl'
-// import FilledInput from '@material-ui/core/FilledInput'
-// import InputAdornment from '@material-ui/core/InputAdornment'
-import Button from '@material-ui/core/Button'
-import Switch from '@material-ui/core/Switch'
-import MuiLink from '@material-ui/core/Link'
-// import SearchIcon from '@material-ui/icons/Search'
-import PublicIcon from '@material-ui/icons/Public'
-import GitHubIcon from '@material-ui/icons/GitHub'
-import Brightness2Icon from '@material-ui/icons/Brightness2'
-import Brightness5Icon from '@material-ui/icons/Brightness5'
-import Link from './Link'
-import { ThemeChanger } from '../pages/_app'
+import TopBar from './TopBar'
+import Container from './Container'
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -34,30 +18,6 @@ const useStyles = makeStyles((theme) => ({
     height: 'auto',
     flex: '1 1 0px',
     overflow: 'auto'
-  },
-  toolbar: {
-    minHeight: 0,
-    '& button': {
-      textTransform: 'none'
-    }
-  },
-  // search: {
-  //   color: 'inherit',
-  //   '& input': {
-  //     paddingTop: theme.spacing(0.75)
-  //   }
-  // },
-  buttonContainer: {
-    marginRight: theme.spacing(2)
-  },
-  breadcrumbs: {
-    background: theme.palette.background.default,
-    borderBottom: `1px solid ${theme.palette.primary.main}`,
-    padding: theme.spacing(0.5, 4),
-    color: theme.palette.text.primary,
-    '& > ol': {
-      minHeight: 27
-    }
   }
 }))
 
@@ -67,62 +27,7 @@ const Page = ({ contained, breadcrumbs, children }) => {
   return (
     <div className={classes.container}>
       <header className={classes.header}>
-        <AppBar position='relative' elevation={0} component='div'>
-          <Grid container justify='space-between' alignItems='center'>
-            <Grid item>
-              <Toolbar className={classes.toolbar}>
-                <Link href='/about'>
-                  <Button variant='contained' color='primary' disableElevation>
-                    TLMC
-                  </Button>
-                </Link>
-              </Toolbar>
-            </Grid>
-            <Grid item>
-              <Toolbar className={classes.toolbar}>
-                {/*
-                  <FormControl size='small'>
-                    <FilledInput
-                      disableUnderline
-                      startAdornment={<InputAdornment><SearchIcon /></InputAdornment>}
-                      placeholder='Search...'
-                      type='search'
-                      className={classes.search}
-                    />
-                  </FormControl>
-                */}
-                <div className={classes.buttonContainer}>
-                  <MuiLink href='http://www.tlmc.eu/search/label/TLMC'>
-                    <Button variant='contained' color='primary' disableElevation startIcon={<PublicIcon />}>
-                      tlmc.eu
-                    </Button>
-                  </MuiLink>
-                  <MuiLink href='https://github.com/pf-tlmc/tlmc'>
-                    <Button variant='contained' color='primary' disableElevation startIcon={<GitHubIcon />}>
-                      GitHub
-                    </Button>
-                  </MuiLink>
-                </div>
-                <ThemeChanger.Consumer>
-                  {({ theme, changeTheme }) => (
-                    <>
-                      <Brightness5Icon />
-                      <Switch
-                        checked={theme === 'dark'}
-                        onChange={changeTheme}
-                      />
-                      <Brightness2Icon />
-                    </>
-                  )}
-                </ThemeChanger.Consumer>
-              </Toolbar>
-            </Grid>
-          </Grid>
-          {breadcrumbs &&
-            <Breadcrumbs className={classes.breadcrumbs}>
-              {breadcrumbs}
-            </Breadcrumbs>}
-        </AppBar>
+        <TopBar breadcrumbs={breadcrumbs} />
       </header>
       <main className={classes.main}>
         {contained ? <Container>{children}</Container> : children}
@@ -133,7 +38,7 @@ const Page = ({ contained, breadcrumbs, children }) => {
 
 Page.propTypes = {
   contained: PropTypes.bool,
-  breadcrumbs: PropTypes.node
+  breadcrumbs: PropTypes.any
 }
 
 export default Page
