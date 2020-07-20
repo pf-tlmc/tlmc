@@ -4,7 +4,6 @@ import { useAsync } from 'react-async'
 import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
 import deserialize from 'ls-serialize/src/deserialize'
-import { Directory } from 'ls-serialize/src/structures'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Page from '../../src/Page'
 import Link from '../../src/Link'
@@ -82,7 +81,7 @@ const TLMC = () => {
   // Path points to a valid node
   return (
     <Page breadcrumbs={breadcrumbs}>
-      {(node instanceof Directory)
+      {node.isDirectory
         ? <DirectoryViewer directory={node} />
         : <FileViewer file={node} />}
     </Page>

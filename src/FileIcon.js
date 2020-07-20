@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Directory } from 'ls-serialize/src/structures'
 import FolderIcon from '@material-ui/icons/Folder'
 import AudiotrackIcon from '@material-ui/icons/Audiotrack'
 import AlbumIcon from '@material-ui/icons/Album'
@@ -9,7 +8,7 @@ import DescriptionIcon from '@material-ui/icons/Description'
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile'
 
 const FileIcon = ({ file }) => {
-  if (file instanceof Directory) {
+  if (file.isDirectory) {
     return <FolderIcon />
   } else {
     switch (file.ext.toLowerCase()) {

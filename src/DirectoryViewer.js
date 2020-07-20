@@ -1,6 +1,5 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Directory } from 'ls-serialize/src/structures'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
@@ -27,7 +26,7 @@ const DirectoryViewer = ({ directory }) => {
     return (
       <DirectoryViewerVirtualized
         directory={directory}
-        filter={(file) => file instanceof Directory}
+        filter={(file) => file.isDirectory}
       />
     )
   }
