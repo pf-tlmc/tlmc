@@ -9,6 +9,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Typography from '@material-ui/core/Typography'
 import Link from './Link'
 import FileIcon from './FileIcon'
+import urlEncode from './urlEncode'
 
 const useStyles = makeStyles((theme) => ({
   listItem: {
@@ -45,7 +46,7 @@ const DirectoryViewer = ({ directory, filter = () => true }) => {
   function renderRow ({ index, style }) {
     const file = files[index]
     return (
-      <Link href='/tlmc/[...tlmc_path]' as={'/tlmc' + file.path}>
+      <Link href='/tlmc/[...tlmc_path]' as={'/tlmc' + urlEncode(file.path)}>
         <ListItem
           button
           style={{

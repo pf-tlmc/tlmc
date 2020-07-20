@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Container from './Container'
 import Code from './Code'
+import urlEncode from './urlEncode'
 
 const useStyles = makeStyles((theme) => ({
   loading: {
@@ -16,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 async function fetchFile ({ file }) {
-  const res = await fetch('/api/tlmc' + file.path)
+  const res = await fetch('/api/tlmc' + urlEncode(file.path))
   return res.text()
 }
 

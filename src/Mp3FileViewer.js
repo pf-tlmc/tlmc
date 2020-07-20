@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from './Container'
+import urlEncode from './urlEncode'
 
 const useStyles = makeStyles((theme) => ({
   audio: {
@@ -16,7 +17,7 @@ const Mp3FileViewer = ({ file }) => {
   return (
     <Container title={file.base}>
       <audio controls className={classes.audio}>
-        <source src={'/api/tlmc' + file.path} type='audio/mpeg' />
+        <source src={'/api/tlmc' + urlEncode(file.path)} type='audio/mpeg' />
       </audio>
     </Container>
   )

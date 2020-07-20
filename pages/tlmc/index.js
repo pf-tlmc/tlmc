@@ -10,6 +10,7 @@ import Link from '../../src/Link'
 import DirectoryViewer from '../../src/DirectoryViewer'
 import FileViewer from '../../src/FileViewer'
 import Error404 from '../404'
+import urlEncode from '../../src/urlEncode'
 
 const useStyles = makeStyles((theme) => ({
   loading: {
@@ -68,7 +69,7 @@ const TLMC = () => {
       node = node.get(tlmcPath[i])
       if (node) {
         if (i < tlmcPath.length - 1) {
-          breadcrumbs.push(<Link key={i} href='/tlmc/[...tlmc_path]' as={'/tlmc' + node.path}>{node.base}</Link>)
+          breadcrumbs.push(<Link key={i} href='/tlmc/[...tlmc_path]' as={'/tlmc' + urlEncode(node.path)}>{node.base}</Link>)
         } else {
           breadcrumbs.push(<span key={i}>{node.base}</span>)
         }

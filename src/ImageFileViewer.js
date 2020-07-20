@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from './Container'
+import urlEncode from './urlEncode'
 
 const useStyles = makeStyles((theme) => ({
   imageContainer: {
@@ -18,7 +19,7 @@ const ImageFileViewer = ({ file }) => {
   return (
     <Container title={file.base}>
       <div className={classes.imageContainer}>
-        <img src={'/api/tlmc' + file.path} className={classes.image} />
+        <img src={'/api/tlmc' + urlEncode(file.path)} className={classes.image} />
       </div>
     </Container>
   )

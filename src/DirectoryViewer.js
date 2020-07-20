@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography'
 import DirectoryViewerVirtualized from './DirectoryViewerVirtualized'
 import FileIcon from './FileIcon'
 import Link from './Link'
+import urlEncode from './urlEncode'
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -37,7 +38,7 @@ const DirectoryViewer = ({ directory }) => {
   return (
     <List className={classes.list}>
       {files.map((file, index) =>
-        <Link key={index} href='/tlmc/[...tlmc_path]' as={'/tlmc' + file.path}>
+        <Link key={index} href='/tlmc/[...tlmc_path]' as={'/tlmc' + urlEncode(file.path)}>
           <ListItem button className={classes.listItem}>
             <ListItemIcon className={classes.listIcon}><FileIcon file={file} /></ListItemIcon>
             <ListItemText><Typography>{file.base}</Typography></ListItemText>
