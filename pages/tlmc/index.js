@@ -83,7 +83,7 @@ const TLMC = () => {
   return (
     <>
       <Head>
-        <title>{node.isRoot ? 'TLMC' : 'asdf'}</title>
+        <title>{node.isRoot ? 'TLMC' : breadcrumbs[1].title}</title>
       </Head>
       <Page breadcrumbs={breadcrumbs}>
         {node.isDirectory
