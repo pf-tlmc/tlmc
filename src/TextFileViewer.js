@@ -5,6 +5,7 @@ import { useAsync } from 'react-async'
 import { makeStyles } from '@material-ui/core/styles'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Container from './Container'
+import Code from './Code'
 
 const useStyles = makeStyles((theme) => ({
   loading: {
@@ -27,7 +28,7 @@ const TextFileViewer = ({ file }) => {
     <Container title={file.base}>
       {isPending && <div className={classes.loading}><CircularProgress /></div>}
       {error && JSON.stringify(error)}
-      {data && <pre><code>{data}</code></pre>}
+      {data && <Code>{data}</Code>}
     </Container>
   )
 }
