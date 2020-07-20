@@ -10,6 +10,8 @@ import Toolbar from '@material-ui/core/Toolbar'
 import Button from '@material-ui/core/Button'
 import Switch from '@material-ui/core/Switch'
 import MuiLink from '@material-ui/core/Link'
+import HomeIcon from '@material-ui/icons/Home'
+import HelpIcon from '@material-ui/icons/Help'
 // import SearchIcon from '@material-ui/icons/Search'
 import PublicIcon from '@material-ui/icons/Public'
 import GitHubIcon from '@material-ui/icons/GitHub'
@@ -45,9 +47,14 @@ const TopBar = ({ breadcrumbs }) => {
       <Grid container justify='space-between' alignItems='center'>
         <Grid item>
           <Toolbar className={classes.toolbar}>
-            <Link href='/about'>
-              <Button variant='contained' color='primary' disableElevation>
+            <Link href='/tlmc'>
+              <Button variant='contained' color='primary' disableElevation startIcon={<HomeIcon />}>
                 TLMC
+              </Button>
+            </Link>
+            <Link href='/about'>
+              <Button variant='contained' color='primary' disableElevation startIcon={<HelpIcon />}>
+                About
               </Button>
             </Link>
           </Toolbar>
