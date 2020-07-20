@@ -18,6 +18,7 @@ const FileIcon = ({ file }) => {
       case '.tta':
         return <AlbumIcon />
       case '.jpg':
+      case '.png':
         return <ImageIcon />
       case '.cue':
       case '.txt':

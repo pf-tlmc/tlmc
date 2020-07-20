@@ -24,13 +24,17 @@ const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
+    flexWrap: 'nowrap',
+    alignItems: 'stretch',
+    width: '100vw',
     height: '100vh',
-    maxHeight: '100vh'
+    overflow: 'hidden'
   },
   appBar: {
     flexShrink: 0
   },
   main: {
+    flex: '1 1 0',
     height: '100%',
     '& > div': {
       height: '100%',

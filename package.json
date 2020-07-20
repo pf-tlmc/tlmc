@@ -27,6 +27,7 @@
     "next": "9.4.4",
     "path-parse": "^1.0.6",
     "react": "16.13.1",
+    "react-async": "^10.0.1",
     "react-dom": "16.13.1",
     "react-virtualized-auto-sizer": "^1.0.2",
     "react-window": "^1.8.5",
