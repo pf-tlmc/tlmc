@@ -1,6 +1,6 @@
 import React from 'react'
-import useSWR from 'swr'
 import fetch from 'unfetch'
+import { useAsync } from 'react-async'
 import { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
 import deserialize from 'ls-serialize/src/deserialize'
@@ -8,7 +8,7 @@ import { Directory } from 'ls-serialize/src/structures'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Page from '../../src/Page'
 import Link from '../../src/Link'
-import DirectoryViewer from '../../src/DirectoryViewer'
+import DirectoryViewerVirtualized from '../../src/DirectoryViewerVirtualized'
 import FileViewer from '../../src/FileViewer'
 import Error404 from '../404'
 
@@ -24,41 +24,36 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-let ls = null
-
-function fetchAndDeserialize (url) {
-  return ls || fetch(url)
-    .then((res) => res.text())
-    .then((text) => {
-      ls = deserialize(text, {
-        levelInd: ' ',
-        dirInd: '+',
-        fileInd: '-'
-      })
-      return ls
-    })
+async function fetchAndDeserialize () {
+  const res = await fetch('/api/ls')
+  const text = await res.text()
+  return deserialize(text, {
+    levelInd: ' ',
+    dirInd: '+',
+    fileInd: '-'
+  })
 }
 
 const TLMC = () => {
-  const { data, error } = useSWR('/api/ls', fetchAndDeserialize)
+  const { data, error, isPending } = useAsync(fetchAndDeserialize)
   const router = useRouter()
   const classes = useStyles()
+
+  if (isPending) {
+    return (
+      <Page>
+        <div className={classes.loading}>
+          <CircularProgress size={100} thickness={5} />
+        </div>
+      </Page>
+    )
+  }
 
   if (error) {
     console.error(error)
     return (
       <Page>
         <div>Error</div>
-      </Page>
-    )
-  }
-
-  if (!data) {
-    return (
-      <Page>
-        <div className={classes.loading}>
-          <CircularProgress size={100} thickness={5} />
-        </div>
       </Page>
     )
   }
@@ -84,7 +79,7 @@ const TLMC = () => {
 
   return (
     <Page breadcrumbs={breadcrumbs}>
-      {(node instanceof Directory) ? <DirectoryViewer directory={node} /> : <FileViewer file={node} />}
+      {(node instanceof Directory) ? <DirectoryViewerVirtualized directory={node} /> : <FileViewer file={node} />}
     </Page>
   )
 }
