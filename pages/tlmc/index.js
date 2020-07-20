@@ -8,7 +8,7 @@ import { Directory } from 'ls-serialize/src/structures'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Page from '../../src/Page'
 import Link from '../../src/Link'
-import DirectoryViewerVirtualized from '../../src/DirectoryViewerVirtualized'
+import DirectoryViewer from '../../src/DirectoryViewer'
 import FileViewer from '../../src/FileViewer'
 import Error404 from '../404'
 
@@ -58,6 +58,8 @@ const TLMC = () => {
     )
   }
 
+  // `/api/ls` has been loaded
+  // Get the path from the URL and the corresponding node
   let node = data
   const { tlmc_path: tlmcPath } = router.query
   const breadcrumbs = [tlmcPath ? <Link key={0} href='/tlmc'>TLMC</Link> : <span key={0}>TLMC</span>]
@@ -77,9 +79,12 @@ const TLMC = () => {
     }
   }
 
+  // Path points to a valid node
   return (
     <Page breadcrumbs={breadcrumbs}>
-      {(node instanceof Directory) ? <DirectoryViewerVirtualized directory={node} /> : <FileViewer file={node} />}
+      {(node instanceof Directory)
+        ? <DirectoryViewer directory={node} />
+        : <FileViewer file={node} />}
     </Page>
   )
 }

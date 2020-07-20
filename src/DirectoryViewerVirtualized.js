@@ -12,16 +12,17 @@ import FileIcon from './FileIcon'
 
 const useStyles = makeStyles((theme) => ({
   listItem: {
-    padding: theme.spacing(0, 4)
+    padding: theme.spacing(0.5, 4)
   },
   listIcon: {
     color: 'inherit'
   }
 }))
 
-const ITEM_SIZE = 42
-const PADDING_TOP = 5
-const PADDING_BOTTOM = ITEM_SIZE * 2
+// These values should match the ones defined in DirectoryViewer
+const ITEM_SIZE = 43
+const PADDING_TOP = 8
+const PADDING_BOTTOM = 160
 
 const paddedList = forwardRef(({ style, children }, ref) => {
   return (
@@ -37,8 +38,8 @@ const paddedList = forwardRef(({ style, children }, ref) => {
   )
 })
 
-const DirectoryViewer = ({ directory }) => {
-  const files = [...directory.files]
+const DirectoryViewer = ({ directory, filter = () => true }) => {
+  const files = [...directory.files].filter(filter)
   const classes = useStyles()
 
   function renderRow ({ index, style }) {
@@ -79,7 +80,8 @@ const DirectoryViewer = ({ directory }) => {
 }
 
 DirectoryViewer.propTypes = {
-  directory: PropTypes.object.isRequired
+  directory: PropTypes.object.isRequired,
+  filter: PropTypes.func
 }
 
 export default DirectoryViewer
