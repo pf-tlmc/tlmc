@@ -36,7 +36,10 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'auto'
   },
   toolbar: {
-    minHeight: 0
+    minHeight: 0,
+    '& button': {
+      textTransform: 'none'
+    }
   },
   // search: {
   //   color: 'inherit',
