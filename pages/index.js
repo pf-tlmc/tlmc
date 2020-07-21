@@ -4,7 +4,8 @@ const Index = () => {
 
 Index.getInitialProps = ({ res, req }) => {
   if (res) {
-    res.writeHead(301, { Location: '/tlmc' + req.url })
+    const { url } = req
+    res.writeHead(301, { Location: url === '/' ? '/tlmc' : '/tlmc' + url })
     res.end()
   }
 
