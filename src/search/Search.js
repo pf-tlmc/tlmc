@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
-import { setSearch } from './redux/actions'
+import { setSearch } from '../redux/actions'
 import FormControl from '@material-ui/core/FormControl'
 import FilledInput from '@material-ui/core/FilledInput'
 import InputAdornment from '@material-ui/core/InputAdornment'

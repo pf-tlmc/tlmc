@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import TopBar from './TopBar'
 import Container from './Container'
+import SearchResults from './search/SearchResults'
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -35,7 +36,7 @@ const Page = connect(
         </header>
         <main className={classes.main}>
           {search
-            ? search
+            ? <SearchResults />
             : (contained ? <Container>{children}</Container> : children)}
         </main>
       </div>

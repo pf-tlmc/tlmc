@@ -17,9 +17,9 @@ import PublicIcon from '@material-ui/icons/Public'
 import GitHubIcon from '@material-ui/icons/GitHub'
 import Brightness2Icon from '@material-ui/icons/Brightness2'
 import Brightness5Icon from '@material-ui/icons/Brightness5'
-import Search from './Search'
 import Breadcrumbs from './Breadcrumbs'
 import Link from './Link'
+import Search from './search/Search'
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
