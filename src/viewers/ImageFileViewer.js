@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
-import Container from './Container'
-import urlEncode from './urlEncode'
+import Container from '../Container'
+import urlEncode from '../urlEncode'
 
 const useStyles = makeStyles((theme) => ({
   imageContainer: {

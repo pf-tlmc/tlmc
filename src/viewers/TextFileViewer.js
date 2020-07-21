@@ -4,9 +4,9 @@ import fetch from 'unfetch'
 import { useAsync } from 'react-async'
 import { makeStyles } from '@material-ui/core/styles'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import Container from './Container'
-import Code from './Code'
-import urlEncode from './urlEncode'
+import Container from '../Container'
+import Code from '../Code'
+import urlEncode from '../urlEncode'
 
 const useStyles = makeStyles((theme) => ({
   loading: {

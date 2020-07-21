@@ -6,9 +6,9 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import Typography from '@material-ui/core/Typography'
 import DirectoryViewerVirtualized from './DirectoryViewerVirtualized'
-import FileIcon from './FileIcon'
-import Link from './Link'
-import urlEncode from './urlEncode'
+import FileIcon from '../FileIcon'
+import Link from '../Link'
+import urlEncode from '../urlEncode'
 
 const useStyles = makeStyles((theme) => ({
   list: {
