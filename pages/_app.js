@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Provider, connect } from 'react-redux'
+import { setTheme } from '../src/redux/actions'
 import Head from 'next/head'
 import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -12,8 +13,16 @@ import path from 'path'
 import pathParse from 'path-parse'
 path.parse = path.parse || pathParse
 
-const Themer = connect((state) => ({ theme: state.theme }))(
-  ({ theme, children }) => {
+const Themer = connect(
+  (state) => ({ theme: state.theme }),
+  { setTheme }
+)(
+  ({ theme, setTheme, children }) => {
+    useEffect(() => {
+      const initialTheme = (typeof window !== 'undefined' && window.localStorage.getItem('theme')) || 'light'
+      setTheme(initialTheme)
+    }, [])
+
     return (
       <ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
         {children}
@@ -22,7 +31,7 @@ const Themer = connect((state) => ({ theme: state.theme }))(
   }
 )
 
-const App = ({ Component, pageProps, theme }) => {
+const App = ({ Component, pageProps }) => {
   useEffect(() => {
     const jssStyles = document.querySelector('#jss-server-side')
     if (jssStyles) {
