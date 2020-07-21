@@ -1,22 +1,21 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
 import Grid from '@material-ui/core/Grid'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
-// import FormControl from '@material-ui/core/FormControl'
-// import FilledInput from '@material-ui/core/FilledInput'
-// import InputAdornment from '@material-ui/core/InputAdornment'
 import Button from '@material-ui/core/Button'
+import IconButton from '@material-ui/core/IconButton'
 import Switch from '@material-ui/core/Switch'
 import MuiLink from '@material-ui/core/Link'
 import HomeIcon from '@material-ui/icons/Home'
 import HelpIcon from '@material-ui/icons/Help'
-// import SearchIcon from '@material-ui/icons/Search'
 import PublicIcon from '@material-ui/icons/Public'
 import GitHubIcon from '@material-ui/icons/GitHub'
 import Brightness2Icon from '@material-ui/icons/Brightness2'
 import Brightness5Icon from '@material-ui/icons/Brightness5'
+import Search from './Search'
 import Breadcrumbs from './Breadcrumbs'
 import Link from './Link'
 import { ThemeChanger } from '../pages/_app'
@@ -28,18 +27,38 @@ const useStyles = makeStyles((theme) => ({
       textTransform: 'none'
     }
   },
-  // search: {
-  //   color: 'inherit',
-  //   '& input': {
-  //     paddingTop: theme.spacing(0.75)
-  //   }
-  // },
   buttonContainer: {
-    marginRight: theme.spacing(2)
+    margin: theme.spacing(0, 2)
   }
 }))
 
+const TopBarButton = ({ isExternal, href, icon, children }) => {
+  const theme = useTheme()
+  const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
+  const LinkComponent = isExternal ? MuiLink : Link
+
+  if (isSmall) {
+    return (
+      <LinkComponent href={href}>
+        <IconButton>
+          {icon}
+        </IconButton>
+      </LinkComponent>
+    )
+  } else {
+    return (
+      <LinkComponent href={href}>
+        <Button variant='contained' color='primary' disableElevation startIcon={icon}>
+          {children}
+        </Button>
+      </LinkComponent>
+    )
+  }
+}
+
 const TopBar = ({ breadcrumbs }) => {
+  const theme = useTheme()
+  const isMedium = useMediaQuery(theme.breakpoints.up('md'))
   const classes = useStyles()
 
   return (
@@ -47,42 +66,28 @@ const TopBar = ({ breadcrumbs }) => {
       <Grid container justify='space-between' alignItems='center'>
         <Grid item>
           <Toolbar className={classes.toolbar}>
-            <Link href='/tlmc'>
-              <Button variant='contained' color='primary' disableElevation startIcon={<HomeIcon />}>
-                TLMC
-              </Button>
-            </Link>
-            <Link href='/about'>
-              <Button variant='contained' color='primary' disableElevation startIcon={<HelpIcon />}>
-                About
-              </Button>
-            </Link>
+            <TopBarButton href='/tlmc' icon={<HomeIcon />}>TLMC</TopBarButton>
+            <TopBarButton href='/about' icon={<HelpIcon />}>About</TopBarButton>
           </Toolbar>
         </Grid>
         <Grid item>
           <Toolbar className={classes.toolbar}>
-            {/*
-              <FormControl size='small'>
-                <FilledInput
-                  disableUnderline
-                  startAdornment={<InputAdornment><SearchIcon /></InputAdornment>}
-                  placeholder='Search...'
-                  type='search'
-                  className={classes.search}
-                />
-              </FormControl>
-            */}
+            {isMedium && <Search />}
             <div className={classes.buttonContainer}>
-              <MuiLink href='http://www.tlmc.eu/search/label/TLMC'>
-                <Button variant='contained' color='primary' disableElevation startIcon={<PublicIcon />}>
-                  tlmc.eu
-                </Button>
-              </MuiLink>
-              <MuiLink href='https://github.com/pf-tlmc/tlmc'>
-                <Button variant='contained' color='primary' disableElevation startIcon={<GitHubIcon />}>
-                  GitHub
-                </Button>
-              </MuiLink>
+              <TopBarButton
+                isExternal
+                href='http://www.tlmc.eu/search/label/TLMC'
+                icon={<PublicIcon />}
+              >
+                tlmc.eu
+              </TopBarButton>
+              <TopBarButton
+                isExternal
+                href='https://github.com/pf-tlmc/tlmc'
+                icon={<GitHubIcon />}
+              >
+                GitHub
+              </TopBarButton>
             </div>
             <ThemeChanger.Consumer>
               {({ theme, changeTheme }) => (
