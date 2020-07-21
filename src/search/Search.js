@@ -37,7 +37,7 @@ const Search = connect(
           disableUnderline
           fullWidth
           startAdornment={<InputAdornment><SearchIcon /></InputAdornment>}
-          placeholder='Search (does not work yet)'
+          placeholder='Search (work in progress)'
           type='search'
           value={search}
           onChange={handleInputSearch}

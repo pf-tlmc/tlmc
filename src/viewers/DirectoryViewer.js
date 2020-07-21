@@ -12,7 +12,7 @@ import urlEncode from '../urlEncode'
 
 const useStyles = makeStyles((theme) => ({
   list: {
-    padding: theme.spacing(1, 0, 20)
+    padding: ({ disablePadding }) => disablePadding ? 0 : theme.spacing(1, 0, 20)
   },
   listItem: {
     padding: theme.spacing(0.5, 4)
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const DirectoryViewer = ({ directory }) => {
+const DirectoryViewer = ({ directory, disablePadding, onSelect = () => {} }) => {
   if (directory.isRoot) {
     return (
       <DirectoryViewerVirtualized
@@ -32,14 +32,14 @@ const DirectoryViewer = ({ directory }) => {
     )
   }
 
-  const files = [...directory.files]
-  const classes = useStyles()
+  const files = Array.isArray(directory) ? directory : [...directory.files]
+  const classes = useStyles({ disablePadding })
 
   return (
     <List className={classes.list}>
       {files.map((file, index) =>
         <Link key={index} href='/tlmc/[...tlmc_path]' as={'/tlmc' + urlEncode(file.path)}>
-          <ListItem button className={classes.listItem}>
+          <ListItem button className={classes.listItem} onClick={onSelect}>
             <ListItemIcon className={classes.listIcon}><FileIcon file={file} /></ListItemIcon>
             <ListItemText><Typography>{file.base}</Typography></ListItemText>
           </ListItem>
