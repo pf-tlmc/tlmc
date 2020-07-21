@@ -14,10 +14,12 @@ fs.access(LS_CACHE, (err) => {
       ls.on('finish', () => {
         ls.close(() => {
           console.log('Fetched LS_CACHE!')
+          console.log()
         })
       })
     })
   } else {
     console.log('LS_CACHE exists!')
+    console.log()
   }
 })
