@@ -12,6 +12,17 @@ function theme (state = initialTheme, action) {
   }
 }
 
-const reducers = combineReducers({ theme })
+function search (state = '', action) {
+  switch (action.type) {
+    case 'search.INPUT_SEARCH':
+      return action.payload
+    case 'search.CLEAR':
+      return ''
+    default:
+      return state
+  }
+}
+
+const reducers = combineReducers({ theme, search })
 
 export default reducers

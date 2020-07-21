@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import TopBar from './TopBar'
 import Container from './Container'
@@ -21,20 +22,26 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const Page = ({ contained, breadcrumbs, children }) => {
-  const classes = useStyles()
+const Page = connect(
+  (state) => ({ search: state.search })
+)(
+  ({ contained, breadcrumbs, search, children }) => {
+    const classes = useStyles()
 
-  return (
-    <div className={classes.container}>
-      <header className={classes.header}>
-        <TopBar breadcrumbs={breadcrumbs} />
-      </header>
-      <main className={classes.main}>
-        {contained ? <Container>{children}</Container> : children}
-      </main>
-    </div>
-  )
-}
+    return (
+      <div className={classes.container}>
+        <header className={classes.header}>
+          <TopBar breadcrumbs={breadcrumbs} />
+        </header>
+        <main className={classes.main}>
+          {search
+            ? search
+            : (contained ? <Container>{children}</Container> : children)}
+        </main>
+      </div>
+    )
+  }
+)
 
 Page.propTypes = {
   contained: PropTypes.bool,
