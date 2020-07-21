@@ -28,7 +28,7 @@ const Search = () => {
         disableUnderline
         fullWidth
         startAdornment={<InputAdornment><SearchIcon /></InputAdornment>}
-        placeholder='Search...'
+        placeholder='Search (does not work yet)'
         type='search'
         className={classes.search}
       />
