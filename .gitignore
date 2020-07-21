@@ -12,6 +12,7 @@
 
 # production
 /build
+/.cache
 
 # debug
 npm-debug.log*

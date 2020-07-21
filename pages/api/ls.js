@@ -1,9 +1,9 @@
-import http from 'http'
+import fs from 'fs'
 
-const LS_URL = 'http://home.pf-n.co:3000/ls'
+const LS_CACHE = './.cache/ls'
 
 export default (req, res) => {
-  return http.get(LS_URL, (httpRes) => httpRes.pipe(res))
+  fs.createReadStream(LS_CACHE).pipe(res)
 }
 
 export const config = {
