@@ -85,7 +85,7 @@ const TLMC = () => {
       <Head>
         <title>{node.isRoot ? 'TLMC' : breadcrumbs[1].title}</title>
       </Head>
-      <Page breadcrumbs={breadcrumbs}>
+      <Page breadcrumbs={breadcrumbs} ls={data}>
         {node.isDirectory
           ? <DirectoryViewer directory={node} />
           : <FileViewer file={node} />}

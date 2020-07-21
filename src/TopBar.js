@@ -61,9 +61,7 @@ const TopBar = connect(
   (state) => ({ theme: state.theme }),
   { setTheme }
 )(
-  ({ breadcrumbs, theme, setTheme }) => {
-    const muiTheme = useTheme()
-    const isMedium = useMediaQuery(muiTheme.breakpoints.up('md'))
+  ({ breadcrumbs, showSearch, theme, setTheme }) => {
     const classes = useStyles()
 
     const toggleTheme = () => {
@@ -81,7 +79,7 @@ const TopBar = connect(
           </Grid>
           <Grid item>
             <Toolbar className={classes.toolbar}>
-              {isMedium && <Search />}
+              {showSearch && <Search />}
               <div className={classes.buttonContainer}>
                 <TopBarButton
                   isExternal
@@ -120,7 +118,8 @@ TopBar.propTypes = {
       href: PropTypes.string.isRequired,
       as: PropTypes.string
     }).isRequired
-  )
+  ),
+  showSearch: PropTypes.bool
 }
 
 export default TopBar

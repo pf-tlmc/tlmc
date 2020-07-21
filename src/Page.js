@@ -1,7 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
 import TopBar from './TopBar'
 import Container from './Container'
 import SearchResults from './search/SearchResults'
@@ -26,17 +27,20 @@ const useStyles = makeStyles((theme) => ({
 const Page = connect(
   (state) => ({ search: state.search })
 )(
-  ({ contained, breadcrumbs, search, children }) => {
+  ({ contained, breadcrumbs, ls, search, children }) => {
+    const theme = useTheme()
+    const isMedium = useMediaQuery(theme.breakpoints.up('md'))
     const classes = useStyles()
+    const showSearch = ls && isMedium
 
     return (
       <div className={classes.container}>
         <header className={classes.header}>
-          <TopBar breadcrumbs={breadcrumbs} />
+          <TopBar breadcrumbs={breadcrumbs} showSearch={showSearch} />
         </header>
         <main className={classes.main}>
-          {search
-            ? <SearchResults />
+          {(showSearch && search)
+            ? <SearchResults ls={ls} />
             : (contained ? <Container>{children}</Container> : children)}
         </main>
       </div>
@@ -46,7 +50,8 @@ const Page = connect(
 
 Page.propTypes = {
   contained: PropTypes.bool,
-  breadcrumbs: PropTypes.any
+  breadcrumbs: PropTypes.any,
+  ls: PropTypes.object
 }
 
 export default Page
