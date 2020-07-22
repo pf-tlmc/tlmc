@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
+import cn from 'classnames'
 import { connect } from 'react-redux'
 import { clearSearch, setSearchOptions } from '../redux/actions'
 import { makeStyles } from '@material-ui/core/styles'
@@ -28,12 +29,20 @@ const useStyles = makeStyles((theme) => ({
       transition: 'none'
     }
   },
+  progressComplete: {
+    opacity: 0,
+    transition: 'opacity 0.4s linear'
+  },
   expand: {
     display: 'block',
     padding: theme.spacing(1, 4)
   },
   virtualized: {
-    height: 500
+    height: 500,
+    margin: theme.spacing(2),
+    border: `1px solid ${theme.palette.primary.main}`,
+    borderRadius: theme.shape.borderRadius,
+    padding: theme.spacing(2)
   }
 }))
 
@@ -91,62 +100,59 @@ const SearchResults = connect(
     const [{ circles, albums, songs, other }, progress] = searchResults
     const classes = useStyles()
 
-    const optionsForm =
-      <Box p={2}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={options.romaji}
-              onChange={() => { setSearchOptions('SET_ROMAJI', !options.romaji) }}
-              color='primary'
-            />
-          }
-          label='Romanize hiragana/katakana when searching'
-        />
-      </Box>
-
-    if (circles.length + albums.length + songs.length === 0) {
-      return (
-        <div className={classes.searchResults}>
-          {optionsForm}
-          <LinearProgress variant='determinate' value={progress * 100} className={classes.progress} />
-          <Typography variant='h5'>{progress < 1 ? 'Searching…' : 'No results'}</Typography>
-        </div>
-      )
-    }
-
     return (
       <div className={classes.searchResults}>
-        {optionsForm}
-        <LinearProgress variant='determinate' value={progress * 100} className={classes.progress} />
-        <SearchResultsSection
-          title='Circles'
-          list={circles}
-          expand={expandCircles}
-          setExpand={setExpandCircles}
-          clearSearch={clearSearch}
+        <Box p={2}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={options.romaji}
+                onChange={() => { setSearchOptions('SET_ROMAJI', !options.romaji) }}
+                color='primary'
+              />
+            }
+            label='Romanize hiragana/katakana when searching'
+          />
+        </Box>
+        <LinearProgress
+          variant='determinate'
+          value={progress * 100}
+          className={cn(classes.progress, progress >= 1 && classes.progressComplete)}
         />
-        <SearchResultsSection
-          title='Albums'
-          list={albums}
-          expand={expandAlbums}
-          setExpand={setExpandAlbums}
-          clearSearch={clearSearch}
-        />
-        <SearchResultsSection
-          title='Songs'
-          list={songs}
-          expand={expandSongs}
-          setExpand={setExpandSongs}
-          clearSearch={clearSearch}
-        />
-        <SearchResultsSection
-          title='Other'
-          list={other}
-          expand={expandOther}
-          setExpand={setExpandOther}
-          clearSearch={clearSearch}
-        />
+        {circles.length + albums.length + songs.length === 0
+          ? <Typography variant='h5'>{progress < 1 ? 'Searching…' : 'No results'}</Typography>
+          : (
+            <>
+              <SearchResultsSection
+                title='Circles'
+                list={circles}
+                expand={expandCircles}
+                setExpand={setExpandCircles}
+                clearSearch={clearSearch}
+              />
+              <SearchResultsSection
+                title='Albums'
+                list={albums}
+                expand={expandAlbums}
+                setExpand={setExpandAlbums}
+                clearSearch={clearSearch}
+              />
+              <SearchResultsSection
+                title='Songs'
+                list={songs}
+                expand={expandSongs}
+                setExpand={setExpandSongs}
+                clearSearch={clearSearch}
+              />
+              <SearchResultsSection
+                title='Other'
+                list={other}
+                expand={expandOther}
+                setExpand={setExpandOther}
+                clearSearch={clearSearch}
+              />
+            </>
+          )}
       </div>
     )
   }

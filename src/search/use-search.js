@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import japanese from 'japanese'
 
-const CHUNK_SIZE = 10
+const CHUNK_SIZE = 50
 const SEARCH_DELAY = 1
 
 // TODO: Expanding sections while searching causes it to stop
