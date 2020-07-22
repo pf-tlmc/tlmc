@@ -11,10 +11,12 @@ const FileViewer = ({ file }) => {
     case '.mp3':
       return <Mp3FileViewer file={file} />
     case '.jpg':
+    case '.gif':
     case '.png':
       return <ImageFileViewer file={file} />
     case '.cue':
     case '.txt':
+    case '.log':
       return <TextFileViewer file={file} />
     default:
       return (

@@ -17,10 +17,12 @@ const FileIcon = ({ file }) => {
       case '.tta':
         return <AlbumIcon />
       case '.jpg':
+      case '.gif':
       case '.png':
         return <ImageIcon />
       case '.cue':
       case '.txt':
+      case '.log':
         return <DescriptionIcon />
       default:
         console.log('Unknown extension:', file.ext)
