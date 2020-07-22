@@ -25,7 +25,8 @@ const useStyles = makeStyles((theme) => ({
   toolbar: {
     minHeight: 0,
     '& button': {
-      textTransform: 'none'
+      textTransform: 'none',
+      color: theme.palette.getContrastText(theme.palette.primary.main)
     }
   },
   buttonContainer: {
