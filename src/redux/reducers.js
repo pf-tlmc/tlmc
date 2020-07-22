@@ -21,6 +21,18 @@ function search (state = '', action) {
   }
 }
 
-const reducers = combineReducers({ theme, search })
+function searchOptions (state = {}, action) {
+  switch (action.type) {
+    case 'searchOptions.SET_ROMAJI':
+      return {
+        ...state,
+        romaji: action.payload
+      }
+    default:
+      return state
+  }
+}
+
+const reducers = combineReducers({ theme, search, searchOptions })
 
 export default reducers

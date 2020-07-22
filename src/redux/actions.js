@@ -11,3 +11,8 @@ export const setSearch = (search) => ({
 export const clearSearch = () => ({
   type: 'search.CLEAR'
 })
+
+export const setSearchOptions = (type, value) => ({
+  type: 'searchOptions.' + type,
+  payload: value
+})

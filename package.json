@@ -23,6 +23,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
+    "japanese": "^1.2.0",
     "ls-serialize": "^1.0.5",
     "next": "9.4.4",
     "path-parse": "^1.0.6",

@@ -39,8 +39,8 @@ const paddedList = forwardRef(({ style, children }, ref) => {
   )
 })
 
-const DirectoryViewer = ({ directory, filter = () => true }) => {
-  const files = [...directory.files].filter(filter)
+const DirectoryViewer = ({ directory, filter = () => true, disablePadding, onSelect = () => {} }) => {
+  const files = (Array.isArray(directory) ? directory : [...directory.files]).filter(filter)
   const classes = useStyles()
 
   function renderRow ({ index, style }) {
@@ -51,8 +51,9 @@ const DirectoryViewer = ({ directory, filter = () => true }) => {
           button
           style={{
             ...style,
-            top: `${parseFloat(style.top) + PADDING_TOP}px`
+            top: `${disablePadding ? style.top : parseFloat(style.top) + PADDING_TOP}px`
           }}
+          onClick={onSelect}
           className={classes.listItem}
         >
           <ListItemIcon className={classes.listIcon}><FileIcon file={file} /></ListItemIcon>
@@ -68,7 +69,7 @@ const DirectoryViewer = ({ directory, filter = () => true }) => {
         <List
           height={height}
           width={width}
-          innerElementType={paddedList}
+          innerElementType={disablePadding ? undefined : paddedList}
           itemCount={files.length}
           itemSize={ITEM_SIZE}
           overscanCount={10}
