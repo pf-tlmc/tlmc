@@ -60,7 +60,7 @@ function getNodeType (node) {
       return 'CIRCLE'
     } else {
       for (const file of node) {
-        if (file.ext.toLowerCase() === '.tta') {
+        if (file.ext.toLowerCase() === '.cue') {
           return 'ALBUM'
         }
       }

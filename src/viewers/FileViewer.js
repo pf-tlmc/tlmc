@@ -4,6 +4,7 @@ import Typography from '@material-ui/core/Typography'
 import Container from '../Container'
 import Mp3FileViewer from './Mp3FileViewer'
 import TextFileViewer from './TextFileViewer'
+import PDFFileViewer from './PDFFileViewer'
 import ImageFileViewer from './ImageFileViewer'
 
 const FileViewer = ({ file }) => {
@@ -18,6 +19,8 @@ const FileViewer = ({ file }) => {
     case '.txt':
     case '.log':
       return <TextFileViewer file={file} />
+    case '.pdf':
+      return <PDFFileViewer file={file} />
     default:
       return (
         <Container title={file.base}>
