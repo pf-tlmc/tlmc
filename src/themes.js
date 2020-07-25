@@ -1,6 +1,11 @@
 import { createMuiTheme } from '@material-ui/core/styles'
 
 export const lightTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#003399'
+    }
+  },
   typography: {
     fontSize: 16,
     fontFamily: '"Open Sans", Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif'
@@ -10,6 +15,11 @@ export const lightTheme = createMuiTheme({
       li: {
         fontSize: '0.8rem'
       }
+    },
+    MuiPaper: {
+      root: {
+        backgroundColor: '#efefef'
+      }
     }
   }
 })
@@ -17,8 +27,11 @@ export const lightTheme = createMuiTheme({
 export const darkTheme = createMuiTheme({
   palette: {
     type: 'dark',
+    primary: {
+      main: '#003399'
+    },
     background: {
-      default: '#1b1b1b'
+      default: '#000000'
     }
   },
   typography: {
@@ -28,12 +41,17 @@ export const darkTheme = createMuiTheme({
   overrides: {
     MuiLink: {
       root: {
-        color: '#8d9eff'
+        color: '#5577dd'
       }
     },
     MuiBreadcrumbs: {
       li: {
         fontSize: '0.8rem'
+      }
+    },
+    MuiPaper: {
+      root: {
+        backgroundColor: '#1b1b1b'
       }
     }
   }
