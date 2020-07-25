@@ -5,7 +5,7 @@ export function isImage (node) {
   return node.isFile && IMAGE_REGEX.test(node.base)
 }
 
-export function isAlbum (node) {
+export function hasAlbum (node) {
   if (!node.isDirectory) return false
   for (const file of node) {
     if (file.isFile && file.ext.toLowerCase() === '.cue') {
@@ -13,4 +13,11 @@ export function isAlbum (node) {
     }
   }
   return false
+}
+
+// This fixes the `#` problem in `[#ゆうかりんちゃんねる]`
+// TODO: API still isn't happy
+export function urlEncode (url) {
+  return url.replace(/#/g, '%23')
+  // return url.split('/').map(encodeURIComponent).join('/')
 }

@@ -1,6 +1,6 @@
 import React from 'react'
 import Container from '../Container'
-import urlEncode from '../urlEncode'
+import { urlEncode } from '../utils'
 
 const PDFFileViewer = ({ file }) => {
   return (

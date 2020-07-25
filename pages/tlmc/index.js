@@ -6,13 +6,15 @@ import { makeStyles } from '@material-ui/core/styles'
 import deserialize from 'ls-serialize/src/deserialize'
 import Head from 'next/head'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import Box from '@material-ui/core/Box'
+import Typography from '@material-ui/core/Typography'
 import Page from '../../src/Page'
 import DirectoryViewer from '../../src/viewers/DirectoryViewer'
 import DirectoryViewerVirtualized from '../../src/viewers/DirectoryViewerVirtualized'
 import AlbumViewer from '../../src/viewers/AlbumViewer'
 import FileViewer from '../../src/viewers/FileViewer'
 import Error404 from '../404'
-import urlEncode from '../../src/urlEncode'
+import { hasAlbum, urlEncode } from '../../src/utils'
 
 const useStyles = makeStyles((theme) => ({
   loading: {
@@ -23,6 +25,9 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     padding: theme.spacing(5),
     textAlign: 'center'
+  },
+  header: {
+    margin: theme.spacing(2, 0, 1, 2)
   }
 }))
 
@@ -97,7 +102,7 @@ const TLMC = () => {
                   filter={(node) => node.isDirectory}
                 />
               )
-            } else {
+            } else if (hasAlbum(node)) {
               const children = []
               let index = 0
               for (const file of node) {
@@ -105,8 +110,15 @@ const TLMC = () => {
                   children.push(<AlbumViewer key={index++} cueFile={file} />)
                 }
               }
-              children.push(<DirectoryViewer key='listing' directory={node} />)
+              children.push(
+                <Box key='files' mt={4} mb={8}>
+                  <Typography variant='h5' className={classes.header}>Files</Typography>
+                  <DirectoryViewer directory={node} />
+                </Box>
+              )
               return children
+            } else {
+              return <DirectoryViewer directory={node} />
             }
           } else {
             return <FileViewer file={node} />

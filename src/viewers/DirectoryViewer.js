@@ -7,7 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Typography from '@material-ui/core/Typography'
 import FileIcon from '../FileIcon'
 import Link from '../Link'
-import urlEncode from '../urlEncode'
+import { urlEncode } from '../utils'
 
 const useStyles = makeStyles((theme) => ({
   listItem: {

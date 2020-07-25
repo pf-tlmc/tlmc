@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Container from '../Container'
 import Code from '../Code'
-import urlEncode from '../urlEncode'
+import { urlEncode } from '../utils'
 
 const useStyles = makeStyles((theme) => ({
   loading: {

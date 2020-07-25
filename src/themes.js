@@ -18,7 +18,7 @@ export const lightTheme = createMuiTheme({
     },
     MuiPaper: {
       root: {
-        backgroundColor: '#efefef'
+        backgroundColor: '#f3f3f3'
       }
     }
   }
