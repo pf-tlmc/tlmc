@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '../Container'
 import urlEncode from '../urlEncode'
@@ -21,10 +20,6 @@ const Mp3FileViewer = ({ file }) => {
       </audio>
     </Container>
   )
-}
-
-Mp3FileViewer.propTypes = {
-  file: PropTypes.object.isRequired
 }
 
 export default Mp3FileViewer

@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '../Container'
 import urlEncode from '../urlEncode'
@@ -23,10 +22,6 @@ const ImageFileViewer = ({ file }) => {
       </div>
     </Container>
   )
-}
-
-ImageFileViewer.propTypes = {
-  file: PropTypes.object.isRequired
 }
 
 export default ImageFileViewer

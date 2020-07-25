@@ -8,6 +8,8 @@ import Head from 'next/head'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Page from '../../src/Page'
 import DirectoryViewer from '../../src/viewers/DirectoryViewer'
+import DirectoryViewerVirtualized from '../../src/viewers/DirectoryViewerVirtualized'
+import AlbumViewer from '../../src/viewers/AlbumViewer'
 import FileViewer from '../../src/viewers/FileViewer'
 import Error404 from '../404'
 import urlEncode from '../../src/urlEncode'
@@ -86,9 +88,30 @@ const TLMC = () => {
         <title>{node.isRoot ? 'TLMC' : breadcrumbs[1].title}</title>
       </Head>
       <Page breadcrumbs={breadcrumbs} ls={data}>
-        {node.isDirectory
-          ? <DirectoryViewer directory={node} />
-          : <FileViewer file={node} />}
+        {(() => {
+          if (node.isDirectory) {
+            if (node.isRoot) {
+              return (
+                <DirectoryViewerVirtualized
+                  directory={node}
+                  filter={(node) => node.isDirectory}
+                />
+              )
+            } else {
+              const children = []
+              let index = 0
+              for (const file of node) {
+                if (file.ext.toLowerCase() === '.cue') {
+                  children.push(<AlbumViewer key={index++} cueFile={file} />)
+                }
+              }
+              children.push(<DirectoryViewer key='listing' directory={node} />)
+              return children
+            }
+          } else {
+            return <FileViewer file={node} />
+          }
+        })()}
       </Page>
     </>
   )

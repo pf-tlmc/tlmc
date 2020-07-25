@@ -1,5 +1,4 @@
 import React, { forwardRef } from 'react'
-import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import { FixedSizeList as List } from 'react-window'
 import AutoSizer from 'react-virtualized-auto-sizer'
@@ -39,12 +38,13 @@ const paddedList = forwardRef(({ style, children }, ref) => {
   )
 })
 
-const DirectoryViewer = ({ directory, filter = () => true, disablePadding, onSelect = () => {} }) => {
-  const files = (Array.isArray(directory) ? directory : [...directory.files]).filter(filter)
+const DirectoryViewer = ({ directory, filter, disablePadding, onSelect = () => {} }) => {
+  const files = Array.isArray(directory) ? directory : [...directory.files]
+  const filteredFiles = filter ? files.filter(filter) : files
   const classes = useStyles()
 
   function renderRow ({ index, style }) {
-    const file = files[index]
+    const file = filteredFiles[index]
     return (
       <Link href='/tlmc/[...tlmc_path]' as={'/tlmc' + urlEncode(file.path)}>
         <ListItem
@@ -70,7 +70,7 @@ const DirectoryViewer = ({ directory, filter = () => true, disablePadding, onSel
           height={height}
           width={width}
           innerElementType={disablePadding ? undefined : paddedList}
-          itemCount={files.length}
+          itemCount={filteredFiles.length}
           itemSize={ITEM_SIZE}
           overscanCount={10}
         >
@@ -79,11 +79,6 @@ const DirectoryViewer = ({ directory, filter = () => true, disablePadding, onSel
       )}
     </AutoSizer>
   )
-}
-
-DirectoryViewer.propTypes = {
-  directory: PropTypes.object.isRequired,
-  filter: PropTypes.func
 }
 
 export default DirectoryViewer

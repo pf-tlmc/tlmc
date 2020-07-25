@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import fetch from 'unfetch'
 import { useAsync } from 'react-async'
 import { makeStyles } from '@material-ui/core/styles'
@@ -32,10 +31,6 @@ const TextFileViewer = ({ file }) => {
       {data && <Code>{data}</Code>}
     </Container>
   )
-}
-
-TextFileViewer.propTypes = {
-  file: PropTypes.object.isRequired
 }
 
 export default TextFileViewer
