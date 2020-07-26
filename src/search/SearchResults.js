@@ -13,9 +13,6 @@ import SearchResultsSection from './SearchResultsSection'
 import useSearch from './use-search'
 
 const useStyles = makeStyles((theme) => ({
-  searchResults: {
-    padding: theme.spacing(0, 0, 20)
-  },
   progress: {
     marginTop: theme.spacing(-1),
     '& > div': {
@@ -25,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
   progressComplete: {
     opacity: 0,
     transition: 'opacity 0.4s linear'
+  },
+  header: {
+    margin: theme.spacing(2, 0, 1, 2)
   }
 }))
 
@@ -60,7 +60,7 @@ const SearchResults = connect(
     const classes = useStyles()
 
     return (
-      <div className={classes.searchResults}>
+      <>
         <LinearProgress
           variant='determinate'
           value={progress * 100}
@@ -79,7 +79,11 @@ const SearchResults = connect(
           />
         </Box>
         {circles.length + albums.length + songs.length + other.length === 0
-          ? <Typography variant='h5'>{progress < 1 ? 'Searching…' : 'No results'}</Typography>
+          ? (
+            <Typography variant='h5' className={classes.header}>
+              {progress < 1 ? 'Searching…' : 'No results'}
+            </Typography>
+          )
           : (
             <>
               <SearchResultsSection
@@ -112,7 +116,7 @@ const SearchResults = connect(
               />
             </>
           )}
-      </div>
+      </>
     )
   }
 )
