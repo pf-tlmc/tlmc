@@ -13,6 +13,7 @@ import Switch from '@material-ui/core/Switch'
 import MuiLink from '@material-ui/core/Link'
 import HomeIcon from '@material-ui/icons/Home'
 import HelpIcon from '@material-ui/icons/Help'
+import SearchIcon from '@material-ui/icons/Search'
 import PublicIcon from '@material-ui/icons/Public'
 import GitHubIcon from '@material-ui/icons/GitHub'
 import Brightness2Icon from '@material-ui/icons/Brightness2'
@@ -67,6 +68,8 @@ const TopBar = connect(
 )(
   ({ breadcrumbs, showSearch, theme, setTheme }) => {
     const classes = useStyles()
+    const muiTheme = useTheme()
+    const isSmall = useMediaQuery(muiTheme.breakpoints.down('sm'))
 
     const toggleTheme = () => {
       setTheme(theme === 'light' ? 'dark' : 'light')
@@ -79,27 +82,29 @@ const TopBar = connect(
             <Toolbar className={classes.toolbar}>
               <TopBarButton href='/tlmc' icon={<HomeIcon />}>TLMC</TopBarButton>
               <TopBarButton href='/about' icon={<HelpIcon />}>About</TopBarButton>
+              {isSmall && <TopBarButton href='/search' icon={<SearchIcon />}>Search</TopBarButton>}
             </Toolbar>
           </Grid>
           <Grid item>
             <Toolbar className={classes.toolbar}>
               {showSearch && <Search />}
-              <div className={classes.buttonContainer}>
-                <TopBarButton
-                  isExternal
-                  href='http://www.tlmc.eu/search/label/TLMC'
-                  icon={<PublicIcon />}
-                >
-                  tlmc.eu
-                </TopBarButton>
-                <TopBarButton
-                  isExternal
-                  href='https://github.com/pf-tlmc/tlmc'
-                  icon={<GitHubIcon />}
-                >
-                  GitHub
-                </TopBarButton>
-              </div>
+              {!isSmall &&
+                <div className={classes.buttonContainer}>
+                  <TopBarButton
+                    isExternal
+                    href='http://www.tlmc.eu/search/label/TLMC'
+                    icon={<PublicIcon />}
+                  >
+                    tlmc.eu
+                  </TopBarButton>
+                  <TopBarButton
+                    isExternal
+                    href='https://github.com/pf-tlmc/tlmc'
+                    icon={<GitHubIcon />}
+                  >
+                    GitHub
+                  </TopBarButton>
+                </div>}
               <Brightness5Icon />
               <Switch
                 checked={theme === 'dark'}

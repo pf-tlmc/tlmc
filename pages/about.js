@@ -4,7 +4,7 @@ import Page from '../src/Page'
 
 const About = () => {
   return (
-    <Page contained>
+    <Page>
       <Typography variant='h2'>About</Typography>
       <Typography paragraph>This is the TLMC</Typography>
     </Page>
