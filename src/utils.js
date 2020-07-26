@@ -4,10 +4,13 @@ export function isImage (node) {
   return node.isFile && IMAGE_REGEX.test(node.base)
 }
 
-export function hasAlbum (node) {
+export function hasAlbum (node, deep) {
   if (!node.isDirectory) return false
   for (const file of node) {
     if (file.isFile && file.ext.toLowerCase() === '.cue') {
+      return true
+    }
+    if (deep && file.isDirectory && hasAlbum(file, deep)) {
       return true
     }
   }
@@ -85,19 +88,15 @@ export function parseCue (cueStr) {
   return cue
 }
 
-const COVER_REGEX = /^(image|img|jacket)_?(0*1)?.(jpe?g|png|gif)$/i
-const COVER_FOLDER_REGEX = /(images?|covers?|scans?)/i
+const ALBUM_REGEX = /^(\d{4}\.\d{2}\.\d{2})(?: \[(.+?)\])? (.+?)(?: \[(.+?)\])?$/
 
-export function findCoverImage (directory) {
-  for (const file of directory) {
-    if (file.isDirectory && COVER_FOLDER_REGEX.test(file.base)) {
-      return findCoverImage(file)
-    }
+export function getAlbumInfo (directory) {
+  const match = directory.base.match(ALBUM_REGEX)
+  if (!match) return null
+  return {
+    date: match[1],
+    circleThing: match[2],
+    title: match[3],
+    otherThing: match[4]
   }
-  for (const file of directory) {
-    if (file.isFile && COVER_REGEX.test(file.base)) {
-      return file
-    }
-  }
-  return [...directory.files].filter(isImage).sort((a, b) => a.base.localeCompare(b.base))[0]
 }

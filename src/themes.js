@@ -41,7 +41,7 @@ export const darkTheme = createMuiTheme({
   overrides: {
     MuiLink: {
       root: {
-        color: '#83baf3'
+        color: '#87cdff'
       }
     },
     MuiBreadcrumbs: {

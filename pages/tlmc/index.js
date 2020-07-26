@@ -16,6 +16,7 @@ import Page from '../../src/Page'
 import DirectoryViewer from '../../src/viewers/DirectoryViewer'
 import DirectoryViewerVirtualized from '../../src/viewers/DirectoryViewerVirtualized'
 import AlbumViewer from '../../src/viewers/AlbumViewer'
+import AlbumListViewer from '../../src/viewers/AlbumListViewer'
 import FileViewer from '../../src/viewers/FileViewer'
 import Error404 from '../404'
 import { hasAlbum, urlEncode } from '../../src/utils'
@@ -107,22 +108,44 @@ const TLMC = () => {
                 />
               )
             } else if (hasAlbum(node)) {
-              const children = []
-              let index = 0
+              return (
+                <>
+                  {[...node.files]
+                    .filter((file) => file.ext.toLowerCase() === '.cue')
+                    .map((file) => <AlbumViewer key={file.base} cueFile={file} />)}
+                  <Box mt={4}>
+                    <Typography variant='h5' className={classes.header}>All Files</Typography>
+                    <DirectoryViewer directory={node} />
+                  </Box>
+                </>
+              )
+            } else {
+              let showAlbums = false
               for (const file of node) {
-                if (file.ext.toLowerCase() === '.cue') {
-                  children.push(<AlbumViewer key={index++} cueFile={file} />)
+                if (hasAlbum(file, true)) {
+                  showAlbums = true
+                  break
                 }
               }
-              children.push(
-                <Box key='files' mt={4}>
-                  <Typography variant='h5' className={classes.header}>Files</Typography>
-                  <DirectoryViewer directory={node} />
-                </Box>
-              )
-              return children
-            } else {
-              return <DirectoryViewer directory={node} />
+
+              if (showAlbums) {
+                return (
+                  <>
+                    <AlbumListViewer directory={node} />
+                    <Box mt={4}>
+                      <Typography variant='h5' className={classes.header}>All Files</Typography>
+                      <DirectoryViewer directory={node} />
+                    </Box>
+                  </>
+                )
+              } else {
+                return (
+                  <>
+                    <Typography variant='h5' className={classes.header}>All Files</Typography>
+                    <DirectoryViewer directory={node} />
+                  </>
+                )
+              }
             }
           } else {
             return <FileViewer file={node} />

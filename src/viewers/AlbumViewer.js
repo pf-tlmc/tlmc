@@ -15,7 +15,8 @@ import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 import Typography from '@material-ui/core/Typography'
 import Alert from '@material-ui/lab/Alert'
-import { urlEncode, parseCue, findCoverImage } from '../utils'
+import CoverImage from '../CoverImage'
+import { urlEncode, parseCue, getAlbumInfo } from '../utils'
 
 const useStyles = makeStyles((theme) => ({
   gridShrink: {
@@ -32,8 +33,8 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   albumCover: {
-    width: 150,
-    height: 150
+    width: 200,
+    height: 200
   },
   albumTable: {
     '& th': {
@@ -54,22 +55,10 @@ async function fetchFile ({ file }) {
   return res.text()
 }
 
-function getInfo (albumDirectory) {
-  const match = albumDirectory.base.match(/^(\d{4}\.\d{2}\.\d{2})(?: \[(.+?)\])? (.+?)(?: \[(.+?)\])?$/)
-  if (!match) return null
-  return {
-    date: match[1],
-    circleThing: match[2],
-    title: match[3],
-    otherThing: match[4]
-  }
-}
-
 const AlbumViewer = ({ cueFile }) => {
   const { data, error, isPending } = useAsync(fetchFile, { file: cueFile })
   const parent = cueFile.parent
-  const coverImage = findCoverImage(parent)
-  const albumInfo = getInfo(parent)
+  const albumInfo = getAlbumInfo(parent)
   const classes = useStyles()
 
   return (
@@ -78,9 +67,9 @@ const AlbumViewer = ({ cueFile }) => {
         <CardContent>
           <Grid container spacing={4}>
             <Grid item className={classes.gridShrink}>
-              <img
+              <CoverImage
                 key={cueFile.base}
-                src={coverImage ? `/api/tlmc${coverImage.path}?size=thumbnail` : '/images/album-placeholder.png'}
+                directory={parent}
                 className={classes.albumCover}
               />
             </Grid>
@@ -88,7 +77,7 @@ const AlbumViewer = ({ cueFile }) => {
               {albumInfo
                 ? (
                   <>
-                    <Typography variant='h5'>{albumInfo.title}</Typography>
+                    <Typography variant='h4'>{albumInfo.title}</Typography>
                     <Typography>{albumInfo.date}</Typography>
                     {albumInfo.circleThing && <Typography>{albumInfo.circleThing}</Typography>}
                     {albumInfo.otherThing && <Typography>{albumInfo.otherThing}</Typography>}
