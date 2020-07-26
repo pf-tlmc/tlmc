@@ -3,7 +3,7 @@ import { createMuiTheme } from '@material-ui/core/styles'
 export const lightTheme = createMuiTheme({
   palette: {
     primary: {
-      main: '#003399'
+      main: '#0f49bd'
     }
   },
   typography: {
@@ -28,7 +28,7 @@ export const darkTheme = createMuiTheme({
   palette: {
     type: 'dark',
     primary: {
-      main: '#003399'
+      main: '#0f49bd'
     },
     background: {
       default: '#000000'
@@ -41,7 +41,7 @@ export const darkTheme = createMuiTheme({
   overrides: {
     MuiLink: {
       root: {
-        color: '#5577dd'
+        color: '#83baf3'
       }
     },
     MuiBreadcrumbs: {

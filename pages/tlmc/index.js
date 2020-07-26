@@ -1,13 +1,17 @@
 import React from 'react'
 import fetch from 'unfetch'
 import { useAsync } from 'react-async'
-import { useRouter } from 'next/router'
+import Router, { useRouter } from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
 import deserialize from 'ls-serialize/src/deserialize'
 import Head from 'next/head'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Box from '@material-ui/core/Box'
+import Container from '@material-ui/core/Container'
+import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
+import Alert from '@material-ui/lab/Alert'
+import AlertTitle from '@material-ui/lab/AlertTitle'
 import Page from '../../src/Page'
 import DirectoryViewer from '../../src/viewers/DirectoryViewer'
 import DirectoryViewerVirtualized from '../../src/viewers/DirectoryViewerVirtualized'
@@ -17,15 +21,6 @@ import Error404 from '../404'
 import { hasAlbum, urlEncode } from '../../src/utils'
 
 const useStyles = makeStyles((theme) => ({
-  loading: {
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: theme.spacing(5),
-    textAlign: 'center'
-  },
   header: {
     margin: theme.spacing(2, 0, 1, 2)
   }
@@ -49,9 +44,9 @@ const TLMC = () => {
   if (isPending) {
     return (
       <Page>
-        <div className={classes.loading}>
+        <Box pt={10} textAlign='center'>
           <CircularProgress size={100} thickness={5} />
-        </div>
+        </Box>
       </Page>
     )
   }
@@ -60,7 +55,16 @@ const TLMC = () => {
     console.error(error)
     return (
       <Page>
-        <div>Error</div>
+        <Container>
+          <Alert
+            severity='error'
+            elevation={2}
+            action={<Button color='inherit' onClick={() => { Router.reload() }}>Refresh Page</Button>}
+          >
+            <AlertTitle><b>Error</b></AlertTitle>
+            Could not load directory structure.
+          </Alert>
+        </Container>
       </Page>
     )
   }
@@ -92,7 +96,7 @@ const TLMC = () => {
       <Head>
         <title>{node.isRoot ? 'TLMC' : breadcrumbs[1].title}</title>
       </Head>
-      <Page breadcrumbs={breadcrumbs} ls={data}>
+      <Page breadcrumbs={breadcrumbs} ls={data} noPadding={node.isRoot}>
         {(() => {
           if (node.isDirectory) {
             if (node.isRoot) {
@@ -111,7 +115,7 @@ const TLMC = () => {
                 }
               }
               children.push(
-                <Box key='files' mt={4} mb={8}>
+                <Box key='files' mt={4}>
                   <Typography variant='h5' className={classes.header}>Files</Typography>
                   <DirectoryViewer directory={node} />
                 </Box>

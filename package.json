@@ -23,10 +23,10 @@
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
     "japanese": "^1.2.0",
     "ls-serialize": "^1.0.5",
     "next": "9.4.4",
-    "path-parse": "^1.0.6",
     "react": "16.13.1",
     "react-async": "^10.0.1",
     "react-dom": "16.13.1",

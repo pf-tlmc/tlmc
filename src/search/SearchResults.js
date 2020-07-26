@@ -9,22 +9,15 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
 import Typography from '@material-ui/core/Typography'
-import DirectoryViewer from '../viewers/DirectoryViewer'
-import DirectoryViewerVirtualized from '../viewers/DirectoryViewerVirtualized'
-import Link from '@material-ui/core/Link'
+import SearchResultsSection from './SearchResultsSection'
 import useSearch from './use-search'
 
 const useStyles = makeStyles((theme) => ({
   searchResults: {
-    padding: theme.spacing(0, 0, 20),
-    '& h5': {
-      margin: theme.spacing(2, 0, 1, 2)
-    }
+    padding: theme.spacing(0, 0, 20)
   },
   progress: {
-    position: 'fixed',
-    width: '100vw',
-    bottom: 0,
+    marginTop: theme.spacing(-1),
     '& > div': {
       transition: 'none'
     }
@@ -32,42 +25,8 @@ const useStyles = makeStyles((theme) => ({
   progressComplete: {
     opacity: 0,
     transition: 'opacity 0.4s linear'
-  },
-  expand: {
-    display: 'block',
-    padding: theme.spacing(1, 4)
-  },
-  virtualized: {
-    height: 500,
-    margin: theme.spacing(2),
-    border: `1px solid ${theme.palette.primary.main}`,
-    borderRadius: theme.shape.borderRadius,
-    padding: theme.spacing(2)
   }
 }))
-
-const SearchResultsSection = ({ title, list, expand, setExpand, clearSearch }) => {
-  if (list.length === 0) {
-    return null
-  }
-
-  const classes = useStyles()
-
-  return (
-    <>
-      <Typography variant='h5' gutterBottom>{title}</Typography>
-      {expand && list.length > 100
-        ? (
-          <div className={classes.virtualized}>
-            <DirectoryViewerVirtualized directory={list} disablePadding onSelect={clearSearch} />
-          </div>
-        )
-        : <DirectoryViewer directory={expand ? list : list.slice(0, 10)} disablePadding onSelect={clearSearch} />}
-      {!expand && list.length > 10 &&
-        <Link onClick={() => { setExpand(!expand) }} className={classes.expand}>… and {(list.length - 10).toLocaleString()} more results</Link>}
-    </>
-  )
-}
 
 const SearchResults = connect(
   (state) => ({ search: state.search, options: state.searchOptions }),
@@ -102,6 +61,11 @@ const SearchResults = connect(
 
     return (
       <div className={classes.searchResults}>
+        <LinearProgress
+          variant='determinate'
+          value={progress * 100}
+          className={cn(classes.progress, progress >= 1 && classes.progressComplete)}
+        />
         <Box p={2}>
           <FormControlLabel
             control={
@@ -114,12 +78,7 @@ const SearchResults = connect(
             label='Romanize hiragana/katakana when searching'
           />
         </Box>
-        <LinearProgress
-          variant='determinate'
-          value={progress * 100}
-          className={cn(classes.progress, progress >= 1 && classes.progressComplete)}
-        />
-        {circles.length + albums.length + songs.length === 0
+        {circles.length + albums.length + songs.length + other.length === 0
           ? <Typography variant='h5'>{progress < 1 ? 'Searching…' : 'No results'}</Typography>
           : (
             <>

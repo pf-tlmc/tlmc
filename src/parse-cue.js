@@ -42,8 +42,7 @@ function parseCue (cueStr) {
         })
         break
       default:
-        console.error(`Unkown command: ${command}`)
-        break
+        throw new Error(`Unkown command: ${command}`)
     }
   }
 

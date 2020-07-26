@@ -4,33 +4,40 @@ import { connect } from 'react-redux'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import TopBar from './TopBar'
-import Container from './Container'
 import SearchResults from './search/SearchResults'
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    display: 'flex',
+    width: '100%',
     height: '100vh',
-    flexFlow: 'column nowrap'
+    display: 'flex',
+    flexDirection: 'column',
+    flexWrap: 'nowrap',
+    '&': {
+      height: '-webkit-fill-available'
+    }
   },
   header: {
-    height: 'auto',
-    flex: '0 0 auto'
+    flexBasis: 'auto',
+    flexGrow: 0,
+    flexShrink: 0
   },
   main: {
-    height: 'auto',
-    flex: '1 1 0px',
-    overflow: 'auto'
+    flexBasis: '0px',
+    flexGrow: 1,
+    flexShrink: 1,
+    overflow: 'auto',
+    padding: ({ noPadding }) => noPadding ? 0 : theme.spacing(1, 0, '250px')
   }
 }))
 
 const Page = connect(
   (state) => ({ search: state.search })
 )(
-  ({ contained, breadcrumbs, ls, search, children }) => {
+  ({ noPadding, breadcrumbs, ls, search, children }) => {
     const theme = useTheme()
     const isMedium = useMediaQuery(theme.breakpoints.up('md'))
-    const classes = useStyles()
+    const classes = useStyles({ noPadding })
     const showSearch = ls && isMedium
 
     return (
@@ -41,7 +48,7 @@ const Page = connect(
         <main className={classes.main}>
           {(showSearch && search)
             ? <SearchResults ls={ls} />
-            : (contained ? <Container>{children}</Container> : children)}
+            : children}
         </main>
       </div>
     )
@@ -49,7 +56,7 @@ const Page = connect(
 )
 
 Page.propTypes = {
-  contained: PropTypes.bool,
+  noPadding: PropTypes.bool,
   breadcrumbs: PropTypes.any,
   ls: PropTypes.object
 }

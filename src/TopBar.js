@@ -30,7 +30,10 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   buttonContainer: {
-    margin: theme.spacing(0, 2)
+    margin: theme.spacing(0, 2),
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: 0
+    }
   }
 }))
 

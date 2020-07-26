@@ -18,6 +18,9 @@ const useStyles = makeStyles((theme) => ({
     '& input': {
       paddingTop: theme.spacing(0.75)
     }
+  },
+  adornment: {
+    marginRight: theme.spacing(1)
   }
 }))
 
@@ -36,8 +39,8 @@ const Search = connect(
         <FilledInput
           disableUnderline
           fullWidth
-          startAdornment={<InputAdornment><SearchIcon /></InputAdornment>}
-          placeholder='Search (work in progress)'
+          startAdornment={<InputAdornment className={classes.adornment}><SearchIcon /></InputAdornment>}
+          placeholder='Search'
           type='search'
           value={search}
           onChange={handleInputSearch}

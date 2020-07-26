@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 // These values should match the ones defined in DirectoryViewer
 const ITEM_SIZE = 43
 const PADDING_TOP = 8
-const PADDING_BOTTOM = 160
+const PADDING_BOTTOM = 250
 
 const paddedList = forwardRef(({ style, children }, ref) => {
   return (
