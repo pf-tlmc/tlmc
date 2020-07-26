@@ -10,6 +10,9 @@ import Link from '../Link'
 import { urlEncode } from '../utils'
 
 const useStyles = makeStyles((theme) => ({
+  list: {
+    padding: 0
+  },
   listItem: {
     padding: theme.spacing(0.5, 4)
   },

@@ -15,8 +15,7 @@ import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 import Typography from '@material-ui/core/Typography'
 import Alert from '@material-ui/lab/Alert'
-import parseCue from '../parse-cue'
-import { isImage, urlEncode } from '../utils'
+import { urlEncode, parseCue, findCoverImage } from '../utils'
 
 const useStyles = makeStyles((theme) => ({
   gridShrink: {
@@ -53,23 +52,6 @@ const useStyles = makeStyles((theme) => ({
 async function fetchFile ({ file }) {
   const res = await fetch('/api/tlmc' + urlEncode(file.path))
   return res.text()
-}
-
-const COVER_REGEX = /^(image|img|jacket)_?(0*1)?.(jpe?g|png|gif)$/i
-const COVER_FOLDER_REGEX = /(images?|covers?)/i
-
-function findCoverImage (directory) {
-  for (const file of directory) {
-    if (file.isDirectory && COVER_FOLDER_REGEX.test(file.base)) {
-      return findCoverImage(file)
-    }
-  }
-  for (const file of directory) {
-    if (file.isFile && COVER_REGEX.test(file.base)) {
-      return file
-    }
-  }
-  return [...directory.files].filter(isImage).sort((a, b) => a.base.localeCompare(b.base))[0]
 }
 
 function getInfo (albumDirectory) {

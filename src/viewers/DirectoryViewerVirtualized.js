@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-// These values should match the ones defined in DirectoryViewer
+// These values should match the ones defined in DirectoryViewer and Page
 const ITEM_SIZE = 43
 const PADDING_TOP = 8
 const PADDING_BOTTOM = 250
