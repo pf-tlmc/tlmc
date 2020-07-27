@@ -44,6 +44,17 @@ const App = ({ Component, pageProps }) => {
       <Head>
         <title>TLMC</title>
         <meta name='viewport' content='minimum-scale=1, initial-scale=1, width=device-width' />
+        <script async src='https://www.googletagmanager.com/gtag/js?id=UA-137452548-2' />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'UA-137452548-2');
+            `
+          }}
+        />
       </Head>
       <Provider store={store}>
         <Themer>

@@ -95,7 +95,7 @@ const TLMC = () => {
   return (
     <>
       <Head>
-        <title>{node.isRoot ? 'TLMC' : breadcrumbs[1].title}</title>
+        <title>{node.isRoot ? 'Touhou Lossless Music Collection' : breadcrumbs[1].title}</title>
       </Head>
       <Page breadcrumbs={breadcrumbs} ls={data} noPadding={node.isRoot}>
         {(() => {
