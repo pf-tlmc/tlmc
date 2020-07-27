@@ -48,7 +48,12 @@ const AlbumListViewer = ({ directory }) => {
         {albums.map((directory) => {
           const albumInfo = getAlbumInfo(directory)
           return (
-            <Link key={directory.base} href='/tlmc/[...tlmc_path]' as={'/tlmc' + urlEncode(directory.path)}>
+            <Link
+              key={directory.base}
+              href='/tlmc/[...tlmc_path]'
+              as={'/tlmc' + urlEncode(directory.path)}
+              underline='none'
+            >
               <ListItem button>
                 <ListItemIcon>
                   <CoverImage directory={directory} className={classes.coverImage} />

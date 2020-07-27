@@ -45,7 +45,7 @@ const TopBarButton = ({ isExternal, href, icon, children }) => {
 
   if (isSmall) {
     return (
-      <LinkComponent href={href}>
+      <LinkComponent href={href} underline='none'>
         <IconButton>
           {icon}
         </IconButton>
@@ -53,7 +53,7 @@ const TopBarButton = ({ isExternal, href, icon, children }) => {
     )
   } else {
     return (
-      <LinkComponent href={href}>
+      <LinkComponent href={href} underline='none'>
         <Button variant='contained' color='primary' disableElevation startIcon={icon}>
           {children}
         </Button>

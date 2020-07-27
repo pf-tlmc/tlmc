@@ -46,7 +46,7 @@ const DirectoryViewer = ({ directory, filter, disablePadding, onSelect = () => {
   function renderRow ({ index, style }) {
     const file = filteredFiles[index]
     return (
-      <Link href='/tlmc/[...tlmc_path]' as={'/tlmc' + urlEncode(file.path)}>
+      <Link href='/tlmc/[...tlmc_path]' as={'/tlmc' + urlEncode(file.path)} underline='none'>
         <ListItem
           button
           style={{

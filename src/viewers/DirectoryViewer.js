@@ -29,7 +29,7 @@ const DirectoryViewer = ({ directory, filter, onSelect = () => {} }) => {
   return (
     <List className={classes.list}>
       {filteredFiles.map((file, index) =>
-        <Link key={index} href='/tlmc/[...tlmc_path]' as={'/tlmc' + urlEncode(file.path)}>
+        <Link key={index} href='/tlmc/[...tlmc_path]' as={'/tlmc' + urlEncode(file.path)} underline='none'>
           <ListItem button className={classes.listItem} onClick={onSelect}>
             <ListItemIcon className={classes.listIcon}><FileIcon file={file} /></ListItemIcon>
             <ListItemText><Typography>{file.base}</Typography></ListItemText>
