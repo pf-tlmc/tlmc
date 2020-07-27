@@ -2,6 +2,7 @@ import React, { forwardRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { FixedSizeList as List } from 'react-window'
 import AutoSizer from 'react-virtualized-auto-sizer'
+import Container from '@material-ui/core/Container'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -12,7 +13,7 @@ import { urlEncode } from '../utils'
 
 const useStyles = makeStyles((theme) => ({
   listItem: {
-    padding: theme.spacing(0.5, 4)
+    padding: theme.spacing(0.5, 2)
   },
   listIcon: {
     color: 'inherit'
@@ -47,18 +48,19 @@ const DirectoryViewer = ({ directory, filter, disablePadding, onSelect = () => {
     const file = filteredFiles[index]
     return (
       <Link href='/tlmc/[...tlmc_path]' as={'/tlmc' + urlEncode(file.path)} underline='none'>
-        <ListItem
-          button
+        <div
           style={{
             ...style,
             top: `${disablePadding ? style.top : parseFloat(style.top) + PADDING_TOP}px`
           }}
-          onClick={onSelect}
-          className={classes.listItem}
         >
-          <ListItemIcon className={classes.listIcon}><FileIcon file={file} /></ListItemIcon>
-          <ListItemText><Typography noWrap>{file.base}</Typography></ListItemText>
-        </ListItem>
+          <Container>
+            <ListItem button onClick={onSelect} className={classes.listItem}>
+              <ListItemIcon className={classes.listIcon}><FileIcon file={file} /></ListItemIcon>
+              <ListItemText><Typography noWrap>{file.base}</Typography></ListItemText>
+            </ListItem>
+          </Container>
+        </div>
       </Link>
     )
   }

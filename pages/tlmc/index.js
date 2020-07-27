@@ -2,17 +2,15 @@ import React from 'react'
 import fetch from 'unfetch'
 import { useAsync } from 'react-async'
 import Router, { useRouter } from 'next/router'
-import { makeStyles } from '@material-ui/core/styles'
 import deserialize from 'ls-serialize/src/deserialize'
 import Head from 'next/head'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Box from '@material-ui/core/Box'
-import Container from '@material-ui/core/Container'
 import Button from '@material-ui/core/Button'
-import Typography from '@material-ui/core/Typography'
 import Alert from '@material-ui/lab/Alert'
 import AlertTitle from '@material-ui/lab/AlertTitle'
 import Page from '../../src/Page'
+import Container from '../../src/Container'
 import DirectoryViewer from '../../src/viewers/DirectoryViewer'
 import DirectoryViewerVirtualized from '../../src/viewers/DirectoryViewerVirtualized'
 import AlbumViewer from '../../src/viewers/AlbumViewer'
@@ -20,12 +18,6 @@ import AlbumListViewer from '../../src/viewers/AlbumListViewer'
 import FileViewer from '../../src/viewers/FileViewer'
 import Error404 from '../404'
 import { hasAlbum, urlEncode } from '../../src/utils'
-
-const useStyles = makeStyles((theme) => ({
-  header: {
-    margin: theme.spacing(2, 0, 1, 2)
-  }
-}))
 
 async function fetchAndDeserialize () {
   const res = await fetch('/api/ls')
@@ -40,7 +32,6 @@ async function fetchAndDeserialize () {
 const TLMC = () => {
   const { data, error, isPending } = useAsync(fetchAndDeserialize)
   const router = useRouter()
-  const classes = useStyles()
 
   if (isPending) {
     return (
@@ -113,10 +104,9 @@ const TLMC = () => {
                   {[...node.files]
                     .filter((file) => file.ext.toLowerCase() === '.cue')
                     .map((file) => <AlbumViewer key={file.base} cueFile={file} />)}
-                  <Box mt={4}>
-                    <Typography variant='h5' className={classes.header}>All Files</Typography>
+                  <Container title='All Files'>
                     <DirectoryViewer directory={node} />
-                  </Box>
+                  </Container>
                 </>
               )
             } else {
@@ -127,25 +117,14 @@ const TLMC = () => {
                   break
                 }
               }
-
-              if (showAlbums) {
-                return (
-                  <>
-                    <AlbumListViewer directory={node} />
-                    <Box mt={4}>
-                      <Typography variant='h5' className={classes.header}>All Files</Typography>
-                      <DirectoryViewer directory={node} />
-                    </Box>
-                  </>
-                )
-              } else {
-                return (
-                  <>
-                    <Typography variant='h5' className={classes.header}>All Files</Typography>
+              return (
+                <>
+                  {showAlbums && <AlbumListViewer directory={node} />}
+                  <Container title='All Files'>
                     <DirectoryViewer directory={node} />
-                  </>
-                )
-              }
+                  </Container>
+                </>
+              )
             }
           } else {
             return <FileViewer file={node} />

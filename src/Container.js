@@ -6,15 +6,15 @@ import Typography from '@material-ui/core/Typography'
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(2)
   }
 }))
 
-const Container = ({ title, children }) => {
+const Container = ({ fullWidth, title, children }) => {
   const classes = useStyles()
 
   return (
-    <MuiContainer className={classes.container}>
+    <MuiContainer maxWidth={fullWidth ? false : 'lg'} className={classes.container}>
       {title && <Typography variant='h5' gutterBottom>{title}</Typography>}
       {children}
     </MuiContainer>
@@ -22,6 +22,7 @@ const Container = ({ title, children }) => {
 }
 
 Container.propTypes = {
+  fullWidth: PropTypes.bool,
   title: PropTypes.string
 }
 

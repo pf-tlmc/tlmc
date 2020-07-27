@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 0
   },
   listItem: {
-    padding: theme.spacing(0.5, 4)
+    padding: theme.spacing(0.5, 2)
   },
   listIcon: {
     color: 'inherit'
