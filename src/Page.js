@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
+import Container from '@material-ui/core/Container'
 import TopBar from './TopBar'
 import SearchResults from './search/SearchResults'
 
@@ -27,14 +28,14 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     flexShrink: 1,
     overflow: 'auto',
-    padding: ({ noPadding }) => noPadding ? 0 : theme.spacing(1, 0, '250px')
+    padding: ({ noPadding }) => noPadding ? 0 : theme.spacing(2, 0)
   }
 }))
 
 const Page = connect(
   (state) => ({ search: state.search })
 )(
-  ({ noPadding, breadcrumbs, ls, search, children }) => {
+  ({ noPadding, contained, breadcrumbs, ls, search, children }) => {
     const theme = useTheme()
     const isMedium = useMediaQuery(theme.breakpoints.up('md'))
     const showSearch = ls && isMedium
@@ -48,7 +49,7 @@ const Page = connect(
         <main className={classes.main}>
           {(showSearch && search)
             ? <SearchResults ls={ls} />
-            : children}
+            : (contained ? <Container>{children}</Container> : children)}
         </main>
       </div>
     )

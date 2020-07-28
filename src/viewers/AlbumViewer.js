@@ -4,7 +4,6 @@ import { useAsync } from 'react-async'
 import { makeStyles } from '@material-ui/core/styles'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Box from '@material-ui/core/Box'
-import Container from '@material-ui/core/Container'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import Grid from '@material-ui/core/Grid'
@@ -62,75 +61,73 @@ const AlbumViewer = ({ cueFile }) => {
   const classes = useStyles()
 
   return (
-    <Container>
-      <Card className={classes.album} elevation={2}>
-        <CardContent>
-          <Grid container spacing={4}>
-            <Grid item className={classes.gridShrink}>
-              <CoverImage
-                key={cueFile.base}
-                directory={parent}
-                className={classes.albumCover}
-              />
-            </Grid>
-            <Grid item className={classes.gridGrow}>
-              {albumInfo
-                ? (
-                  <>
-                    <Typography variant='h4'>{albumInfo.title}</Typography>
-                    <Typography>{albumInfo.date}</Typography>
-                    {albumInfo.circleThing && <Typography>{albumInfo.circleThing}</Typography>}
-                    {albumInfo.otherThing && <Typography>{albumInfo.otherThing}</Typography>}
-                  </>
-                )
-                : <Typography variant='h5'>{cueFile.name}</Typography>}
-            </Grid>
+    <Card className={classes.album} elevation={2}>
+      <CardContent>
+        <Grid container spacing={4}>
+          <Grid item className={classes.gridShrink}>
+            <CoverImage
+              key={cueFile.base}
+              directory={parent}
+              className={classes.albumCover}
+            />
           </Grid>
-        </CardContent>
-        <CardContent>
-          {(() => {
-            if (isPending) {
-              return <Box textAlign='center'><CircularProgress /></Box>
-            }
+          <Grid item className={classes.gridGrow}>
+            {albumInfo
+              ? (
+                <>
+                  <Typography variant='h4'>{albumInfo.title}</Typography>
+                  <Typography>{albumInfo.date}</Typography>
+                  {albumInfo.circleThing && <Typography>{albumInfo.circleThing}</Typography>}
+                  {albumInfo.otherThing && <Typography>{albumInfo.otherThing}</Typography>}
+                </>
+              )
+              : <Typography variant='h5'>{cueFile.name}</Typography>}
+          </Grid>
+        </Grid>
+      </CardContent>
+      <CardContent>
+        {(() => {
+          if (isPending) {
+            return <Box textAlign='center'><CircularProgress /></Box>
+          }
 
-            if (error) {
-              return <Alert severity='error' variant='outlined'>Could not load cue file.</Alert>
-            }
+          if (error) {
+            return <Alert severity='error' variant='outlined'>Could not load cue file.</Alert>
+          }
 
-            let cue
-            try {
-              cue = parseCue(data)
-            } catch (err) {
-              console.error(err)
-              return <Alert severity='error' variant='outlined'>Could not parse cue file.</Alert>
-            }
+          let cue
+          try {
+            cue = parseCue(data)
+          } catch (err) {
+            console.error(err)
+            return <Alert severity='error' variant='outlined'>Could not parse cue file.</Alert>
+          }
 
-            return (
-              <Table className={classes.albumTable}>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Index</TableCell>
-                    <TableCell>Title</TableCell>
-                    <TableCell>Performer</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {cue._child.TRACK
-                    .sort((a, b) => Number(a.number) - Number(b.number))
-                    .map((track) =>
-                      <TableRow key={track.number} hover>
-                        <TableCell>{track.number}</TableCell>
-                        <TableCell>{track.TITLE}</TableCell>
-                        <TableCell>{track.PERFORMER}</TableCell>
-                      </TableRow>
-                    )}
-                </TableBody>
-              </Table>
-            )
-          })()}
-        </CardContent>
-      </Card>
-    </Container>
+          return (
+            <Table className={classes.albumTable}>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Index</TableCell>
+                  <TableCell>Title</TableCell>
+                  <TableCell>Performer</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {cue._child.TRACK
+                  .sort((a, b) => Number(a.number) - Number(b.number))
+                  .map((track) =>
+                    <TableRow key={track.number} hover>
+                      <TableCell>{track.number}</TableCell>
+                      <TableCell>{track.TITLE}</TableCell>
+                      <TableCell>{track.PERFORMER}</TableCell>
+                    </TableRow>
+                  )}
+              </TableBody>
+            </Table>
+          )
+        })()}
+      </CardContent>
+    </Card>
   )
 }
 

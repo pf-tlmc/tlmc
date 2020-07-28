@@ -1,6 +1,5 @@
 import React from 'react'
 import Typography from '@material-ui/core/Typography'
-import Container from '../Container'
 import Mp3FileViewer from './Mp3FileViewer'
 import TextFileViewer from './TextFileViewer'
 import PDFFileViewer from './PDFFileViewer'
@@ -21,11 +20,7 @@ const FileViewer = ({ file }) => {
     case '.pdf':
       return <PDFFileViewer file={file} />
     default:
-      return (
-        <Container title={file.base}>
-          <Typography paragraph>There is no viewer for this file type yet.</Typography>
-        </Container>
-      )
+      return <Typography paragraph>There is no viewer for this file type yet.</Typography>
   }
 }
 

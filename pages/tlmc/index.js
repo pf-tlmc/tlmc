@@ -10,7 +10,7 @@ import Button from '@material-ui/core/Button'
 import Alert from '@material-ui/lab/Alert'
 import AlertTitle from '@material-ui/lab/AlertTitle'
 import Page from '../../src/Page'
-import Container from '../../src/Container'
+import Section from '../../src/Section'
 import DirectoryViewer from '../../src/viewers/DirectoryViewer'
 import DirectoryViewerVirtualized from '../../src/viewers/DirectoryViewerVirtualized'
 import AlbumViewer from '../../src/viewers/AlbumViewer'
@@ -46,17 +46,15 @@ const TLMC = () => {
   if (error) {
     console.error(error)
     return (
-      <Page>
-        <Container>
-          <Alert
-            severity='error'
-            elevation={2}
-            action={<Button color='inherit' onClick={() => { Router.reload() }}>Refresh Page</Button>}
-          >
-            <AlertTitle><b>Error</b></AlertTitle>
-            Could not load directory structure.
-          </Alert>
-        </Container>
+      <Page contained>
+        <Alert
+          severity='error'
+          elevation={2}
+          action={<Button color='inherit' onClick={() => { Router.reload() }}>Refresh Page</Button>}
+        >
+          <AlertTitle><b>Error</b></AlertTitle>
+          Could not load directory structure.
+        </Alert>
       </Page>
     )
   }
@@ -88,7 +86,7 @@ const TLMC = () => {
       <Head>
         <title>{node.isRoot ? 'Touhou Lossless Music Collection' : breadcrumbs[1].title}</title>
       </Head>
-      <Page breadcrumbs={breadcrumbs} ls={data} noPadding={node.isRoot}>
+      <Page breadcrumbs={breadcrumbs} ls={data} noPadding={node.isRoot} contained={!node.isRoot}>
         {(() => {
           if (node.isDirectory) {
             if (node.isRoot) {
@@ -104,9 +102,9 @@ const TLMC = () => {
                   {[...node.files]
                     .filter((file) => file.ext.toLowerCase() === '.cue')
                     .map((file) => <AlbumViewer key={file.base} cueFile={file} />)}
-                  <Container title='All Files'>
+                  <Section title='All Files'>
                     <DirectoryViewer directory={node} />
-                  </Container>
+                  </Section>
                 </>
               )
             } else {
@@ -120,14 +118,18 @@ const TLMC = () => {
               return (
                 <>
                   {showAlbums && <AlbumListViewer directory={node} />}
-                  <Container title='All Files'>
+                  <Section title='All Files'>
                     <DirectoryViewer directory={node} />
-                  </Container>
+                  </Section>
                 </>
               )
             }
           } else {
-            return <FileViewer file={node} />
+            return (
+              <Section title={node.base}>
+                <FileViewer file={node} />
+              </Section>
+            )
           }
         })()}
       </Page>
