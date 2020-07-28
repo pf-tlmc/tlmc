@@ -101,7 +101,11 @@ const TLMC = () => {
                 <>
                   {[...node.files]
                     .filter((file) => file.ext.toLowerCase() === '.cue')
-                    .map((file) => <AlbumViewer key={file.base} cueFile={file} />)}
+                    .map((file) =>
+                      <Section key={file.base}>
+                        <AlbumViewer cueFile={file} />
+                      </Section>
+                    )}
                   <Section title='All Files'>
                     <DirectoryViewer directory={node} />
                   </Section>
@@ -117,7 +121,9 @@ const TLMC = () => {
               }
               return (
                 <>
-                  {showAlbums && <AlbumListViewer directory={node} />}
+                  <Section>
+                    {showAlbums && <AlbumListViewer directory={node} />}
+                  </Section>
                   <Section title='All Files'>
                     <DirectoryViewer directory={node} />
                   </Section>
