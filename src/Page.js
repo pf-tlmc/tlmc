@@ -39,7 +39,7 @@ const Page = connect(
     const theme = useTheme()
     const isMedium = useMediaQuery(theme.breakpoints.up('md'))
     const showSearch = ls && isMedium
-    const classes = useStyles({ noPadding: noPadding && !(showSearch && search) })
+    const classes = useStyles({ noPadding: noPadding || (showSearch && search) })
 
     return (
       <div className={classes.container}>

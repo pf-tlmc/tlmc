@@ -77,16 +77,18 @@ const Search = connect(
     return (
       <Page>
         <Box px={2} py={1}>
-          <TextField
-            variant='outlined'
-            fullWidth
-            InputProps={{
-              startAdornment: <InputAdornment><SearchIcon /></InputAdornment>
-            }}
-            label='Search'
-            value={search}
-            onChange={handleInputSearch}
-          />
+          <Container>
+            <TextField
+              variant='outlined'
+              fullWidth
+              InputProps={{
+                startAdornment: <InputAdornment><SearchIcon /></InputAdornment>
+              }}
+              label='Search'
+              value={search}
+              onChange={handleInputSearch}
+            />
+          </Container>
         </Box>
         <Divider className={classes.divider} />
         <SearchResults ls={data} />

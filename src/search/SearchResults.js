@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { clearSearch, setSearchOptions } from '../redux/actions'
 import { makeStyles } from '@material-ui/core/styles'
 import Box from '@material-ui/core/Box'
+import Container from '@material-ui/core/Container'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
@@ -66,56 +67,58 @@ const SearchResults = connect(
           value={progress * 100}
           className={cn(classes.progress, progress >= 1 && classes.progressComplete)}
         />
-        <Box p={2}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={options.romaji}
-                onChange={() => { setSearchOptions('SET_ROMAJI', !options.romaji) }}
-                color='primary'
-              />
-            }
-            label='Romanize hiragana/katakana when searching'
-          />
-        </Box>
-        {circles.length + albums.length + songs.length + other.length === 0
-          ? (
-            <Typography variant='h5' className={classes.header}>
-              {progress < 1 ? 'Searching…' : 'No results'}
-            </Typography>
-          )
-          : (
-            <>
-              <SearchResultsSection
-                title='Circles'
-                list={circles}
-                expand={expandCircles}
-                setExpand={setExpandCircles}
-                clearSearch={clearSearch}
-              />
-              <SearchResultsSection
-                title='Albums'
-                list={albums}
-                expand={expandAlbums}
-                setExpand={setExpandAlbums}
-                clearSearch={clearSearch}
-              />
-              <SearchResultsSection
-                title='Songs'
-                list={songs}
-                expand={expandSongs}
-                setExpand={setExpandSongs}
-                clearSearch={clearSearch}
-              />
-              <SearchResultsSection
-                title='Other'
-                list={other}
-                expand={expandOther}
-                setExpand={setExpandOther}
-                clearSearch={clearSearch}
-              />
-            </>
-          )}
+        <Container>
+          <Box p={2}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={options.romaji}
+                  onChange={() => { setSearchOptions('SET_ROMAJI', !options.romaji) }}
+                  color='primary'
+                />
+              }
+              label='Romanize hiragana/katakana when searching'
+            />
+          </Box>
+          {circles.length + albums.length + songs.length + other.length === 0
+            ? (
+              <Typography variant='h5' className={classes.header}>
+                {progress < 1 ? 'Searching…' : 'No results'}
+              </Typography>
+            )
+            : (
+              <>
+                <SearchResultsSection
+                  title='Circles'
+                  list={circles}
+                  expand={expandCircles}
+                  setExpand={setExpandCircles}
+                  clearSearch={clearSearch}
+                />
+                <SearchResultsSection
+                  title='Albums'
+                  list={albums}
+                  expand={expandAlbums}
+                  setExpand={setExpandAlbums}
+                  clearSearch={clearSearch}
+                />
+                <SearchResultsSection
+                  title='Songs'
+                  list={songs}
+                  expand={expandSongs}
+                  setExpand={setExpandSongs}
+                  clearSearch={clearSearch}
+                />
+                <SearchResultsSection
+                  title='Other'
+                  list={other}
+                  expand={expandOther}
+                  setExpand={setExpandOther}
+                  clearSearch={clearSearch}
+                />
+              </>
+            )}
+        </Container>
       </>
     )
   }
