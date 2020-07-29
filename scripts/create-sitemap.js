@@ -7,7 +7,7 @@ const LS_CACHE_PATH = path.resolve(__dirname, '../.cache/ls')
 const PAGES = ['about', 'search']
 
 function urlEncode (url) {
-  return url.replace(/#/g, '%23')
+  return url.split('/').map(encodeURIComponent).join('/')
 }
 
 module.exports = () =>
