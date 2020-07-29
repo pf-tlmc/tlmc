@@ -50,7 +50,7 @@ const MusicPlayer = connect(
 
     useEffect(() => {
       if (!song) return
-      musicPlayer.src = `http://home.pf-n.co:3000/tlmc${urlEncode(song.path)}`
+      musicPlayer.src = `/api/tlmc${urlEncode(song.path)}`
       musicPlayer.play()
     }, [song])
 
