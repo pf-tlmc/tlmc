@@ -14,6 +14,7 @@
 /build
 /.cache
 /public/sitemap.xml
+/public/sitemaps/*.xml
 
 # debug
 npm-debug.log*

@@ -3,11 +3,28 @@ const path = require('path')
 const lsSerialize = require('ls-serialize')
 
 const SITEMAP_PATH = path.resolve(__dirname, '../public/sitemap.xml')
+const SITEMAPS_DIR = path.resolve(__dirname, '../public/sitemaps')
 const LS_CACHE_PATH = path.resolve(__dirname, '../.cache/ls')
 const PAGES = ['about', 'search']
 
 function urlEncode (url) {
-  return url.split('/').map(encodeURIComponent).join('/')
+  return url
+    .replace(/#/g, '%23')
+    .replace(/&/g, '%26')
+    .replace(/</g, '%3C')
+    .replace(/>/g, '%3E')
+    .replace(/"/g, '%22')
+}
+
+function processDirectory (directory, path) {
+  for (const file of directory) {
+    fs.appendFileSync(path,
+      `  <url><loc>https://tlmc.pf-n.co/tlmc${urlEncode(file.path)}</loc></url>\n`
+    )
+    if (file.isDirectory) {
+      processDirectory(file, path)
+    }
+  }
 }
 
 module.exports = () =>
@@ -15,10 +32,12 @@ module.exports = () =>
     fs.access(SITEMAP_PATH, (err) => {
       if (err) {
         console.log('Generating sitemap...')
-        fs.writeFileSync(SITEMAP_PATH, '')
+        if (!fs.existsSync(SITEMAPS_DIR)) {
+          fs.mkdirSync(SITEMAPS_DIR)
+        }
 
         const root = lsSerialize.deserialize(fs.readFileSync(LS_CACHE_PATH).toString())
-        fs.appendFileSync(SITEMAP_PATH,
+        fs.writeFileSync(SITEMAP_PATH,
           '<?xml version="1.0" encoding="UTF-8"?>\n' +
           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         )
@@ -29,18 +48,35 @@ module.exports = () =>
           )
         }
 
-        ;(function processDirectory (directory = root) {
-          for (const file of directory) {
+        const sitemaps = []
+        for (const file of root) {
+          if (file.isFile) {
             fs.appendFileSync(SITEMAP_PATH,
               `  <url><loc>https://tlmc.pf-n.co/tlmc${urlEncode(file.path)}</loc></url>\n`
             )
-            if (file.isDirectory) {
-              processDirectory(file)
-            }
-          }
-        })()
+          } else {
+            const fileName = `${urlEncode(file.base)}.xml`
+            const filePath = path.resolve(SITEMAPS_DIR, `./${fileName}`)
+            sitemaps.push(fileName)
 
+            fs.writeFileSync(filePath,
+              '<?xml version="1.0" encoding="UTF-8"?>\n' +
+              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+            )
+            processDirectory(file, filePath)
+            fs.appendFileSync(filePath, '</urlset>\n')
+          }
+        }
         fs.appendFileSync(SITEMAP_PATH, '</urlset>\n')
+
+        fs.appendFileSync(SITEMAP_PATH, '<sitemapindex xmlns="http://www.google.com/schemas/sitemap/0.84">\n')
+        for (const sitemap of sitemaps) {
+          fs.appendFileSync(SITEMAP_PATH,
+            `  <sitemap><loc>https://tlmc.pf-n.co/sitemaps/${sitemap}</loc></sitemap>\n`
+          )
+        }
+        fs.appendFileSync(SITEMAP_PATH, '</sitemapindex>\n')
+
         console.log('Generated sitemap!')
         console.log()
         resolve()
