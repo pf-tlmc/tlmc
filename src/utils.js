@@ -18,6 +18,7 @@ export function hasAlbum (node, deep) {
 }
 
 // This fixes the `#` problem in `[#ゆうかりんちゃんねる]`
+// Make sure this matches the function in create-sitemap.js
 // TODO: API still isn't happy
 export function urlEncode (url) {
   return url.replace(/#/g, '%23')

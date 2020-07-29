@@ -13,6 +13,7 @@
 # production
 /build
 /.cache
+/public/sitemap.xml
 
 # debug
 npm-debug.log*

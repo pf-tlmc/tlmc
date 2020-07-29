@@ -16,8 +16,8 @@
     "url": "https://github.com/pf-tlmc/tlmc/issues"
   },
   "scripts": {
-    "dev": "node get-ls && next dev",
-    "build": "node get-ls && next build",
+    "dev": "node prebuild && next dev",
+    "build": "node prebuild && next build",
     "start": "next start"
   },
   "dependencies": {
