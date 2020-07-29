@@ -15,7 +15,7 @@ import useSearch from './use-search'
 
 const useStyles = makeStyles((theme) => ({
   progress: {
-    marginTop: theme.spacing(-1),
+    marginTop: theme.spacing(-2),
     '& > div': {
       transition: 'none'
     }

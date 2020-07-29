@@ -21,7 +21,7 @@ import SearchResults from '../src/search/SearchResults'
 
 const useStyles = makeStyles((theme) => ({
   divider: {
-    margin: theme.spacing(1, 0)
+    margin: theme.spacing(1, 0, 2)
   }
 }))
 
