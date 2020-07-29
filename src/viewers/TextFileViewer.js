@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 async function fetchFile ({ file }) {
-  const res = await fetch('/api/tlmc' + urlEncode(file.path))
+  const res = await fetch(`/api/tlmc${urlEncode(file.path)}`)
   return res.text()
 }
 

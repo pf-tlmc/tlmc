@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { createRef, useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles((theme) => ({
@@ -19,11 +19,25 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const Progress = ({ value }) => {
+const Progress = ({ audio }) => {
   const classes = useStyles()
+  const [value, setValue] = useState(0)
+  const ref = createRef()
+
+  useEffect(() => {
+    audio.addEventListener('timeupdate', () => {
+      setValue(audio.currentTime / audio.duration)
+    })
+  }, [])
+
+  function handleClickProgress (event) {
+    const rect = ref.current.getBoundingClientRect()
+    const percent = (event.clientX - rect.left) / rect.width
+    audio.currentTime = audio.duration * percent
+  }
 
   return (
-    <div className={classes.progress}>
+    <div ref={ref} onClick={handleClickProgress} className={classes.progress}>
       <div style={{ width: `${value * 100}%` }} className={classes.indicator} />
     </div>
   )

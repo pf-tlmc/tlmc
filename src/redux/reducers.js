@@ -33,6 +33,29 @@ function searchOptions (state = {}, action) {
   }
 }
 
-const reducers = combineReducers({ theme, search, searchOptions })
+function musicPlayer (state = { playlist: [], currIndex: -1, playing: false }, action) {
+  switch (action.type) {
+    case 'musicPlayer.TOGGLE_PLAY':
+      return {
+        ...state,
+        playing: !state.playing
+      }
+    case 'musicPlayer.PLAY_SONG':
+      return {
+        playlist: [action.payload],
+        currIndex: 0,
+        playing: true
+      }
+    default:
+      return state
+  }
+}
+
+const reducers = combineReducers({
+  theme,
+  search,
+  searchOptions,
+  musicPlayer
+})
 
 export default reducers

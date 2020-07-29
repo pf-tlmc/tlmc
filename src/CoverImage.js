@@ -52,7 +52,7 @@ export function findCoverImage (directory) {
 }
 
 const CoverImage = ({ directory, ...props }) => {
-  const coverImage = findCoverImage(directory)
+  const coverImage = directory && findCoverImage(directory)
   const src = coverImage ? `/api/tlmc${coverImage.path}?size=thumbnail` : '/images/album-placeholder.png'
   return (
     <img src={src} {...props} />

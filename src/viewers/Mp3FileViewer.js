@@ -14,7 +14,7 @@ const Mp3FileViewer = ({ file }) => {
 
   return (
     <audio controls className={classes.audio}>
-      <source src={'/api/tlmc' + urlEncode(file.path)} type='audio/mpeg' />
+      <source src={`http://home.pf-n.co:3000/tlmc${urlEncode(file.path)}`} type='audio/mpeg' />
     </audio>
   )
 }

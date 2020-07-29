@@ -14,7 +14,7 @@ const ImageFileViewer = ({ file }) => {
 
   return (
     <Box textAlign='center'>
-      <img src={'/api/tlmc' + urlEncode(file.path)} className={classes.image} />
+      <img src={`/api/tlmc${urlEncode(file.path)}`} className={classes.image} />
     </Box>
   )
 }

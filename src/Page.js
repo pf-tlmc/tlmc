@@ -9,15 +9,20 @@ import SearchResults from './search/SearchResults'
 import MusicPlayer from './music-player/MusicPlayer'
 
 const useStyles = makeStyles((theme) => ({
+  '@global': {
+    __next: {
+      height: '100vh',
+      '&': {
+        height: '-webkit-fill-available'
+      }
+    }
+  },
   container: {
     width: '100%',
     height: '100vh',
     display: 'flex',
     flexDirection: 'column',
-    flexWrap: 'nowrap',
-    '&': {
-      height: '-webkit-fill-available'
-    }
+    flexWrap: 'nowrap'
   },
   header: {
     flexBasis: 'auto',
@@ -39,9 +44,12 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const Page = connect(
-  (state) => ({ search: state.search })
+  (state) => ({
+    search: state.search,
+    song: state.musicPlayer.playlist[state.musicPlayer.currIndex]
+  })
 )(
-  ({ noPadding, contained, breadcrumbs, ls, search, children }) => {
+  ({ noPadding, contained, breadcrumbs, ls, search, song, children }) => {
     const theme = useTheme()
     const isMedium = useMediaQuery(theme.breakpoints.up('md'))
     const showSearch = ls && isMedium
@@ -57,9 +65,10 @@ const Page = connect(
             ? <SearchResults ls={ls} />
             : (contained ? <Container>{children}</Container> : children)}
         </main>
-        <footer className={classes.footer}>
-          <MusicPlayer />
-        </footer>
+        {song &&
+          <footer className={classes.footer}>
+            <MusicPlayer />
+          </footer>}
       </div>
     )
   }
