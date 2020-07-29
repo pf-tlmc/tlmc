@@ -6,6 +6,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery'
 import Container from '@material-ui/core/Container'
 import TopBar from './TopBar'
 import SearchResults from './search/SearchResults'
+import MusicPlayer from './music-player/MusicPlayer'
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -29,6 +30,11 @@ const useStyles = makeStyles((theme) => ({
     flexShrink: 1,
     overflow: 'auto',
     padding: ({ noPadding }) => noPadding ? 0 : theme.spacing(2, 0)
+  },
+  footer: {
+    flexBasis: 'auto',
+    flexGrow: 0,
+    flexShrink: 0
   }
 }))
 
@@ -51,6 +57,9 @@ const Page = connect(
             ? <SearchResults ls={ls} />
             : (contained ? <Container>{children}</Container> : children)}
         </main>
+        <footer className={classes.footer}>
+          <MusicPlayer />
+        </footer>
       </div>
     )
   }

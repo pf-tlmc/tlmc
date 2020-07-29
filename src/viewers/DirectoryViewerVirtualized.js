@@ -67,18 +67,17 @@ const DirectoryViewer = ({ directory, filter, disablePadding, onSelect = () => {
 
   return (
     <AutoSizer>
-      {({ height, width }) => (
+      {({ width, height }) =>
         <List
-          height={height}
           width={width}
+          height={height}
           innerElementType={disablePadding ? undefined : paddedList}
           itemCount={filteredFiles.length}
           itemSize={ITEM_SIZE}
           overscanCount={10}
         >
           {renderRow}
-        </List>
-      )}
+        </List>}
     </AutoSizer>
   )
 }
