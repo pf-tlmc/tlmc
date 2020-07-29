@@ -92,6 +92,7 @@ const TLMC = () => {
             if (node.isRoot) {
               return (
                 <DirectoryViewerVirtualized
+                  title='Touhou Lossess Music Collection'
                   directory={node}
                   filter={(node) => node.isDirectory}
                 />
