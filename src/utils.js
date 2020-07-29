@@ -100,3 +100,8 @@ export function getAlbumInfo (directory) {
     otherThing: match[4]
   }
 }
+
+export function getFileName (track) {
+  return `${track.number}. ${track.TITLE}.mp3`
+    .replace(/\?/g, '')
+}

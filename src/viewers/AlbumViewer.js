@@ -13,13 +13,15 @@ import TableHead from '@material-ui/core/TableHead'
 import TableBody from '@material-ui/core/TableBody'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
+import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
+import QueueMusicIcon from '@material-ui/icons/QueueMusic'
 import Alert from '@material-ui/lab/Alert'
 import CoverImage from '../CoverImage'
-import { playSong } from '../redux/actions'
-import { urlEncode, parseCue, getAlbumInfo } from '../utils'
+import { playSong, queueSong } from '../redux/actions'
+import { urlEncode, parseCue, getAlbumInfo, getFileName } from '../utils'
 
 const useStyles = makeStyles((theme) => ({
   gridShrink: {
@@ -47,12 +49,15 @@ const useStyles = makeStyles((theme) => ({
     },
     '& td': {
       border: 'none',
-      paddingTop: theme.spacing(1),
-      paddingBottom: theme.spacing(1)
+      paddingTop: theme.spacing(0.5),
+      paddingBottom: theme.spacing(0.5)
     }
   },
-  playIcon: {
-    padding: theme.spacing(0.5)
+  buttons: {
+    '& button': {
+      padding: theme.spacing(1),
+      margin: theme.spacing(0, 0.5)
+    }
   }
 }))
 
@@ -62,18 +67,26 @@ async function fetchFile ({ file }) {
 }
 
 const AlbumViewer = connect(
-  null,
-  { playSong }
+  (state) => ({ song: state.musicPlayer.playlist[state.musicPlayer.index] }),
+  { playSong, queueSong }
 )(
-  ({ cueFile, playSong }) => {
+  ({ cueFile, song, playSong, queueSong }) => {
     const { data, error, isPending } = useAsync(fetchFile, { file: cueFile })
     const parent = cueFile.parent
     const albumInfo = getAlbumInfo(parent)
     const classes = useStyles()
 
     const playCue = (track) => {
-      const fileName = `${track.number}. ${track.TITLE}.mp3`
-      playSong(parent.get(fileName))
+      playSong(parent.get(getFileName(track)))
+    }
+
+    const queueCue = (track) => {
+      if (song) {
+        queueSong(parent.get(getFileName(track)))
+      } else {
+        song = true // Let queueAll know that a song has been queued already
+        playSong(parent.get(getFileName(track)))
+      }
     }
 
     return (
@@ -119,6 +132,12 @@ const AlbumViewer = connect(
               return <Alert severity='error' variant='outlined'>Could not parse cue file.</Alert>
             }
 
+            const queueAll = () => {
+              cue._child.TRACK
+                .sort((a, b) => Number(a.number) - Number(b.number))
+                .forEach(queueCue)
+            }
+
             return (
               <Table className={classes.albumTable}>
                 <TableHead>
@@ -126,7 +145,7 @@ const AlbumViewer = connect(
                     <TableCell>Index</TableCell>
                     <TableCell>Title</TableCell>
                     <TableCell>Performer</TableCell>
-                    <TableCell />
+                    <TableCell><Button variant='outlined' onClick={queueAll}>Queue All</Button></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -137,9 +156,12 @@ const AlbumViewer = connect(
                         <TableCell>{track.number}</TableCell>
                         <TableCell>{track.TITLE}</TableCell>
                         <TableCell>{track.PERFORMER}</TableCell>
-                        <TableCell>
-                          <IconButton onClick={playCue.bind(null, track)} className={classes.playIcon}>
+                        <TableCell className={classes.buttons}>
+                          <IconButton onClick={playCue.bind(null, track)}>
                             <PlayArrowIcon />
+                          </IconButton>
+                          <IconButton onClick={queueCue.bind(null, track)}>
+                            <QueueMusicIcon />
                           </IconButton>
                         </TableCell>
                       </TableRow>

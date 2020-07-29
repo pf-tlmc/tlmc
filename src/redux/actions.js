@@ -25,3 +25,16 @@ export const playSong = (file) => ({
   type: 'musicPlayer.PLAY_SONG',
   payload: file
 })
+
+export const queueSong = (file) => ({
+  type: 'musicPlayer.QUEUE_SONG',
+  payload: file
+})
+
+export const previousSong = () => ({
+  type: 'musicPlayer.PREVIOUS_SONG'
+})
+
+export const nextSong = () => ({
+  type: 'musicPlayer.NEXT_SONG'
+})

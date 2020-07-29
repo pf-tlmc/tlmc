@@ -33,7 +33,7 @@ function searchOptions (state = {}, action) {
   }
 }
 
-function musicPlayer (state = { playlist: [], currIndex: -1, playing: false }, action) {
+function musicPlayer (state = { playlist: [], index: -1, playing: false }, action) {
   switch (action.type) {
     case 'musicPlayer.TOGGLE_PLAY':
       return {
@@ -43,9 +43,44 @@ function musicPlayer (state = { playlist: [], currIndex: -1, playing: false }, a
     case 'musicPlayer.PLAY_SONG':
       return {
         playlist: [action.payload],
-        currIndex: 0,
+        index: 0,
         playing: true
       }
+    case 'musicPlayer.QUEUE_SONG': {
+      if (!action.payload) return state
+
+      const lastSong = state.playlist[state.playlist.length - 1]
+      if (!lastSong || action.payload.path !== lastSong.path) {
+        return {
+          ...state,
+          playlist: state.playlist.concat([action.payload])
+        }
+      } else {
+        return state
+      }
+    }
+    case 'musicPlayer.PREVIOUS_SONG': {
+      if (state.index > 0) {
+        return {
+          ...state,
+          index: state.index - 1,
+          playing: true
+        }
+      } else {
+        return state
+      }
+    }
+    case 'musicPlayer.NEXT_SONG': {
+      if (state.index < state.playlist.length - 1) {
+        return {
+          ...state,
+          index: state.index + 1,
+          playing: true
+        }
+      } else {
+        return state
+      }
+    }
     default:
       return state
   }

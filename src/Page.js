@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
 const Page = connect(
   (state) => ({
     search: state.search,
-    song: state.musicPlayer.playlist[state.musicPlayer.currIndex]
+    song: state.musicPlayer.playlist[state.musicPlayer.index]
   })
 )(
   ({ noPadding, contained, breadcrumbs, ls, search, song, children }) => {

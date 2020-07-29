@@ -13,7 +13,7 @@ import SkipPreviousIcon from '@material-ui/icons/SkipPrevious'
 import SkipNextIcon from '@material-ui/icons/SkipNext'
 import Progress from './Progress'
 import CoverImage from '../CoverImage'
-import { togglePlay } from '../redux/actions'
+import { togglePlay, previousSong, nextSong } from '../redux/actions'
 import { urlEncode } from '../utils'
 
 const useStyles = makeStyles((theme) => ({
@@ -33,16 +33,19 @@ let musicPlayer = null // IDK why createRef isn't working
 
 const MusicPlayer = connect(
   (state) => ({
-    song: state.musicPlayer.playlist[state.musicPlayer.currIndex],
+    playlist: state.musicPlayer.playlist,
+    index: state.musicPlayer.index,
     playing: state.musicPlayer.playing
   }),
-  { togglePlay }
+  { togglePlay, previousSong, nextSong }
 )(
-  ({ song, playing, togglePlay }) => {
+  ({ playlist, index, playing, togglePlay, previousSong, nextSong }) => {
     const classes = useStyles()
+    const song = playlist[index]
 
     useEffect(() => {
       musicPlayer = new window.Audio()
+      musicPlayer.addEventListener('ended', nextSong)
     }, [])
 
     useEffect(() => {
@@ -51,7 +54,7 @@ const MusicPlayer = connect(
       musicPlayer.play()
     }, [song])
 
-    function handleClickPlay () {
+    const handleClickPlay = () => {
       if (playing) {
         musicPlayer.pause()
       } else {
@@ -60,29 +63,37 @@ const MusicPlayer = connect(
       togglePlay()
     }
 
+    const handleClickPrevious = () => {
+      if (index === 0 || musicPlayer.currentTime > 5) {
+        musicPlayer.currentTime = 0
+      } else {
+        previousSong()
+      }
+    }
+
     return (
       <div className={classes.player}>
         <Container>
           <Grid container spacing={2}>
             <Grid item className={classes.gridShrink}>
-              <CoverImage directory={song && song.parent} width={150} height={150} />
+              <CoverImage directory={song && song.parent} width={128} height={128} />
             </Grid>
             <Grid item className={classes.gridGrow}>
               <AutoSizer>
                 {({ width, height }) =>
                   <div style={{ width, height }}>
                     <Progress audio={musicPlayer} />
-                    <Box textAlign='center' pt={1.5}>
+                    <Box textAlign='center' pt={1}>
                       <Typography variant='h6' noWrap gutterBottom>
                         {song ? song.name : <i>No song selected</i>}
                       </Typography>
-                      <IconButton><SkipPreviousIcon /></IconButton>
+                      <IconButton onClick={handleClickPrevious}><SkipPreviousIcon /></IconButton>
                       <IconButton onClick={handleClickPlay}>
                         {playing
                           ? <PauseIcon fontSize='large' />
                           : <PlayArrowIcon fontSize='large' />}
                       </IconButton>
-                      <IconButton><SkipNextIcon /></IconButton>
+                      <IconButton onClick={nextSong}><SkipNextIcon /></IconButton>
                     </Box>
                   </div>}
               </AutoSizer>
