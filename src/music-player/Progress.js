@@ -8,7 +8,8 @@ const useStyles = makeStyles((theme) => ({
     height: 20,
     backgroundColor: theme.palette.type === 'dark' ? theme.palette.grey[900] : theme.palette.grey[300],
     borderRadius: theme.shape.borderRadius,
-    overflow: 'hidden'
+    overflow: 'hidden',
+    cursor: 'pointer'
   },
   indicator: {
     position: 'absolute',
@@ -31,9 +32,9 @@ const Progress = ({ audio }) => {
   }, [])
 
   function handleClickProgress (event) {
-    // const rect = ref.current.getBoundingClientRect()
-    // const percent = (event.clientX - rect.left) / rect.width
-    // audio.currentTime = audio.duration * percent
+    const rect = ref.current.getBoundingClientRect()
+    const percent = (event.clientX - rect.left) / rect.width
+    audio.currentTime = audio.duration * percent
   }
 
   return (
