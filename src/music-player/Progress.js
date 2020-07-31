@@ -27,41 +27,46 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const Progress = ({ audio }) => {
-  const timeRanges = audio.buffered
+const Progress = ({ musicPlayer }) => {
+  const timeRanges = musicPlayer.buffered
   const classes = useStyles()
   const ref = createRef()
   const forceUpdate = useForceUpdate()
 
   useEffect(() => {
-    audio.addEventListener('timeupdate', forceUpdate)
-    audio.addEventListener('progress', forceUpdate)
+    musicPlayer.addEventListener('timeupdate', forceUpdate)
+    musicPlayer.addEventListener('progress', forceUpdate)
     return () => {
-      audio.removeEventListener('timeupdate', forceUpdate)
-      audio.removeEventListener('progress', forceUpdate)
+      musicPlayer.removeEventListener('timeupdate', forceUpdate)
+      musicPlayer.removeEventListener('progress', forceUpdate)
     }
   }, [])
 
   function handleClickProgress (event) {
     const rect = ref.current.getBoundingClientRect()
     const percent = (event.clientX - rect.left) / rect.width
-    audio.currentTime = audio.duration * percent
+    musicPlayer.currentTime = musicPlayer.duration * percent
   }
 
   return (
     <div ref={ref} onClick={handleClickProgress} className={classes.progress}>
-      {Array(timeRanges.length).fill().map((_, index) =>
-        <div
-          key={index}
-          style={{
-            left: `${timeRanges.start(index) / audio.duration * 100}%`,
-            width: `${(timeRanges.end(index) - timeRanges.start(index)) / audio.duration * 100}%`
-          }}
-          className={classes.buffered}
-        />)}
+      {Array(timeRanges.length).fill().map((_, index) => {
+        const start = timeRanges.start(index)
+        const duration = timeRanges.end(index) - start
+        return (
+          <div
+            key={index}
+            style={{
+              left: `${start / musicPlayer.duration * 100}%`,
+              width: `${duration / musicPlayer.duration * 100}%`
+            }}
+            className={classes.buffered}
+          />
+        )
+      })}
       <div
         style={{
-          width: `${(audio.currentTime / audio.duration) * 100}%`
+          width: `${(musicPlayer.currentTime / musicPlayer.duration) * 100}%`
         }}
         className={classes.indicator}
       />

@@ -67,7 +67,7 @@ const MusicPlayer = connect(
               <AutoSizer>
                 {({ width, height }) =>
                   <div style={{ width, height }}>
-                    <Progress audio={musicPlayer} />
+                    <Progress musicPlayer={musicPlayer} />
                     <Box textAlign='center' pt={1} pb={1}>
                       <Typography variant='h6' noWrap>
                         {song ? song.name : <i>No song selected</i>}
