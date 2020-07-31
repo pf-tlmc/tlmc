@@ -1,6 +1,6 @@
 import http from 'http'
 
-const TLMC_SERVE = 'http://home.pf-n.co:3000/tlmc'
+const TLMC_SERVE = 'http://serve.tlmc.pf-n.co:3000/tlmc'
 
 export default (req, res) => {
   const query = req.query.size === 'thumbnail' ? '?size=thumbnail' : ''

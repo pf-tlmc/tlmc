@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const http = require('http')
 
-const LS_URL = 'http://home.pf-n.co:3000/ls'
+const LS_URL = 'http://serve.tlmc.pf-n.co:3000/ls'
 const LS_CACHE_PATH = path.resolve(__dirname, '../.cache/ls')
 
 module.exports = () =>
