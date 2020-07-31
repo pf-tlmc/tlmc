@@ -5,15 +5,12 @@ import AutoSizer from 'react-virtualized-auto-sizer'
 import Container from '@material-ui/core/Container'
 import Box from '@material-ui/core/Box'
 import Grid from '@material-ui/core/Grid'
-import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
-import PlayArrowIcon from '@material-ui/icons/PlayArrow'
-import PauseIcon from '@material-ui/icons/Pause'
-import SkipPreviousIcon from '@material-ui/icons/SkipPrevious'
-import SkipNextIcon from '@material-ui/icons/SkipNext'
 import Progress from './Progress'
+import Controls from './Controls'
+import Volume from './Volume'
 import CoverImage from '../CoverImage'
-import { togglePlay, previousSong, nextSong } from '../redux/actions'
+import { nextSong } from '../redux/actions'
 import { urlEncode } from '../utils'
 
 const useStyles = makeStyles((theme) => ({
@@ -33,15 +30,13 @@ let musicPlayer = null // IDK why createRef isn't working
 
 const MusicPlayer = connect(
   (state) => ({
-    playlist: state.musicPlayer.playlist,
-    index: state.musicPlayer.index,
+    song: state.musicPlayer.playlist[state.musicPlayer.index],
     playing: state.musicPlayer.playing
   }),
-  { togglePlay, previousSong, nextSong }
+  { nextSong }
 )(
-  ({ playlist, index, playing, togglePlay, previousSong, nextSong }) => {
+  ({ song, playing, nextSong }) => {
     const classes = useStyles()
-    const song = playlist[index]
 
     useEffect(() => {
       musicPlayer = new window.Audio()
@@ -61,23 +56,6 @@ const MusicPlayer = connect(
       }
     }, [song])
 
-    const handleClickPlay = () => {
-      if (playing) {
-        musicPlayer.pause()
-      } else {
-        musicPlayer.play()
-      }
-      togglePlay()
-    }
-
-    const handleClickPrevious = () => {
-      if (index === 0 || musicPlayer.currentTime > 5) {
-        musicPlayer.currentTime = 0
-      } else {
-        previousSong()
-      }
-    }
-
     return (
       <div className={classes.player}>
         <Container>
@@ -90,18 +68,24 @@ const MusicPlayer = connect(
                 {({ width, height }) =>
                   <div style={{ width, height }}>
                     <Progress audio={musicPlayer} />
-                    <Box textAlign='center' pt={1}>
-                      <Typography variant='h6' noWrap gutterBottom>
+                    <Box textAlign='center' pt={1} pb={1}>
+                      <Typography variant='h6' noWrap>
                         {song ? song.name : <i>No song selected</i>}
                       </Typography>
-                      <IconButton onClick={handleClickPrevious}><SkipPreviousIcon /></IconButton>
-                      <IconButton onClick={handleClickPlay}>
-                        {playing
-                          ? <PauseIcon fontSize='large' />
-                          : <PlayArrowIcon fontSize='large' />}
-                      </IconButton>
-                      <IconButton onClick={nextSong}><SkipNextIcon /></IconButton>
                     </Box>
+                    <Grid container>
+                      <Grid item xs={4} />
+                      <Grid item xs={4}>
+                        <Box textAlign='center'>
+                          <Controls musicPlayer={musicPlayer} />
+                        </Box>
+                      </Grid>
+                      <Grid item xs={4}>
+                        <Box textAlign='right'>
+                          <Volume musicPlayer={musicPlayer} />
+                        </Box>
+                      </Grid>
+                    </Grid>
                   </div>}
               </AutoSizer>
             </Grid>
