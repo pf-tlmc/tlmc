@@ -1,5 +1,6 @@
-import React, { createRef, useState, useEffect } from 'react'
+import React, { createRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import { useForceUpdate } from '../utils'
 
 const useStyles = makeStyles((theme) => ({
   progress: {
@@ -11,6 +12,12 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'hidden',
     cursor: 'pointer'
   },
+  buffered: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    backgroundColor: theme.palette.grey[400]
+  },
   indicator: {
     position: 'absolute',
     top: 0,
@@ -21,14 +28,18 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const Progress = ({ audio }) => {
+  const timeRanges = audio.buffered
   const classes = useStyles()
-  const [value, setValue] = useState(0)
   const ref = createRef()
+  const forceUpdate = useForceUpdate()
 
   useEffect(() => {
-    audio.addEventListener('timeupdate', () => {
-      setValue(audio.currentTime / audio.duration)
-    })
+    audio.addEventListener('timeupdate', forceUpdate)
+    audio.addEventListener('progress', forceUpdate)
+    return () => {
+      audio.removeEventListener('timeupdate', forceUpdate)
+      audio.removeEventListener('progress', forceUpdate)
+    }
   }, [])
 
   function handleClickProgress (event) {
@@ -39,7 +50,21 @@ const Progress = ({ audio }) => {
 
   return (
     <div ref={ref} onClick={handleClickProgress} className={classes.progress}>
-      <div style={{ width: `${value * 100}%` }} className={classes.indicator} />
+      {Array(timeRanges.length).fill().map((_, index) =>
+        <div
+          key={index}
+          style={{
+            left: `${timeRanges.start(index) / audio.duration * 100}%`,
+            width: `${(timeRanges.end(index) - timeRanges.start(index)) / audio.duration * 100}%`
+          }}
+          className={classes.buffered}
+        />)}
+      <div
+        style={{
+          width: `${(audio.currentTime / audio.duration) * 100}%`
+        }}
+        className={classes.indicator}
+      />
     </div>
   )
 }

@@ -1,3 +1,5 @@
+import { useReducer } from 'react'
+
 const IMAGE_REGEX = /\.(jpe?g|png|bmp|tiff|gif)$/i
 
 export function isImage (node) {
@@ -105,4 +107,8 @@ export function getAlbumInfo (directory) {
 export function getFileName (track) {
   return `${track.number}. ${track.TITLE}.mp3`
     .replace(/\?/g, '')
+}
+
+export function useForceUpdate () {
+  return useReducer(x => x + 1, 0)[1]
 }
