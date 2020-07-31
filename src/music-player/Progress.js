@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     width: '100%',
     height: 20,
-    backgroundColor: theme.palette.type === 'dark' ? theme.palette.grey[900] : theme.palette.grey[300],
+    backgroundColor: theme.palette.type === 'dark' ? '#121212' : '#e0e0e0',
     borderRadius: theme.shape.borderRadius,
     overflow: 'hidden',
     cursor: 'pointer'
@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     top: 0,
     bottom: 0,
-    backgroundColor: theme.palette.grey[400]
+    backgroundColor: theme.palette.type === 'dark' ? '#242424' : '#cccccc'
   },
   indicator: {
     position: 'absolute',

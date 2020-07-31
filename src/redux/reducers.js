@@ -74,8 +74,7 @@ function musicPlayer (state = { playlist: [], index: -1, playing: false }, actio
       if (state.index < state.playlist.length - 1) {
         return {
           ...state,
-          index: state.index + 1,
-          playing: true
+          index: state.index + 1
         }
       } else {
         return state

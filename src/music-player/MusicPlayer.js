@@ -45,13 +45,20 @@ const MusicPlayer = connect(
 
     useEffect(() => {
       musicPlayer = new window.Audio()
+      musicPlayer.volume = 0.4
       musicPlayer.addEventListener('ended', nextSong)
+      return () => {
+        musicPlayer.removeEventListener('ended', nextSong)
+        musicPlayer = null
+      }
     }, [])
 
     useEffect(() => {
       if (!song) return
       musicPlayer.src = `/api/tlmc${urlEncode(song.path)}`
-      musicPlayer.play()
+      if (playing) {
+        musicPlayer.play()
+      }
     }, [song])
 
     const handleClickPlay = () => {
