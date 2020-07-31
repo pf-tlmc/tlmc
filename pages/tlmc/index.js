@@ -20,7 +20,7 @@ import FileViewer from '../../src/viewers/FileViewer'
 import Error404 from '../404'
 import { hasAlbum, urlEncode } from '../../src/utils'
 
-const OFFLINE = true
+const OFFLINE = false
 
 async function fetchAndDeserialize () {
   const res = await fetch('/api/ls')
