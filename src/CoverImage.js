@@ -1,5 +1,5 @@
 import React from 'react'
-import { isImage } from './utils'
+import { isImage, urlEncode } from './utils'
 import COVER_IMAGE_MAP from './cover-image-map'
 
 const COVER_REGEX = /^(image|img|jacket).*0*1\.(jpe?g|png|gif)$/i
@@ -53,7 +53,7 @@ export function findCoverImage (directory) {
 
 const CoverImage = ({ directory, ...props }) => {
   const coverImage = directory && findCoverImage(directory)
-  const src = coverImage ? `/api/tlmc${coverImage.path}?size=thumbnail` : '/images/album-placeholder.png'
+  const src = coverImage ? `/api/tlmc${urlEncode(coverImage.path)}?size=thumbnail` : '/images/album-placeholder.png'
   return (
     <img src={src} {...props} />
   )
