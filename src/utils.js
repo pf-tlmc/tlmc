@@ -107,6 +107,9 @@ export function getAlbumInfo (directory) {
 export function getFileName (track) {
   return `${track.number}. ${track.TITLE}.mp3`
     .replace(/\?/g, '')
+    .replace(/[/\\:|]/g, '-')
+    .replace(/[<>\t]/g, '_')
+    .replace(/\*/g, 'x')
 }
 
 export function useForceUpdate () {
