@@ -66,7 +66,7 @@ const MusicPlayer = connect(
         <Container>
           <Grid container spacing={2}>
             <Grid item className={classes.gridShrink}>
-              <CoverImage cueFile={song} width={128} height={128} />
+              <CoverImage cueFile={song} size={125} />
             </Grid>
             <Grid item className={classes.gridGrow}>
               <AutoSizer className={classes.autoSizer}>

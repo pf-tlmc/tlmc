@@ -19,8 +19,6 @@ const useClasses = makeStyles((theme) => ({
     }
   },
   coverImage: {
-    width: 100,
-    height: 100,
     marginRight: theme.spacing(2)
   }
 }))
@@ -54,7 +52,7 @@ const AlbumListViewer = ({ directory }) => {
           >
             <ListItem button>
               <ListItemIcon>
-                <CoverImage cueFile={album} className={classes.coverImage} />
+                <CoverImage cueFile={album} size={100} className={classes.coverImage} />
               </ListItemIcon>
               <ListItemText>
                 {albumInfo ? (

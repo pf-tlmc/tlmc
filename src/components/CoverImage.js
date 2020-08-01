@@ -56,14 +56,15 @@ export function findCoverImage (cueFile) {
   }
 }
 
-const CoverImage = ({ cueFile, ...props }) => {
+const CoverImage = ({ cueFile, size, ...props }) => {
   const coverImage = cueFile && findCoverImage(cueFile)
   const src = coverImage ? `/api/tlmc${urlEncode(coverImage.path)}?size=thumbnail` : DEFAULT_IMAGE
-  return <img src={src} {...props} />
+  return <img src={src} width={size} height={size} {...props} />
 }
 
 CoverImage.propTypes = {
-  cueFile: PropTypes.instanceOf(File)
+  cueFile: PropTypes.instanceOf(File),
+  size: PropTypes.number
 }
 
 export default CoverImage

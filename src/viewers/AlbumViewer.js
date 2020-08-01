@@ -39,10 +39,6 @@ const useStyles = makeStyles((theme) => ({
       padding: theme.spacing(0.25)
     }
   },
-  albumCover: {
-    width: 150,
-    height: 150
-  },
   albumTable: {
     '& th': {
       fontWeight: 'bold',
