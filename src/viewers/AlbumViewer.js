@@ -18,6 +18,7 @@ import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 import Link from '@material-ui/core/Link'
 import Button from '@material-ui/core/Button'
+import Tooltip from '@material-ui/core/Tooltip'
 import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
@@ -162,17 +163,23 @@ const AlbumViewer = connect(
                           <TableCell>{track.TITLE}</TableCell>
                           <TableCell>{track.PERFORMER}</TableCell>
                           <TableCell align='center' className={classes.buttons}>
-                            <IconButton onClick={playTrack.bind(null, track)}>
-                              <PlayArrowIcon />
-                            </IconButton>
-                            <IconButton onClick={queueTrack.bind(null, track)}>
-                              <QueueMusicIcon />
-                            </IconButton>
-                            <Link download href={`/api/tlmc${urlEncode([parent.path, getFileName(track)].join('/'))}`}>
-                              <IconButton>
-                                <GetAppIcon />
+                            <Tooltip title='Play'>
+                              <IconButton onClick={playTrack.bind(null, track)}>
+                                <PlayArrowIcon />
                               </IconButton>
-                            </Link>
+                            </Tooltip>
+                            <Tooltip title='Queue'>
+                              <IconButton onClick={queueTrack.bind(null, track)}>
+                                <QueueMusicIcon />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title='Download'>
+                              <Link download href={`/api/tlmc${urlEncode([parent.path, getFileName(track)].join('/'))}`}>
+                                <IconButton>
+                                  <GetAppIcon />
+                                </IconButton>
+                              </Link>
+                            </Tooltip>
                           </TableCell>
                         </TableRow>
                       )}

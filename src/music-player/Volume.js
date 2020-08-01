@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import Slider from '@material-ui/core/Slider'
 import IconButton from '@material-ui/core/IconButton'
+import Tooltip from '@material-ui/core/Tooltip'
 import VolumeOffIcon from '@material-ui/icons/VolumeOff'
 import VolumeMuteIcon from '@material-ui/icons/VolumeMute'
 import VolumeDownIcon from '@material-ui/icons/VolumeDown'
@@ -60,9 +61,11 @@ const Volume = ({ musicPlayer }) => {
         onChange={handleChangeVolume}
         className={classes.slider}
       />
-      <IconButton onClick={handleToggleMute}>
-        <VolumeIcon />
-      </IconButton>
+      <Tooltip title={isMute ? 'Unmute' : 'Mute'}>
+        <IconButton onClick={handleToggleMute}>
+          <VolumeIcon />
+        </IconButton>
+      </Tooltip>
     </>
   )
 }

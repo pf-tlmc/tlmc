@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import IconButton from '@material-ui/core/IconButton'
+import Tooltip from '@material-ui/core/Tooltip'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import PauseIcon from '@material-ui/icons/Pause'
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious'
@@ -46,15 +47,29 @@ const Controls = connect(
 
     return (
       <div className={classes.controls}>
-        <IconButton onClick={handleClickPrevious}>
-          <SkipPreviousIcon />
-        </IconButton>
-        <IconButton onClick={handleClickPlay}>
-          {playing ? <PauseIcon /> : <PlayArrowIcon />}
-        </IconButton>
-        <IconButton onClick={handleClickNext}>
-          <SkipNextIcon />
-        </IconButton>
+        <Tooltip title='Previous'>
+          <IconButton onClick={handleClickPrevious}>
+            <SkipPreviousIcon />
+          </IconButton>
+        </Tooltip>
+        {playing ? (
+          <Tooltip title='Pause'>
+            <IconButton onClick={handleClickPlay}>
+              <PauseIcon />
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <Tooltip title='Play'>
+            <IconButton onClick={handleClickPlay}>
+              <PlayArrowIcon />
+            </IconButton>
+          </Tooltip>
+        )}
+        <Tooltip title='Next'>
+          <IconButton onClick={handleClickNext}>
+            <SkipNextIcon />
+          </IconButton>
+        </Tooltip>
       </div>
     )
   }
