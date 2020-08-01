@@ -5,7 +5,6 @@ const TLMC_SERVE = 'http://serve.tlmc.pf-n.co:3000/tlmc'
 
 export default (req, res) => {
   const query = req.query.size === 'thumbnail' ? '?size=thumbnail' : ''
-  console.log(req.query)
   return http.get(
     `${TLMC_SERVE}/${urlEncode(req.query.tlmc_path.join('/'))}${query}`,
     (httpRes) => {

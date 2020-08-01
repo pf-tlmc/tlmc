@@ -67,7 +67,7 @@ module.exports = () =>
             const filePath = path.resolve(SITEMAPS_DIR, `./${fileName}`)
 
             fs.appendFileSync(SITEMAP_PATH,
-              `  <sitemap><loc>https://tlmc.pf-n.co/sitemaps/${fileName}</loc></sitemap>\n`
+              `  <sitemap><loc>https://tlmc.pf-n.co/sitemaps/${fileName.replace(/%/g, '%25')}</loc></sitemap>\n`
             )
 
             fs.writeFileSync(filePath,
