@@ -51,7 +51,7 @@ const DirectoryViewer = ({ title, directory, filter, disablePadding, onSelect = 
       top: `${disablePadding ? style.top : parseFloat(style.top) + PADDING_TOP}px`
     }
 
-    if (index === 0) {
+    if (title && index === 0) {
       return (
         <div style={adjustedStyle}>
           <Container>
@@ -63,7 +63,7 @@ const DirectoryViewer = ({ title, directory, filter, disablePadding, onSelect = 
       )
     }
 
-    const file = filteredFiles[index - 1]
+    const file = filteredFiles[title ? index - 1 : index]
     return (
       <Link href='/tlmc/[...tlmc_path]' as={'/tlmc' + urlEncode(file.path)} underline='none'>
         <div style={adjustedStyle}>
@@ -85,8 +85,8 @@ const DirectoryViewer = ({ title, directory, filter, disablePadding, onSelect = 
           width={width}
           height={height}
           innerElementType={disablePadding ? undefined : paddedList}
-          itemCount={filteredFiles.length + 1}
-          itemSize={(index) => index === 0 ? TITLE_SIZE : ITEM_SIZE}
+          itemCount={title ? filteredFiles.length + 1 : filteredFiles.length}
+          itemSize={(index) => title && index === 0 ? TITLE_SIZE : ITEM_SIZE}
           overscanCount={10}
         >
           {renderRow}
