@@ -10,7 +10,7 @@ import VolumeUpIcon from '@material-ui/icons/VolumeUp'
 const useStyles = makeStyles((theme) => ({
   slider: {
     position: 'relative',
-    top: theme.spacing(1),
+    top: 10,
     width: 100
   }
 }))
@@ -54,7 +54,7 @@ const Volume = ({ musicPlayer }) => {
   return (
     <>
       <Slider
-        valueLabelDisplay
+        valueLabelDisplay='auto'
         value={volume}
         onChange={handleChangeVolume}
         className={classes.slider}

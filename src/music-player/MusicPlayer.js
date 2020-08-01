@@ -11,7 +11,7 @@ import Controls from './Controls'
 import Volume from './Volume'
 import CoverImage from '../CoverImage'
 import { nextSong } from '../redux/actions'
-import { urlEncode } from '../utils'
+import { urlEncode, getAlbumInfo } from '../utils'
 
 const useStyles = makeStyles((theme) => ({
   player: {
@@ -23,6 +23,9 @@ const useStyles = makeStyles((theme) => ({
   },
   gridGrow: {
     flex: '1 1 0px'
+  },
+  autoSizer: {
+    height: 'auto !important'
   }
 }))
 
@@ -37,6 +40,7 @@ const MusicPlayer = connect(
 )(
   ({ song, playing, nextSong }) => {
     const classes = useStyles()
+    const albumInfo = getAlbumInfo(song.parent)
 
     useEffect(() => {
       musicPlayer = new window.Audio()
@@ -64,13 +68,17 @@ const MusicPlayer = connect(
               <CoverImage directory={song && song.parent} width={128} height={128} />
             </Grid>
             <Grid item className={classes.gridGrow}>
-              <AutoSizer>
-                {({ width, height }) =>
-                  <div style={{ width, height }}>
+              <AutoSizer className={classes.autoSizer}>
+                {({ width }) =>
+                  <div style={{ width }}>
                     <Progress musicPlayer={musicPlayer} />
-                    <Box textAlign='center' pt={1} pb={1}>
+                    <Box textAlign='center' pt={0.5} pb={0.5}>
                       <Typography variant='h6' noWrap>
                         {song ? song.name : <i>No song selected</i>}
+                      </Typography>
+                      <Typography variant='body2' noWrap>
+                        {albumInfo.circleThing && `[${albumInfo.circleThing}]${String.fromCharCode(8193)}`}
+                        {albumInfo.title}
                       </Typography>
                     </Box>
                     <Grid container>
