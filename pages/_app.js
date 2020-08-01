@@ -42,7 +42,7 @@ const App = ({ Component, pageProps }) => {
   return (
     <>
       <Head>
-        <title>TLMC</title>
+        <title>Touhou Lossless Music Collection</title>
         <meta name='viewport' content='minimum-scale=1, initial-scale=1, width=device-width' />
         <script async src='https://www.googletagmanager.com/gtag/js?id=UA-137452548-2' />
         <script
