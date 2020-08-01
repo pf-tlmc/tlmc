@@ -62,7 +62,7 @@ const Progress = ({ musicPlayer }) => {
     }
   }, [])
 
-  function handleClickProgress (event) {
+  const handleClickProgress = (event) => {
     const rect = ref.current.getBoundingClientRect()
     const percent = (event.clientX - rect.left) / rect.width
     musicPlayer.currentTime = musicPlayer.duration * percent

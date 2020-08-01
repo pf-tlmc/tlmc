@@ -16,11 +16,13 @@ import TableHead from '@material-ui/core/TableHead'
 import TableBody from '@material-ui/core/TableBody'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
+import Link from '@material-ui/core/Link'
 import Button from '@material-ui/core/Button'
-import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
+import Typography from '@material-ui/core/Typography'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import QueueMusicIcon from '@material-ui/icons/QueueMusic'
+import GetAppIcon from '@material-ui/icons/GetApp'
 import Alert from '@material-ui/lab/Alert'
 import CoverImage from '../components/CoverImage'
 import { playSong, queueSong } from '../redux/actions'
@@ -82,11 +84,11 @@ const AlbumViewer = connect(
     const albumInfo = getAlbumInfo(cueFile)
     const classes = useStyles()
 
-    const playCue = (track) => {
+    const playTrack = (track) => {
       playSong(parent.get(getFileName(track)))
     }
 
-    const queueCue = (track) => {
+    const queueTrack = (track) => {
       if (song) {
         queueSong(parent.get(getFileName(track)))
       } else {
@@ -137,7 +139,7 @@ const AlbumViewer = connect(
             const queueAll = () => {
               cue._child.TRACK
                 .sort((a, b) => Number(a.number) - Number(b.number))
-                .forEach(queueCue)
+                .forEach(queueTrack)
             }
 
             return (
@@ -160,12 +162,17 @@ const AlbumViewer = connect(
                           <TableCell>{track.TITLE}</TableCell>
                           <TableCell>{track.PERFORMER}</TableCell>
                           <TableCell align='center' className={classes.buttons}>
-                            <IconButton onClick={playCue.bind(null, track)}>
+                            <IconButton onClick={playTrack.bind(null, track)}>
                               <PlayArrowIcon />
                             </IconButton>
-                            <IconButton onClick={queueCue.bind(null, track)}>
+                            <IconButton onClick={queueTrack.bind(null, track)}>
                               <QueueMusicIcon />
                             </IconButton>
+                            <Link download href={`/api/tlmc${urlEncode([parent.path, getFileName(track)].join('/'))}`}>
+                              <IconButton>
+                                <GetAppIcon />
+                              </IconButton>
+                            </Link>
                           </TableCell>
                         </TableRow>
                       )}
