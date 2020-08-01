@@ -93,11 +93,7 @@ const AlbumViewer = connect(
         <CardContent>
           <Grid container spacing={4}>
             <Grid item className={classes.gridShrink}>
-              <CoverImage
-                key={cueFile.base}
-                cueFile={cueFile}
-                className={classes.albumCover}
-              />
+              <CoverImage key={cueFile.base} cueFile={cueFile} />
             </Grid>
             <Grid item className={classes.gridGrow}>
               {albumInfo
