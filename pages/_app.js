@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
+import { Provider, connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import Head from 'next/head'
-import { Provider, connect } from 'react-redux'
-import { setTheme } from '../src/redux/actions'
-import store from '../src/redux/store'
+import { useRouter } from 'next/router'
 import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
+import store from '../src/redux/store'
+import { setTheme, clearSearch } from '../src/redux/actions'
 import { lightTheme, darkTheme } from '../src/themes'
 
 // Polyfill the path.parse() function
@@ -13,14 +14,21 @@ import path from 'path'
 import pathParse from 'path-parse'
 path.parse = path.parse || pathParse
 
-const Themer = connect(
+const Main = connect(
   (state) => ({ theme: state.theme }),
-  { setTheme }
+  { setTheme, clearSearch }
 )(
-  ({ theme, setTheme, children }) => {
+  ({ theme, setTheme, clearSearch, children }) => {
+    const router = useRouter()
+
     useEffect(() => {
       const initialTheme = (typeof window !== 'undefined' && window.localStorage.getItem('theme')) || 'light'
       setTheme(initialTheme)
+
+      router.events.on('routeChangeStart', clearSearch)
+      return () => {
+        router.events.off('routeChangeStart', clearSearch)
+      }
     }, [])
 
     return (
@@ -57,10 +65,10 @@ const App = ({ Component, pageProps }) => {
         />
       </Head>
       <Provider store={store}>
-        <Themer>
+        <Main>
           <CssBaseline />
           <Component {...pageProps} />
-        </Themer>
+        </Main>
       </Provider>
     </>
   )
