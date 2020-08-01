@@ -11,7 +11,8 @@ import MusicPlayer from '../music-player/MusicPlayer'
 const useStyles = makeStyles((theme) => ({
   '@global': {
     'html, body, #__next': {
-      height: '-webkit-fill-available'
+      width: '100%',
+      height: '100%'
     }
   },
   container: {
@@ -19,10 +20,7 @@ const useStyles = makeStyles((theme) => ({
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    flexWrap: 'nowrap',
-    '&': {
-      height: '-webkit-fill-available'
-    }
+    flexWrap: 'nowrap'
   },
   header: {
     flexBasis: 'auto',
