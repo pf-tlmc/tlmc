@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { setTheme } from './redux/actions'
+import { setTheme } from '../redux/actions'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import Grid from '@material-ui/core/Grid'
@@ -20,7 +20,7 @@ import Brightness2Icon from '@material-ui/icons/Brightness2'
 import Brightness5Icon from '@material-ui/icons/Brightness5'
 import Breadcrumbs from './Breadcrumbs'
 import Link from './Link'
-import Search from './search/Search'
+import Search from '../search/Search'
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -62,6 +62,12 @@ const TopBarButton = ({ isExternal, href, icon, children }) => {
   }
 }
 
+TopBarButton.propTypes = {
+  isExternal: PropTypes.bool,
+  href: PropTypes.string,
+  icon: PropTypes.node.isRequired
+}
+
 const TopBar = connect(
   (state) => ({ theme: state.theme }),
   { setTheme }
@@ -71,7 +77,7 @@ const TopBar = connect(
     const muiTheme = useTheme()
     const isSmall = useMediaQuery(muiTheme.breakpoints.down('sm'))
 
-    const toggleTheme = () => {
+    const handleToggleTheme = () => {
       setTheme(theme === 'light' ? 'dark' : 'light')
     }
 
@@ -108,7 +114,7 @@ const TopBar = connect(
               <Brightness5Icon />
               <Switch
                 checked={theme === 'dark'}
-                onChange={toggleTheme}
+                onChange={handleToggleTheme}
               />
               <Brightness2Icon />
             </Toolbar>

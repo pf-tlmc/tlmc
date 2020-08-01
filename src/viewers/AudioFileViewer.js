@@ -1,4 +1,6 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+import { File } from 'ls-serialize/src/structures'
 import { makeStyles } from '@material-ui/core/styles'
 import { urlEncode } from '../utils'
 
@@ -9,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const Mp3FileViewer = ({ file }) => {
+const AudioFileViewer = ({ file }) => {
   const classes = useStyles()
 
   return (
@@ -19,4 +21,8 @@ const Mp3FileViewer = ({ file }) => {
   )
 }
 
-export default Mp3FileViewer
+AudioFileViewer.propTypes = {
+  file: PropTypes.instanceOf(File).isRequired
+}
+
+export default AudioFileViewer

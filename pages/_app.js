@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
+import Head from 'next/head'
 import { Provider, connect } from 'react-redux'
 import { setTheme } from '../src/redux/actions'
-import Head from 'next/head'
+import store from '../src/redux/store'
 import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { lightTheme, darkTheme } from '../src/themes'
-import store from '../src/redux/store'
 
 // Polyfill the path.parse() function
 import path from 'path'

@@ -7,11 +7,11 @@ import Head from 'next/head'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
-import Typography from '@material-ui/core/Typography'
+// import Typography from '@material-ui/core/Typography'
 import Alert from '@material-ui/lab/Alert'
 import AlertTitle from '@material-ui/lab/AlertTitle'
-import Page from '../../src/Page'
-import Section from '../../src/Section'
+import Page from '../../src/components/Page'
+import Section from '../../src/components/Section'
 import DirectoryViewer from '../../src/viewers/DirectoryViewer'
 import DirectoryViewerVirtualized from '../../src/viewers/DirectoryViewerVirtualized'
 import AlbumViewer from '../../src/viewers/AlbumViewer'
@@ -19,8 +19,6 @@ import AlbumListViewer from '../../src/viewers/AlbumListViewer'
 import FileViewer from '../../src/viewers/FileViewer'
 import Error404 from '../404'
 import { hasAlbum, urlEncode } from '../../src/utils'
-
-const OFFLINE = false
 
 async function fetchAndDeserialize () {
   const res = await fetch('/api/ls')
@@ -36,14 +34,13 @@ const TLMC = () => {
   const { data, error, isPending } = useAsync(fetchAndDeserialize)
   const router = useRouter()
 
-  if (OFFLINE) {
-    return (
-      <Page contained>
-        <Typography variant='h5'>TLMC is offline</Typography>
-        <Typography paragraph>(Moving files...)</Typography>
-      </Page>
-    )
-  }
+  // For emergencies
+  // return (
+  //   <Page contained>
+  //     <Typography variant='h5'>TLMC is offline</Typography>
+  //     <Typography paragraph>(Moving files...)</Typography>
+  //   </Page>
+  // )
 
   if (isPending) {
     return (

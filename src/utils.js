@@ -93,9 +93,13 @@ export function parseCue (cueStr) {
 
 const ALBUM_REGEX = /^(\d{4}\.\d{2}\.\d{2})(?: \[(.+?)\])? (.+?)(?: \[(.+?)\])?$/
 
-export function getAlbumInfo (directory) {
-  const match = directory.base.match(ALBUM_REGEX)
-  if (!match) return null
+export function getAlbumInfo (cueFile) {
+  const match = cueFile.parent.base.match(ALBUM_REGEX)
+  if (!match) {
+    console.error('Could not parse album info: ', cueFile)
+    return null
+  }
+
   return {
     date: match[1],
     circleThing: match[2],

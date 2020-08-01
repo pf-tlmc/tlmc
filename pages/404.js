@@ -1,5 +1,5 @@
 import React from 'react'
-import Page from '../src/Page'
+import Page from '../src/components/Page'
 
 const Error404 = () => {
   return (

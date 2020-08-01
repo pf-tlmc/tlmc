@@ -1,15 +1,23 @@
 import React, { forwardRef } from 'react'
+import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import { VariableSizeList as List } from 'react-window'
 import AutoSizer from 'react-virtualized-auto-sizer'
+import { Directory, File } from 'ls-serialize/src/structures'
 import Container from '@material-ui/core/Container'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import Typography from '@material-ui/core/Typography'
-import Link from '../Link'
-import FileIcon from '../FileIcon'
+import Link from '../components/Link'
+import FileIcon from '../components/FileIcon'
 import { urlEncode } from '../utils'
+
+// These values should match the ones defined in DirectoryViewer and Page
+const TITLE_SIZE = 50
+const ITEM_SIZE = 43
+const PADDING_TOP = 8
+const PADDING_BOTTOM = 8
 
 const useStyles = makeStyles((theme) => ({
   listItem: {
@@ -20,35 +28,20 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-// These values should match the ones defined in DirectoryViewer and Page
-const TITLE_SIZE = 50
-const ITEM_SIZE = 43
-const PADDING_TOP = 8
-const PADDING_BOTTOM = 250
-
 const paddedList = forwardRef(({ style, children }, ref) => {
-  return (
-    <div
-      ref={ref}
-      style={{
-        ...style,
-        height: `${parseFloat(style.height) + PADDING_TOP + PADDING_BOTTOM}px`
-      }}
-    >
-      {children}
-    </div>
-  )
+  style.height = `${parseFloat(style.height) + PADDING_TOP + PADDING_BOTTOM}px`
+  return <div ref={ref} style={style}>{children}</div>
 })
 
-const DirectoryViewer = ({ title, directory, filter, disablePadding, onSelect = () => {} }) => {
+const DirectoryViewerVirtualized = ({ title, directory, filter, onSelect = () => {} }) => {
+  const classes = useStyles()
   const files = Array.isArray(directory) ? directory : [...directory.files]
   const filteredFiles = filter ? files.filter(filter) : files
-  const classes = useStyles()
 
-  function renderRow ({ index, style }) {
+  const renderRow = ({ index, style }) => {
     const adjustedStyle = {
       ...style,
-      top: `${disablePadding ? style.top : parseFloat(style.top) + PADDING_TOP}px`
+      top: `${parseFloat(style.top) + PADDING_TOP}px`
     }
 
     if (title && index === 0) {
@@ -84,7 +77,7 @@ const DirectoryViewer = ({ title, directory, filter, disablePadding, onSelect = 
         <List
           width={width}
           height={height}
-          innerElementType={disablePadding ? undefined : paddedList}
+          innerElementType={paddedList}
           itemCount={title ? filteredFiles.length + 1 : filteredFiles.length}
           itemSize={(index) => title && index === 0 ? TITLE_SIZE : ITEM_SIZE}
           overscanCount={10}
@@ -95,4 +88,13 @@ const DirectoryViewer = ({ title, directory, filter, disablePadding, onSelect = 
   )
 }
 
-export default DirectoryViewer
+DirectoryViewerVirtualized.propTypes = {
+  title: PropTypes.string,
+  directory: PropTypes.oneOfType([
+    PropTypes.instanceOf(Directory).isRequired,
+    PropTypes.arrayOf(PropTypes.instanceOf(File).isRequired).isRequired
+  ]).isRequired,
+  filter: PropTypes.func
+}
+
+export default DirectoryViewerVirtualized

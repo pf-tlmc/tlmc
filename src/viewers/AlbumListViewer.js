@@ -6,9 +6,9 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import Typography from '@material-ui/core/Typography'
-import Link from '../Link'
-import CoverImage from '../CoverImage'
-import { urlEncode, hasAlbum, getAlbumInfo } from '../utils'
+import Link from '../components/Link'
+import CoverImage from '../components/CoverImage'
+import { urlEncode, getAlbumInfo } from '../utils'
 
 const useClasses = makeStyles((theme) => ({
   albumList: {
@@ -27,7 +27,7 @@ const useClasses = makeStyles((theme) => ({
 
 function collectAlbums (node, albums = []) {
   for (const file of node) {
-    if (hasAlbum(file)) {
+    if (file.isFile && file.ext.toLowerCase() === '.cue') {
       albums.push(file)
     }
     if (file.isDirectory) {
@@ -43,30 +43,28 @@ const AlbumListViewer = ({ directory }) => {
 
   return (
     <List component={Paper} className={classes.albumList}>
-      {albums.map((directory) => {
-        const albumInfo = getAlbumInfo(directory)
+      {albums.map((album) => {
+        const albumInfo = getAlbumInfo(album)
         return (
           <Link
-            key={directory.base}
+            key={album.base}
             href='/tlmc/[...tlmc_path]'
-            as={'/tlmc' + urlEncode(directory.path)}
+            as={'/tlmc' + urlEncode(album.parent.path)}
             underline='none'
           >
             <ListItem button>
               <ListItemIcon>
-                <CoverImage directory={directory} className={classes.coverImage} />
+                <CoverImage cueFile={album} className={classes.coverImage} />
               </ListItemIcon>
               <ListItemText>
-                {albumInfo
-                  ? (
-                    <>
-                      <Typography variant='h6'>{albumInfo.title}</Typography>
-                      <Typography variant='body2'>{albumInfo.date}</Typography>
-                      {albumInfo.circleThing && <Typography variant='body2'>{albumInfo.circleThing}</Typography>}
-                      {albumInfo.otherThing && <Typography variant='body2'>{albumInfo.otherThing}</Typography>}
-                    </>
-                  )
-                  : <Typography variant='h6'>{directory.base}</Typography>}
+                {albumInfo ? (
+                  <>
+                    <Typography variant='h6'>{albumInfo.title}</Typography>
+                    <Typography variant='body2'>{albumInfo.date}</Typography>
+                    {albumInfo.circleThing && <Typography variant='body2'>{albumInfo.circleThing}</Typography>}
+                    {albumInfo.otherThing && <Typography variant='body2'>{albumInfo.otherThing}</Typography>}
+                  </>
+                ) : <Typography variant='h6'>{album.base}</Typography>}
               </ListItemText>
             </ListItem>
           </Link>

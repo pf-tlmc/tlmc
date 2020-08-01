@@ -5,24 +5,24 @@ import { makeStyles, useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import Container from '@material-ui/core/Container'
 import TopBar from './TopBar'
-import SearchResults from './search/SearchResults'
-import MusicPlayer from './music-player/MusicPlayer'
+import SearchResults from '../search/SearchResults'
+import MusicPlayer from '../music-player/MusicPlayer'
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
-    __next: {
-      height: '100vh',
-      '&': {
-        height: '-webkit-fill-available'
-      }
+    'html, body, #__next': {
+      height: '-webkit-fill-available'
     }
   },
   container: {
     width: '100%',
-    height: '100vh',
+    height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    flexWrap: 'nowrap'
+    flexWrap: 'nowrap',
+    '&': {
+      height: '-webkit-fill-available'
+    }
   },
   header: {
     flexBasis: 'auto',

@@ -1,5 +1,7 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import fetch from 'unfetch'
+import { File } from 'ls-serialize/src/structures'
 import { useAsync } from 'react-async'
 import { connect } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
@@ -19,7 +21,7 @@ import IconButton from '@material-ui/core/IconButton'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import QueueMusicIcon from '@material-ui/icons/QueueMusic'
 import Alert from '@material-ui/lab/Alert'
-import CoverImage from '../CoverImage'
+import CoverImage from '../components/CoverImage'
 import { playSong, queueSong } from '../redux/actions'
 import { urlEncode, parseCue, getAlbumInfo, getFileName } from '../utils'
 
@@ -54,6 +56,7 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   buttons: {
+    whitespace: 'noWrap',
     '& button': {
       padding: theme.spacing(1),
       margin: theme.spacing(0, 0.5)
@@ -73,7 +76,7 @@ const AlbumViewer = connect(
   ({ cueFile, song, playSong, queueSong }) => {
     const { data, error, isPending } = useAsync(fetchFile, { file: cueFile })
     const parent = cueFile.parent
-    const albumInfo = getAlbumInfo(parent)
+    const albumInfo = getAlbumInfo(cueFile)
     const classes = useStyles()
 
     const playCue = (track) => {
@@ -96,7 +99,7 @@ const AlbumViewer = connect(
             <Grid item className={classes.gridShrink}>
               <CoverImage
                 key={cueFile.base}
-                directory={parent}
+                cueFile={cueFile}
                 className={classes.albumCover}
               />
             </Grid>
@@ -110,7 +113,7 @@ const AlbumViewer = connect(
                     {albumInfo.otherThing && <Typography>{albumInfo.otherThing}</Typography>}
                   </>
                 )
-                : <Typography variant='h5'>{cueFile.name}</Typography>}
+                : <Typography variant='h4'>{cueFile.name}</Typography>}
             </Grid>
           </Grid>
         </CardContent>
@@ -142,10 +145,10 @@ const AlbumViewer = connect(
               <Table className={classes.albumTable}>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Index</TableCell>
+                    <TableCell align='center'>Index</TableCell>
                     <TableCell>Title</TableCell>
                     <TableCell>Performer</TableCell>
-                    <TableCell><Button variant='outlined' onClick={queueAll}>Queue All</Button></TableCell>
+                    <TableCell align='center'><Button variant='outlined' onClick={queueAll}>Queue All</Button></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -153,10 +156,10 @@ const AlbumViewer = connect(
                     .sort((a, b) => Number(a.number) - Number(b.number))
                     .map((track) =>
                       <TableRow key={track.number} hover>
-                        <TableCell>{track.number}</TableCell>
+                        <TableCell align='center'>{track.number}</TableCell>
                         <TableCell>{track.TITLE}</TableCell>
                         <TableCell>{track.PERFORMER}</TableCell>
-                        <TableCell className={classes.buttons}>
+                        <TableCell align='center' className={classes.buttons}>
                           <IconButton onClick={playCue.bind(null, track)}>
                             <PlayArrowIcon />
                           </IconButton>
@@ -175,5 +178,9 @@ const AlbumViewer = connect(
     )
   }
 )
+
+AlbumViewer.propTypes = {
+  cueFile: PropTypes.instanceOf(File).isRequired
+}
 
 export default AlbumViewer

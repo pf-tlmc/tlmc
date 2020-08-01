@@ -1,4 +1,5 @@
 import React, { createRef, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import { useForceUpdate } from '../utils'
 
@@ -72,6 +73,12 @@ const Progress = ({ musicPlayer }) => {
       />
     </div>
   )
+}
+
+if (typeof window !== 'undefined') {
+  Progress.propTypes = {
+    musicPlayer: PropTypes.instanceOf(window.Audio).isRequired
+  }
 }
 
 export default Progress

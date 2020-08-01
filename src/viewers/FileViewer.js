@@ -1,6 +1,8 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+import { File } from 'ls-serialize/src/structures'
 import Typography from '@material-ui/core/Typography'
-import Mp3FileViewer from './Mp3FileViewer'
+import AudioFileViewer from './AudioFileViewer'
 import TextFileViewer from './TextFileViewer'
 import PDFFileViewer from './PDFFileViewer'
 import ImageFileViewer from './ImageFileViewer'
@@ -8,7 +10,7 @@ import ImageFileViewer from './ImageFileViewer'
 const FileViewer = ({ file }) => {
   switch (file.ext.toLowerCase()) {
     case '.mp3':
-      return <Mp3FileViewer file={file} />
+      return <AudioFileViewer file={file} />
     case '.jpg':
     case '.gif':
     case '.png':
@@ -22,6 +24,10 @@ const FileViewer = ({ file }) => {
     default:
       return <Typography paragraph>There is no viewer for this file type yet.</Typography>
   }
+}
+
+FileViewer.propTypes = {
+  file: PropTypes.instanceOf(File).isRequired
 }
 
 export default FileViewer

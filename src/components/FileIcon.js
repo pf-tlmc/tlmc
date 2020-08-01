@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Directory, File } from 'ls-serialize/src/structures'
 import FolderIcon from '@material-ui/icons/Folder'
 import AudiotrackIcon from '@material-ui/icons/Audiotrack'
 import AlbumIcon from '@material-ui/icons/Album'
@@ -43,7 +44,10 @@ const FileIcon = ({ file }) => {
 }
 
 FileIcon.propTypes = {
-  file: PropTypes.object.isRequired
+  file: PropTypes.oneOfType([
+    PropTypes.instanceOf(Directory).isRequired,
+    PropTypes.instanceOf(File).isRequired
+  ]).isRequired
 }
 
 export default FileIcon

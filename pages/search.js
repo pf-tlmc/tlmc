@@ -16,7 +16,7 @@ import AlertTitle from '@material-ui/lab/AlertTitle'
 import TextField from '@material-ui/core/TextField'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import SearchIcon from '@material-ui/icons/Search'
-import Page from '../src/Page'
+import Page from '../src/components/Page'
 import SearchResults from '../src/search/SearchResults'
 
 const useStyles = makeStyles((theme) => ({
@@ -40,8 +40,9 @@ const Search = connect(
   { setSearch }
 )(
   ({ search, setSearch }) => {
-    const { data, error, isPending } = useAsync(fetchAndDeserialize)
     const classes = useStyles()
+    const { data, error, isPending } = useAsync(fetchAndDeserialize)
+
     const handleInputSearch = (event) => {
       setSearch(event.target.value)
     }

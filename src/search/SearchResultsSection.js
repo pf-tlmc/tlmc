@@ -35,7 +35,7 @@ const SearchResultsSection = ({ title, list, expand, setExpand, clearSearch }) =
       {expand && list.length > 50
         ? (
           <div className={classes.virtualized}>
-            <DirectoryViewerVirtualized directory={list} disablePadding onSelect={clearSearch} />
+            <DirectoryViewerVirtualized directory={list} onSelect={clearSearch} />
           </div>
         )
         : <DirectoryViewer directory={expand ? list : list.slice(0, 10)} disablePadding onSelect={clearSearch} />}

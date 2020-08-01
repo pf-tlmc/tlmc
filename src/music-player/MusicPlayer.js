@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography'
 import Progress from './Progress'
 import Controls from './Controls'
 import Volume from './Volume'
-import CoverImage from '../CoverImage'
+import CoverImage from '../components/CoverImage'
 import { nextSong } from '../redux/actions'
 import { urlEncode, getAlbumInfo } from '../utils'
 
@@ -40,7 +40,7 @@ const MusicPlayer = connect(
 )(
   ({ song, playing, nextSong }) => {
     const classes = useStyles()
-    const albumInfo = getAlbumInfo(song.parent)
+    const albumInfo = getAlbumInfo(song)
 
     useEffect(() => {
       musicPlayer = new window.Audio()
@@ -48,6 +48,7 @@ const MusicPlayer = connect(
       musicPlayer.addEventListener('ended', nextSong)
       return () => {
         musicPlayer.removeEventListener('ended', nextSong)
+        musicPlayer.pause()
         musicPlayer = null
       }
     }, [])
@@ -65,7 +66,7 @@ const MusicPlayer = connect(
         <Container>
           <Grid container spacing={2}>
             <Grid item className={classes.gridShrink}>
-              <CoverImage directory={song && song.parent} width={128} height={128} />
+              <CoverImage cueFile={song} width={128} height={128} />
             </Grid>
             <Grid item className={classes.gridGrow}>
               <AutoSizer className={classes.autoSizer}>
@@ -76,10 +77,11 @@ const MusicPlayer = connect(
                       <Typography variant='h6' noWrap>
                         {song ? song.name : <i>No song selected</i>}
                       </Typography>
-                      <Typography variant='body2' noWrap>
-                        {albumInfo.circleThing && `[${albumInfo.circleThing}]${String.fromCharCode(8193)}`}
-                        {albumInfo.title}
-                      </Typography>
+                      {albumInfo &&
+                        <Typography variant='body2' noWrap>
+                          {albumInfo.circleThing && `[${albumInfo.circleThing}]${String.fromCharCode(8193)}`}
+                          {albumInfo.title}
+                        </Typography>}
                     </Box>
                     <Grid container>
                       <Grid item xs={4} />

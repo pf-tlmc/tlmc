@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const Section = ({ fullWidth, title, children }) => {
+const Section = ({ title, children }) => {
   const classes = useStyles()
 
   return (

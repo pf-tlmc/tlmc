@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react'
+import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import Slider from '@material-ui/core/Slider'
 import IconButton from '@material-ui/core/IconButton'
@@ -64,6 +65,12 @@ const Volume = ({ musicPlayer }) => {
       </IconButton>
     </>
   )
+}
+
+if (typeof window !== 'undefined') {
+  Volume.propTypes = {
+    musicPlayer: PropTypes.instanceOf(window.Audio).isRequired
+  }
 }
 
 export default Volume

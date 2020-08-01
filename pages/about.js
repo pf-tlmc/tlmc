@@ -1,6 +1,6 @@
 import React from 'react'
 import Typography from '@material-ui/core/Typography'
-import Page from '../src/Page'
+import Page from '../src/components/Page'
 
 const About = () => {
   return (
