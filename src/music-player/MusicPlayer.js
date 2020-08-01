@@ -17,7 +17,7 @@ import { urlEncode, getAlbumInfo } from '../utils'
 const useStyles = makeStyles((theme) => ({
   player: {
     borderTop: `1px solid ${theme.palette.primary.main}`,
-    padding: theme.spacing(2)
+    padding: theme.spacing(1, 2)
   },
   coverImage: {
     flex: '0 0 auto'
@@ -77,7 +77,7 @@ const MusicPlayer = connect(
                 {({ width }) =>
                   <div style={{ width }}>
                     <Progress musicPlayer={musicPlayer} />
-                    <Box textAlign='center' mt={isSmall ? 4 : 0} pt={0.5} pb={0.5}>
+                    <Box textAlign='center' mt={isSmall ? 2 : 0} pt={0.5} pb={0.5}>
                       <Typography variant='h6' noWrap>
                         {song ? song.name : <i>No song selected</i>}
                       </Typography>

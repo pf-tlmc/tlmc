@@ -1,12 +1,19 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import { makeStyles } from '@material-ui/core/styles'
 import IconButton from '@material-ui/core/IconButton'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import PauseIcon from '@material-ui/icons/Pause'
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious'
 import SkipNextIcon from '@material-ui/icons/SkipNext'
 import { togglePlay, previousSong, nextSong } from '../redux/actions'
+
+const useStyles = makeStyles((theme) => ({
+  controls: {
+    whiteSpace: 'nowrap'
+  }
+}))
 
 const Controls = connect(
   (state) => ({
@@ -16,6 +23,8 @@ const Controls = connect(
   { togglePlay, previousSong, nextSong }
 )(
   ({ musicPlayer, index, playing, togglePlay, previousSong, nextSong }) => {
+    const classes = useStyles()
+
     const handleClickPlay = () => {
       if (playing) {
         musicPlayer.pause()
@@ -36,7 +45,7 @@ const Controls = connect(
     const handleClickNext = nextSong
 
     return (
-      <>
+      <div className={classes.controls}>
         <IconButton onClick={handleClickPrevious}>
           <SkipPreviousIcon />
         </IconButton>
@@ -46,7 +55,7 @@ const Controls = connect(
         <IconButton onClick={handleClickNext}>
           <SkipNextIcon />
         </IconButton>
-      </>
+      </div>
     )
   }
 )
