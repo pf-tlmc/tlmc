@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import Container from '@material-ui/core/Container'
 import Box from '@material-ui/core/Box'
@@ -18,10 +19,10 @@ const useStyles = makeStyles((theme) => ({
     borderTop: `1px solid ${theme.palette.primary.main}`,
     padding: theme.spacing(2)
   },
-  gridShrink: {
+  coverImage: {
     flex: '0 0 auto'
   },
-  gridGrow: {
+  interface: {
     flex: '1 1 0px'
   },
   autoSizer: {
@@ -40,7 +41,9 @@ const MusicPlayer = connect(
 )(
   ({ song, playing, nextSong }) => {
     const classes = useStyles()
+    const theme = useTheme()
     const albumInfo = getAlbumInfo(song)
+    const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
 
     useEffect(() => {
       musicPlayer = new window.Audio()
@@ -65,15 +68,16 @@ const MusicPlayer = connect(
       <div className={classes.player}>
         <Container>
           <Grid container spacing={2}>
-            <Grid item className={classes.gridShrink}>
-              <CoverImage cueFile={song} size={125} />
-            </Grid>
-            <Grid item className={classes.gridGrow}>
+            {!isSmall &&
+              <Grid item className={classes.coverImage}>
+                <CoverImage cueFile={song} size={125} />
+              </Grid>}
+            <Grid item className={classes.interface}>
               <AutoSizer className={classes.autoSizer}>
                 {({ width }) =>
                   <div style={{ width }}>
                     <Progress musicPlayer={musicPlayer} />
-                    <Box textAlign='center' pt={0.5} pb={0.5}>
+                    <Box textAlign='center' mt={isSmall ? 4 : 0} pt={0.5} pb={0.5}>
                       <Typography variant='h6' noWrap>
                         {song ? song.name : <i>No song selected</i>}
                       </Typography>
@@ -83,19 +87,25 @@ const MusicPlayer = connect(
                           {albumInfo.title}
                         </Typography>}
                     </Box>
-                    <Grid container>
-                      <Grid item xs={4} />
-                      <Grid item xs={4}>
-                        <Box textAlign='center'>
-                          <Controls musicPlayer={musicPlayer} />
-                        </Box>
+                    {isSmall ? (
+                      <Box textAlign='center'>
+                        <Controls musicPlayer={musicPlayer} />
+                      </Box>
+                    ) : (
+                      <Grid container>
+                        <Grid item xs />
+                        <Grid item xs>
+                          <Box textAlign='center'>
+                            <Controls musicPlayer={musicPlayer} />
+                          </Box>
+                        </Grid>
+                        <Grid item xs>
+                          <Box textAlign='right'>
+                            <Volume musicPlayer={musicPlayer} />
+                          </Box>
+                        </Grid>
                       </Grid>
-                      <Grid item xs={4}>
-                        <Box textAlign='right'>
-                          <Volume musicPlayer={musicPlayer} />
-                        </Box>
-                      </Grid>
-                    </Grid>
+                    )}
                   </div>}
               </AutoSizer>
             </Grid>

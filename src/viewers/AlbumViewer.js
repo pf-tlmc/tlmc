@@ -10,6 +10,7 @@ import Box from '@material-ui/core/Box'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import Grid from '@material-ui/core/Grid'
+import TableContainer from '@material-ui/core/TableContainer'
 import Table from '@material-ui/core/Table'
 import TableHead from '@material-ui/core/TableHead'
 import TableBody from '@material-ui/core/TableBody'
@@ -27,7 +28,12 @@ import { urlEncode, parseCue, getAlbumInfo, getFileName } from '../utils'
 
 const useStyles = makeStyles((theme) => ({
   gridShrink: {
-    flex: '0 0 auto'
+    flex: '0 0 auto',
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+      textAlign: 'center'
+    }
   },
   gridGrow: {
     flex: '1 1 0px'
@@ -40,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   albumTable: {
+    minWidth: 500,
     '& th': {
       fontWeight: 'bold',
       paddingTop: theme.spacing(1),
@@ -52,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   buttons: {
-    whitespace: 'noWrap',
+    whiteSpace: 'nowrap',
     '& button': {
       padding: theme.spacing(1),
       margin: theme.spacing(0, 0.5)
@@ -91,7 +98,7 @@ const AlbumViewer = connect(
     return (
       <Card className={classes.album} elevation={2}>
         <CardContent>
-          <Grid container spacing={4}>
+          <Grid container spacing={2}>
             <Grid item className={classes.gridShrink}>
               <CoverImage key={cueFile.base} cueFile={cueFile} />
             </Grid>
@@ -134,35 +141,37 @@ const AlbumViewer = connect(
             }
 
             return (
-              <Table className={classes.albumTable}>
-                <TableHead>
-                  <TableRow>
-                    <TableCell align='center'>Index</TableCell>
-                    <TableCell>Title</TableCell>
-                    <TableCell>Performer</TableCell>
-                    <TableCell align='center'><Button variant='outlined' onClick={queueAll}>Queue All</Button></TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {cue._child.TRACK
-                    .sort((a, b) => Number(a.number) - Number(b.number))
-                    .map((track) =>
-                      <TableRow key={track.number} hover>
-                        <TableCell align='center'>{track.number}</TableCell>
-                        <TableCell>{track.TITLE}</TableCell>
-                        <TableCell>{track.PERFORMER}</TableCell>
-                        <TableCell align='center' className={classes.buttons}>
-                          <IconButton onClick={playCue.bind(null, track)}>
-                            <PlayArrowIcon />
-                          </IconButton>
-                          <IconButton onClick={queueCue.bind(null, track)}>
-                            <QueueMusicIcon />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    )}
-                </TableBody>
-              </Table>
+              <TableContainer>
+                <Table className={classes.albumTable}>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align='center'>Index</TableCell>
+                      <TableCell>Title</TableCell>
+                      <TableCell>Performer</TableCell>
+                      <TableCell align='center'><Button variant='outlined' onClick={queueAll}>Queue All</Button></TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {cue._child.TRACK
+                      .sort((a, b) => Number(a.number) - Number(b.number))
+                      .map((track) =>
+                        <TableRow key={track.number} hover>
+                          <TableCell align='center'>{track.number}</TableCell>
+                          <TableCell>{track.TITLE}</TableCell>
+                          <TableCell>{track.PERFORMER}</TableCell>
+                          <TableCell align='center' className={classes.buttons}>
+                            <IconButton onClick={playCue.bind(null, track)}>
+                              <PlayArrowIcon />
+                            </IconButton>
+                            <IconButton onClick={queueCue.bind(null, track)}>
+                              <QueueMusicIcon />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             )
           })()}
         </CardContent>
