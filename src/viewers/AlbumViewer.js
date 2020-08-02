@@ -1,12 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import fetch from 'unfetch'
 import { File } from 'ls-serialize/src/structures'
-import { useAsync } from 'react-async'
 import { connect } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Box from '@material-ui/core/Box'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import Grid from '@material-ui/core/Grid'
@@ -24,10 +20,9 @@ import Typography from '@material-ui/core/Typography'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import QueueMusicIcon from '@material-ui/icons/QueueMusic'
 import GetAppIcon from '@material-ui/icons/GetApp'
-import Alert from '@material-ui/lab/Alert'
 import CoverImage from '../components/CoverImage'
 import { playSong, queueSong } from '../redux/actions'
-import { urlEncode, parseCue, getAlbumInfo, getFileName } from '../utils'
+import { urlEncode, getAlbumInfo, getFileName } from '../utils'
 
 const useStyles = makeStyles((theme) => ({
   gridShrink: {
@@ -70,20 +65,15 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-async function fetchFile ({ file }) {
-  const res = await fetch('/api/tlmc' + urlEncode(file.path))
-  return res.text()
-}
-
 const AlbumViewer = connect(
   (state) => ({ song: state.musicPlayer.playlist[state.musicPlayer.index] }),
   { playSong, queueSong }
 )(
-  ({ cueFile, song, playSong, queueSong }) => {
-    const { data, error, isPending } = useAsync(fetchFile, { file: cueFile })
-    const parent = cueFile.parent
-    const albumInfo = getAlbumInfo(cueFile)
+  ({ cueSheets, cueFile, song, playSong, queueSong }) => {
     const classes = useStyles()
+    const albumInfo = getAlbumInfo(cueFile)
+    const parent = cueFile.parent
+    const cue = cueSheets[cueFile.path]
 
     const playTrack = (track) => {
       playSong(parent.get(getFileName(track)))
@@ -98,6 +88,12 @@ const AlbumViewer = connect(
       }
     }
 
+    const queueAll = () => {
+      cue._child.TRACK
+        .sort((a, b) => Number(a.number) - Number(b.number))
+        .forEach(queueTrack)
+    }
+
     return (
       <Card className={classes.album} elevation={2}>
         <CardContent>
@@ -106,88 +102,64 @@ const AlbumViewer = connect(
               <CoverImage key={cueFile.base} cueFile={cueFile} />
             </Grid>
             <Grid item className={classes.gridGrow}>
-              {albumInfo
-                ? (
-                  <>
-                    <Typography variant='h4'>{albumInfo.title}</Typography>
-                    <Typography>{albumInfo.date}</Typography>
-                    {albumInfo.circleThing && <Typography>{albumInfo.circleThing}</Typography>}
-                    {albumInfo.otherThing && <Typography>{albumInfo.otherThing}</Typography>}
-                  </>
-                )
-                : <Typography variant='h4'>{cueFile.name}</Typography>}
+              {albumInfo ? (
+                <>
+                  <Typography variant='h4'>{albumInfo.title}</Typography>
+                  <Typography>{albumInfo.date}</Typography>
+                  {albumInfo.circleThing && <Typography>{albumInfo.circleThing}</Typography>}
+                  {albumInfo.otherThing && <Typography>{albumInfo.otherThing}</Typography>}
+                </>
+              ) : (
+                <Typography variant='h4'>{cueFile.name}</Typography>
+              )}
             </Grid>
           </Grid>
         </CardContent>
         <CardContent>
-          {(() => {
-            if (isPending) {
-              return <Box textAlign='center'><CircularProgress /></Box>
-            }
-
-            if (error) {
-              return <Alert severity='error' variant='outlined'>Could not load cue file.</Alert>
-            }
-
-            let cue
-            try {
-              cue = parseCue(data)
-            } catch (error) {
-              console.error(error)
-              return <Alert severity='error' variant='outlined'>Could not parse cue file.</Alert>
-            }
-
-            const queueAll = () => {
-              cue._child.TRACK
-                .sort((a, b) => Number(a.number) - Number(b.number))
-                .forEach(queueTrack)
-            }
-
-            return (
-              <TableContainer>
-                <Table className={classes.albumTable}>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell align='center'>Index</TableCell>
-                      <TableCell>Title</TableCell>
-                      <TableCell>Performer</TableCell>
-                      <TableCell align='center'><Button variant='outlined' onClick={queueAll}>Queue All</Button></TableCell>
+          <TableContainer>
+            <Table className={classes.albumTable}>
+              <TableHead>
+                <TableRow>
+                  <TableCell align='center'>Index</TableCell>
+                  <TableCell>Title</TableCell>
+                  <TableCell>Performer</TableCell>
+                  <TableCell align='center'>
+                    <Button variant='outlined' onClick={queueAll}>Queue All</Button>
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {cue._child.TRACK
+                  .sort((a, b) => Number(a.number) - Number(b.number))
+                  .map((track) =>
+                    <TableRow key={track.number} hover>
+                      <TableCell align='center'>{track.number}</TableCell>
+                      <TableCell>{track.TITLE}</TableCell>
+                      <TableCell>{track.PERFORMER}</TableCell>
+                      <TableCell align='center' className={classes.buttons}>
+                        <Tooltip title='Play'>
+                          <IconButton onClick={playTrack.bind(null, track)}>
+                            <PlayArrowIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title='Queue'>
+                          <IconButton onClick={queueTrack.bind(null, track)}>
+                            <QueueMusicIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title='Download'>
+                          <Link download href={`/api/tlmc${urlEncode([parent.path, getFileName(track)].join('/'))}`}>
+                            <IconButton>
+                              <GetAppIcon />
+                            </IconButton>
+                          </Link>
+                        </Tooltip>
+                      </TableCell>
                     </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {cue._child.TRACK
-                      .sort((a, b) => Number(a.number) - Number(b.number))
-                      .map((track) =>
-                        <TableRow key={track.number} hover>
-                          <TableCell align='center'>{track.number}</TableCell>
-                          <TableCell>{track.TITLE}</TableCell>
-                          <TableCell>{track.PERFORMER}</TableCell>
-                          <TableCell align='center' className={classes.buttons}>
-                            <Tooltip title='Play'>
-                              <IconButton onClick={playTrack.bind(null, track)}>
-                                <PlayArrowIcon />
-                              </IconButton>
-                            </Tooltip>
-                            <Tooltip title='Queue'>
-                              <IconButton onClick={queueTrack.bind(null, track)}>
-                                <QueueMusicIcon />
-                              </IconButton>
-                            </Tooltip>
-                            <Tooltip title='Download'>
-                              <Link download href={`/api/tlmc${urlEncode([parent.path, getFileName(track)].join('/'))}`}>
-                                <IconButton>
-                                  <GetAppIcon />
-                                </IconButton>
-                              </Link>
-                            </Tooltip>
-                          </TableCell>
-                        </TableRow>
-                      )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            )
-          })()}
+                  )}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </CardContent>
       </Card>
     )
@@ -195,6 +167,7 @@ const AlbumViewer = connect(
 )
 
 AlbumViewer.propTypes = {
+  cue: PropTypes.object.isRequired,
   cueFile: PropTypes.instanceOf(File).isRequired
 }
 

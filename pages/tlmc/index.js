@@ -18,16 +18,31 @@ import AlbumViewer from '../../src/viewers/AlbumViewer'
 import AlbumListViewer from '../../src/viewers/AlbumListViewer'
 import FileViewer from '../../src/viewers/FileViewer'
 import Error404 from '../404'
-import { hasAlbum, urlEncode } from '../../src/utils'
+import { hasAlbum, urlEncode, parseCue } from '../../src/utils'
 
 async function fetchAndDeserialize () {
-  const res = await fetch('/api/ls')
-  const text = await res.text()
-  return deserialize(text, {
-    levelInd: ' ',
-    dirInd: '+',
-    fileInd: '-'
-  })
+  const [lsRes, cueRes] = await Promise.all([
+    fetch('/api/ls'),
+    fetch('/api/cue')
+  ])
+  return {
+    ls: deserialize(await lsRes.text(), {
+      levelInd: ' ',
+      dirInd: '+',
+      fileInd: '-'
+    }),
+    cueSheets: (await cueRes.text()).split('===\n').reduce((acc, curr) => {
+      const lines = curr.split('\n')
+      const head = lines.shift()
+      try {
+        acc[head] = parseCue(lines)
+      } catch (err) {
+        console.log(err)
+        console.log(lines.join('\n'))
+      }
+      return acc
+    }, {})
+  }
 }
 
 const TLMC = () => {
@@ -68,9 +83,11 @@ const TLMC = () => {
     )
   }
 
+  const { ls, cueSheets } = data
+
   // `/api/ls` has been loaded
   // Get the path from the URL and the corresponding node
-  let node = data
+  let node = ls
   const { tlmc_path: tlmcPath } = router.query
   const breadcrumbs = [{ title: 'TLMC', href: '/tlmc' }]
 
@@ -113,7 +130,7 @@ const TLMC = () => {
                     .filter((file) => file.ext.toLowerCase() === '.cue')
                     .map((file) =>
                       <Section key={file.base}>
-                        <AlbumViewer cueFile={file} />
+                        <AlbumViewer cueSheets={cueSheets} cueFile={file} />
                       </Section>
                     )}
                   <Section title='All Files'>

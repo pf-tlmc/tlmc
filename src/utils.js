@@ -45,7 +45,7 @@ export function parseCue (cueStr) {
   let currIndent = 0
   let node = cue
 
-  for (const line of cueStr.split('\n')) {
+  for (const line of Array.isArray(cueStr) ? cueStr : cueStr.split('\n')) {
     if (!line.trim()) continue
     const { indent, args: [command, ...args] } = parseLine(line)
 
@@ -67,6 +67,7 @@ export function parseCue (cueStr) {
         break
       case 'TITLE':
       case 'PERFORMER':
+      case 'FLAGS':
       case 'INDEX':
         node[command] = args[0]
         break
