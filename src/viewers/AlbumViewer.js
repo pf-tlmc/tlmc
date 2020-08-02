@@ -37,7 +37,6 @@ const useStyles = makeStyles((theme) => ({
     flex: '1 1 0px'
   },
   album: {
-    margin: theme.spacing(2, 0),
     padding: theme.spacing(2),
     [theme.breakpoints.down('sm')]: {
       padding: theme.spacing(0.25)

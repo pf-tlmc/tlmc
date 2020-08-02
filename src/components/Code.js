@@ -5,7 +5,7 @@ import Paper from '@material-ui/core/Paper'
 const useStyles = makeStyles((theme) => ({
   code: {
     overflowX: 'auto',
-    margin: 0,
+    margin: theme.spacing(0, 0, 2),
     padding: theme.spacing(2)
   }
 }))
