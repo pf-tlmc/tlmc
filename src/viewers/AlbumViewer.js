@@ -22,7 +22,7 @@ import QueueMusicIcon from '@material-ui/icons/QueueMusic'
 import GetAppIcon from '@material-ui/icons/GetApp'
 import CoverImage from '../components/CoverImage'
 import { playSong, queueSong } from '../redux/actions'
-import { urlEncode, getAlbumInfo, getFileName } from '../utils'
+import { urlEncode, getAlbumInfo, getFileName, shuffle } from '../utils'
 
 const useStyles = makeStyles((theme) => ({
   gridShrink: {
@@ -56,6 +56,11 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   buttons: {
+    '& button': {
+      margin: theme.spacing(2, 2, 0, 0)
+    }
+  },
+  iconButtons: {
     whiteSpace: 'nowrap',
     '& button': {
       padding: theme.spacing(1),
@@ -93,6 +98,11 @@ const AlbumViewer = connect(
         .forEach(queueTrack)
     }
 
+    const shuffleAll = () => {
+      shuffle(cue._child.TRACK)
+        .forEach(queueTrack)
+    }
+
     return (
       <Card className={classes.album} elevation={2}>
         <CardContent>
@@ -111,6 +121,10 @@ const AlbumViewer = connect(
               ) : (
                 <Typography variant='h4'>{cueFile.name}</Typography>
               )}
+              <div className={classes.buttons}>
+                <Button variant='outlined' onClick={queueAll}>Queue All</Button>
+                <Button variant='outlined' onClick={shuffleAll}>Shuffle All</Button>
+              </div>
             </Grid>
           </Grid>
         </CardContent>
@@ -122,9 +136,7 @@ const AlbumViewer = connect(
                   <TableCell align='center'>Index</TableCell>
                   <TableCell>Title</TableCell>
                   <TableCell>Performer</TableCell>
-                  <TableCell align='center'>
-                    <Button variant='outlined' onClick={queueAll}>Queue All</Button>
-                  </TableCell>
+                  <TableCell />
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -135,7 +147,7 @@ const AlbumViewer = connect(
                       <TableCell align='center'>{track.number}</TableCell>
                       <TableCell>{track.TITLE}</TableCell>
                       <TableCell>{track.PERFORMER}</TableCell>
-                      <TableCell align='center' className={classes.buttons}>
+                      <TableCell align='center' className={classes.iconButtons}>
                         <Tooltip title='Play'>
                           <IconButton onClick={playTrack.bind(null, track)}>
                             <PlayArrowIcon />

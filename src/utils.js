@@ -120,3 +120,14 @@ export function getFileName (track) {
 export function useForceUpdate () {
   return useReducer(x => x + 1, 0)[1]
 }
+
+export function shuffle (array) {
+  let counter = array.length
+  while (counter > 0) {
+    const index = Math.random() * counter-- | 0
+    const temp = array[counter]
+    array[counter] = array[index]
+    array[index] = temp
+  }
+  return array
+}
