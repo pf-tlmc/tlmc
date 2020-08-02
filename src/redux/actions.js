@@ -17,10 +17,6 @@ export const setSearchOptions = (type, value) => ({
   payload: value
 })
 
-export const togglePlay = () => ({
-  type: 'musicPlayer.TOGGLE_PLAY'
-})
-
 export const playSong = (file) => ({
   type: 'musicPlayer.PLAY_SONG',
   payload: file

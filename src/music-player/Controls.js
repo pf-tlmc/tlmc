@@ -8,7 +8,8 @@ import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import PauseIcon from '@material-ui/icons/Pause'
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious'
 import SkipNextIcon from '@material-ui/icons/SkipNext'
-import { togglePlay, previousSong, nextSong } from '../redux/actions'
+import { previousSong, nextSong } from '../redux/actions'
+import { useForceUpdate } from '../utils'
 
 const useStyles = makeStyles((theme) => ({
   controls: {
@@ -18,21 +19,21 @@ const useStyles = makeStyles((theme) => ({
 
 const Controls = connect(
   (state) => ({
-    index: state.musicPlayer.index,
-    playing: state.musicPlayer.playing
+    index: state.musicPlayer.index
   }),
-  { togglePlay, previousSong, nextSong }
+  { previousSong, nextSong }
 )(
-  ({ musicPlayer, index, playing, togglePlay, previousSong, nextSong }) => {
+  ({ musicPlayer, index, previousSong, nextSong }) => {
     const classes = useStyles()
+    const forceUpdate = useForceUpdate()
 
     const handleClickPlay = () => {
-      if (playing) {
-        musicPlayer.pause()
-      } else {
+      if (musicPlayer.paused) {
         musicPlayer.play()
+      } else {
+        musicPlayer.pause()
       }
-      togglePlay()
+      forceUpdate()
     }
 
     const handleClickPrevious = () => {
@@ -52,16 +53,16 @@ const Controls = connect(
             <SkipPreviousIcon />
           </IconButton>
         </Tooltip>
-        {playing ? (
-          <Tooltip title='Pause'>
-            <IconButton onClick={handleClickPlay}>
-              <PauseIcon />
-            </IconButton>
-          </Tooltip>
-        ) : (
+        {musicPlayer.paused ? (
           <Tooltip title='Play'>
             <IconButton onClick={handleClickPlay}>
               <PlayArrowIcon />
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <Tooltip title='Pause'>
+            <IconButton onClick={handleClickPlay}>
+              <PauseIcon />
             </IconButton>
           </Tooltip>
         )}

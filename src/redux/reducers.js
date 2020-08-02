@@ -33,18 +33,12 @@ function searchOptions (state = {}, action) {
   }
 }
 
-function musicPlayer (state = { playlist: [], index: -1, playing: false }, action) {
+function musicPlayer (state = { playlist: [], index: -1 }, action) {
   switch (action.type) {
-    case 'musicPlayer.TOGGLE_PLAY':
-      return {
-        ...state,
-        playing: !state.playing
-      }
     case 'musicPlayer.PLAY_SONG':
       return {
         playlist: [action.payload],
-        index: 0,
-        playing: true
+        index: 0
       }
     case 'musicPlayer.QUEUE_SONG': {
       if (!action.payload) return state
@@ -63,8 +57,7 @@ function musicPlayer (state = { playlist: [], index: -1, playing: false }, actio
       if (state.index > 0) {
         return {
           ...state,
-          index: state.index - 1,
-          playing: true
+          index: state.index - 1
         }
       } else {
         return state

@@ -34,12 +34,11 @@ let musicPlayer = null // IDK why createRef isn't working
 
 const MusicPlayer = connect(
   (state) => ({
-    song: state.musicPlayer.playlist[state.musicPlayer.index],
-    playing: state.musicPlayer.playing
+    song: state.musicPlayer.playlist[state.musicPlayer.index]
   }),
   { nextSong }
 )(
-  ({ song, playing, nextSong }) => {
+  ({ song, nextSong }) => {
     const classes = useStyles()
     const theme = useTheme()
     const albumInfo = getAlbumInfo(song)
@@ -59,9 +58,7 @@ const MusicPlayer = connect(
     useEffect(() => {
       if (!song) return
       musicPlayer.src = `/api/tlmc${urlEncode(song.path)}`
-      if (playing) {
-        musicPlayer.play()
-      }
+      musicPlayer.play()
     }, [song])
 
     return (
