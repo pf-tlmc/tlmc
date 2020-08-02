@@ -178,7 +178,7 @@ const AlbumViewer = connect(
 )
 
 AlbumViewer.propTypes = {
-  cue: PropTypes.object.isRequired,
+  cueSheets: PropTypes.object.isRequired,
   cueFile: PropTypes.instanceOf(File).isRequired
 }
 

@@ -20,7 +20,12 @@ const Controls = connect(
   (state) => ({
     index: state.musicPlayer.index
   }),
-  { previousSong, nextSong }
+  { previousSong, nextSong },
+  null,
+  {
+    pure: false,
+    areOwnPropsEqual: () => false
+  }
 )(
   ({ musicPlayer, index, previousSong, nextSong }) => {
     const classes = useStyles()

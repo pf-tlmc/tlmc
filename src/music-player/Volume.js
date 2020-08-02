@@ -19,14 +19,13 @@ const useStyles = makeStyles((theme) => ({
 
 const Volume = ({ musicPlayer }) => {
   const classes = useStyles()
-  const [volume, setVolume] = useState(musicPlayer.volume * 100 | 0)
   const [isMute, setIsMute] = useState(false)
+  const volume = musicPlayer.volume * 100 | 0
   const lastVolume = useRef(volume)
 
   const handleChangeVolume = (_, value) => {
     musicPlayer.volume = value / 100
     setIsMute(false)
-    setVolume(value)
   }
 
   const handleToggleMute = () => {
@@ -34,11 +33,9 @@ const Volume = ({ musicPlayer }) => {
       musicPlayer.volume = 0
       lastVolume.current = volume
       setIsMute(true)
-      setVolume(0)
     } else {
       musicPlayer.volume = lastVolume.current / 100
       setIsMute(false)
-      setVolume(lastVolume.current)
     }
   }
 

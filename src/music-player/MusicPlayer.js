@@ -12,7 +12,7 @@ import Controls from './Controls'
 import Volume from './Volume'
 import CoverImage from '../components/CoverImage'
 import { nextSong } from '../redux/actions'
-import { urlEncode, getAlbumInfo } from '../utils'
+import { useForceUpdate, urlEncode, getAlbumInfo } from '../utils'
 
 const useStyles = makeStyles((theme) => ({
   player: {
@@ -41,6 +41,7 @@ const MusicPlayer = connect(
   ({ song, nextSong }) => {
     const classes = useStyles()
     const theme = useTheme()
+    const forceUpdate = useForceUpdate()
     const albumInfo = getAlbumInfo(song)
     const isSmall = useMediaQuery(theme.breakpoints.down('sm'))
 
@@ -48,8 +49,17 @@ const MusicPlayer = connect(
       musicPlayer = new window.Audio()
       musicPlayer.volume = 0.4
       musicPlayer.addEventListener('ended', nextSong)
+
+      const events = ['durationchange', 'ended', 'loadeddata', 'loadedmetadata', 'loadstart', 'pause', 'play', 'playing', 'progress', 'seeked', 'seeking', 'timeupdate', 'volumechange']
+      events.forEach((eventName) => {
+        musicPlayer.addEventListener(eventName, forceUpdate)
+      })
+
       return () => {
         musicPlayer.removeEventListener('ended', nextSong)
+        events.forEach((eventName) => {
+          musicPlayer.removeEventListener(eventName, forceUpdate)
+        })
         musicPlayer.pause()
         musicPlayer = null
       }
