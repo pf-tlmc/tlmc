@@ -52,7 +52,7 @@ const About = () => {
           [DiGiTAL WiNG]\2013.05.26 [DWCD-0008] BEST OF WiNG [例大祭10]\16. 止まるなかれ、進むなかれ.mp3
         </Code>
         <Typography paragraph>
-          <Link href='/tlmc/[...tlmc_path]' as='/tlmc/error.txt'>See error.txt.</Link>
+          <Link href='/tlmc/[...tlmc_path]' as='/tlmc/error.txt'>See error.txt</Link>
         </Typography>
       </Section>
 
