@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { memo, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import Slider from '@material-ui/core/Slider'
@@ -17,10 +17,9 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const Volume = ({ musicPlayer }) => {
+const Volume = memo(({ musicPlayer, volume }) => {
   const classes = useStyles()
   const [isMute, setIsMute] = useState(false)
-  const volume = musicPlayer.volume * 100 | 0
   const lastVolume = useRef(volume)
 
   const handleChangeVolume = (_, value) => {
@@ -34,7 +33,7 @@ const Volume = ({ musicPlayer }) => {
       lastVolume.current = volume
       setIsMute(true)
     } else {
-      musicPlayer.volume = lastVolume.current / 100
+      musicPlayer.volume = lastVolume
       setIsMute(false)
     }
   }
@@ -42,9 +41,9 @@ const Volume = ({ musicPlayer }) => {
   let VolumeIcon
   if (isMute) {
     VolumeIcon = VolumeOffIcon
-  } else if (volume <= 33) {
+  } else if (volume < 1 / 3) {
     VolumeIcon = VolumeMuteIcon
-  } else if (volume <= 66) {
+  } else if (volume < 2 / 3) {
     VolumeIcon = VolumeDownIcon
   } else {
     VolumeIcon = VolumeUpIcon
@@ -54,7 +53,7 @@ const Volume = ({ musicPlayer }) => {
     <>
       <Slider
         valueLabelDisplay='auto'
-        value={volume}
+        value={volume * 100 | 0}
         onChange={handleChangeVolume}
         className={classes.slider}
       />
@@ -65,7 +64,7 @@ const Volume = ({ musicPlayer }) => {
       </Tooltip>
     </>
   )
-}
+})
 
 if (typeof window !== 'undefined') {
   Volume.propTypes = {

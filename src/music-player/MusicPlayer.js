@@ -96,19 +96,19 @@ const MusicPlayer = connect(
                     </Box>
                     {isSmall ? (
                       <Box textAlign='center'>
-                        <Controls musicPlayer={musicPlayer} />
+                        <Controls musicPlayer={musicPlayer} paused={musicPlayer.paused} />
                       </Box>
                     ) : (
                       <Grid container>
                         <Grid item xs />
                         <Grid item xs>
                           <Box textAlign='center'>
-                            <Controls musicPlayer={musicPlayer} />
+                            <Controls musicPlayer={musicPlayer} paused={musicPlayer.paused} />
                           </Box>
                         </Grid>
                         <Grid item xs>
                           <Box textAlign='right'>
-                            <Volume musicPlayer={musicPlayer} />
+                            <Volume musicPlayer={musicPlayer} volume={musicPlayer.volume} />
                           </Box>
                         </Grid>
                       </Grid>

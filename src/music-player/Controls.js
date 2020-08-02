@@ -20,18 +20,13 @@ const Controls = connect(
   (state) => ({
     index: state.musicPlayer.index
   }),
-  { previousSong, nextSong },
-  null,
-  {
-    pure: false,
-    areOwnPropsEqual: () => false
-  }
+  { previousSong, nextSong }
 )(
-  ({ musicPlayer, index, previousSong, nextSong }) => {
+  ({ musicPlayer, paused, index, previousSong, nextSong }) => {
     const classes = useStyles()
 
     const handleClickPlay = () => {
-      if (musicPlayer.paused) {
+      if (paused) {
         musicPlayer.play()
       } else {
         musicPlayer.pause()
@@ -55,7 +50,7 @@ const Controls = connect(
             <SkipPreviousIcon />
           </IconButton>
         </Tooltip>
-        {musicPlayer.paused ? (
+        {paused ? (
           <Tooltip title='Play'>
             <IconButton onClick={handleClickPlay}>
               <PlayArrowIcon />
