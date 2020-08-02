@@ -1,8 +1,7 @@
-import React, { useState, createRef, useEffect } from 'react'
+import React, { useState, createRef } from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
-import { useForceUpdate } from '../utils'
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -68,23 +67,12 @@ const Progress = ({ musicPlayer }) => {
   const [isHover, setIsHover] = useState(false)
   const [hoverPosition, setHoverPosition] = useState(0)
   const ref = createRef()
-  const forceUpdate = useForceUpdate()
   const timeRanges = musicPlayer.buffered
-
-  useEffect(() => {
-    musicPlayer.addEventListener('timeupdate', forceUpdate)
-    musicPlayer.addEventListener('progress', forceUpdate)
-    return () => {
-      musicPlayer.removeEventListener('timeupdate', forceUpdate)
-      musicPlayer.removeEventListener('progress', forceUpdate)
-    }
-  }, [])
 
   const handleClickProgress = (event) => {
     const rect = ref.current.getBoundingClientRect()
     const percent = (event.clientX - rect.left) / rect.width
     musicPlayer.currentTime = musicPlayer.duration * percent
-    forceUpdate()
   }
 
   const handleMouseOver = (event) => {

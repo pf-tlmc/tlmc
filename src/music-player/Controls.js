@@ -9,7 +9,6 @@ import PauseIcon from '@material-ui/icons/Pause'
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious'
 import SkipNextIcon from '@material-ui/icons/SkipNext'
 import { previousSong, nextSong } from '../redux/actions'
-import { useForceUpdate } from '../utils'
 
 const useStyles = makeStyles((theme) => ({
   controls: {
@@ -25,7 +24,6 @@ const Controls = connect(
 )(
   ({ musicPlayer, index, previousSong, nextSong }) => {
     const classes = useStyles()
-    const forceUpdate = useForceUpdate()
 
     const handleClickPlay = () => {
       if (musicPlayer.paused) {
@@ -33,7 +31,6 @@ const Controls = connect(
       } else {
         musicPlayer.pause()
       }
-      forceUpdate()
     }
 
     const handleClickPrevious = () => {
