@@ -2,27 +2,27 @@ const fs = require('fs')
 const path = require('path')
 const http = require('http')
 
-const LS_URL = 'http://serve.tlmc.pf-n.co:3000/ls'
-const LS_CACHE_PATH = path.resolve(__dirname, '../.cache/ls')
+const CUE_URL = 'http://serve.tlmc.pf-n.co:3000/cue'
+const CUE_CACHE_PATH = path.resolve(__dirname, '../.cache/cue')
 
 module.exports = () => {
   return new Promise((resolve, reject) => {
-    fs.access(LS_CACHE_PATH, (err) => {
+    fs.access(CUE_CACHE_PATH, (err) => {
       if (err) {
-        console.log('Fetching LS_CACHE...')
-        http.get(LS_URL, (res) => {
-          const ls = fs.createWriteStream(LS_CACHE_PATH)
+        console.log('Fetching CUE_CACHE...')
+        http.get(CUE_URL, (res) => {
+          const ls = fs.createWriteStream(CUE_CACHE_PATH)
           res.pipe(ls)
           ls.on('finish', () => {
             ls.close(() => {
-              console.log('Fetched LS_CACHE!')
+              console.log('Fetched CUE_CACHE!')
               console.log()
               resolve()
             })
           })
         })
       } else {
-        console.log('LS_CACHE exists!')
+        console.log('CUE_CACHE exists!')
         console.log()
         resolve()
       }

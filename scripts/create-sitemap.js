@@ -27,8 +27,8 @@ function processDirectory (directory, path) {
   }
 }
 
-module.exports = () =>
-  new Promise((resolve, reject) => {
+module.exports = () => {
+  return new Promise((resolve, reject) => {
     fs.access(SITEMAP_PATH, (err) => {
       if (err) {
         console.log('Generating sitemap...')
@@ -92,3 +92,4 @@ module.exports = () =>
       }
     })
   })
+}
