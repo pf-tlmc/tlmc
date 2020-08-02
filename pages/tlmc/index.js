@@ -112,7 +112,7 @@ const TLMC = () => {
       <Head>
         <title>{node.isRoot ? 'Touhou Lossless Music Collection' : breadcrumbs[1].title}</title>
       </Head>
-      <Page breadcrumbs={breadcrumbs} ls={data} noPadding={node.isRoot} contained={!node.isRoot}>
+      <Page breadcrumbs={breadcrumbs} ls={ls} noPadding={node.isRoot} contained={!node.isRoot}>
         {(() => {
           if (node.isDirectory) {
             if (node.isRoot) {
