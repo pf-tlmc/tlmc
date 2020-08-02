@@ -1,6 +1,7 @@
-import React, { createRef, useEffect } from 'react'
+import React, { useState, createRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
+import Paper from '@material-ui/core/Paper'
 import { useForceUpdate } from '../utils'
 
 const useStyles = makeStyles((theme) => ({
@@ -29,6 +30,21 @@ const useStyles = makeStyles((theme) => ({
     bottom: 0,
     backgroundColor: theme.palette.primary.main
   },
+  seeker: {
+    position: 'absolute',
+    top: 0,
+    height: 20,
+    width: 1,
+    backgroundColor: theme.palette.primary.dark,
+    pointerEvents: 'none'
+  },
+  tooltip: {
+    position: 'absolute',
+    transform: 'translate(-50%, -32px)',
+    padding: theme.spacing(0.25, 0.5),
+    backgroundColor: theme.palette.grey[800],
+    color: theme.palette.getContrastText(theme.palette.grey[800])
+  },
   currentTime: {
     position: 'absolute',
     top: 24,
@@ -48,10 +64,12 @@ function formatTime (time) {
 }
 
 const Progress = ({ musicPlayer }) => {
-  const timeRanges = musicPlayer.buffered
   const classes = useStyles()
+  const [isHover, setIsHover] = useState(false)
+  const [hoverPosition, setHoverPosition] = useState(0)
   const ref = createRef()
   const forceUpdate = useForceUpdate()
+  const timeRanges = musicPlayer.buffered
 
   useEffect(() => {
     musicPlayer.addEventListener('timeupdate', forceUpdate)
@@ -66,11 +84,25 @@ const Progress = ({ musicPlayer }) => {
     const rect = ref.current.getBoundingClientRect()
     const percent = (event.clientX - rect.left) / rect.width
     musicPlayer.currentTime = musicPlayer.duration * percent
+    forceUpdate()
+  }
+
+  const handleMouseOver = (event) => {
+    const rect = ref.current.getBoundingClientRect()
+    const percent = (event.clientX - rect.left) / rect.width
+    setHoverPosition(percent)
   }
 
   return (
-    <div className={classes.container}>
-      <div ref={ref} onClick={handleClickProgress} className={classes.progress}>
+    <div
+      ref={ref}
+      onClick={handleClickProgress}
+      onMouseMove={handleMouseOver}
+      onMouseEnter={setIsHover.bind(null, true)}
+      onMouseLeave={setIsHover.bind(null, false)}
+      className={classes.container}
+    >
+      <div className={classes.progress}>
         {Array(timeRanges.length).fill().map((_, index) => {
           const start = timeRanges.start(index)
           const duration = timeRanges.end(index) - start
@@ -92,6 +124,17 @@ const Progress = ({ musicPlayer }) => {
           className={classes.indicator}
         />
       </div>
+      {isHover &&
+        <div
+          style={{
+            left: `${hoverPosition * 100}%`
+          }}
+          className={classes.seeker}
+        >
+          <Paper className={classes.tooltip}>
+            {formatTime(hoverPosition * musicPlayer.duration)}
+          </Paper>
+        </div>}
       <div className={classes.currentTime}>{formatTime(musicPlayer.currentTime)}</div>
       <div className={classes.duration}>{formatTime(musicPlayer.duration)}</div>
     </div>
