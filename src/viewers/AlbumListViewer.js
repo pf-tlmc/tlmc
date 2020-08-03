@@ -11,14 +11,20 @@ import CoverImage from '../components/CoverImage'
 import { urlEncode, getAlbumInfo } from '../utils'
 
 const useClasses = makeStyles((theme) => ({
-  albumList: {
-    padding: theme.spacing(2),
-    [theme.breakpoints.down('sm')]: {
-      padding: theme.spacing(0.25)
+  root: {
+    padding: 0
+  },
+  listItem: {
+    '& > *': {
+      margin: 0
     }
   },
   coverImage: {
-    marginRight: theme.spacing(2)
+    margin: theme.spacing(0.25, 2, 0.25, 0)
+  },
+  title: {
+    lineHeight: 1.1,
+    margin: theme.spacing(0.5, 0)
   }
 }))
 
@@ -39,24 +45,24 @@ const AlbumListViewer = ({ directory }) => {
   const albums = collectAlbums(directory)
 
   return (
-    <List component={Paper} className={classes.albumList}>
+    <List component={Paper} className={classes.root}>
       {albums.map((album) => {
         const albumInfo = getAlbumInfo(album)
         return (
           <Link
-            key={album.base}
+            key={album.path}
             href='/tlmc/[...tlmc_path]'
             as={'/tlmc' + urlEncode(album.parent.path)}
             underline='none'
           >
-            <ListItem button>
+            <ListItem button alignItems='flex-start' className={classes.listItem}>
               <ListItemIcon>
                 <CoverImage cueFile={album} size={100} className={classes.coverImage} />
               </ListItemIcon>
               <ListItemText>
                 {albumInfo ? (
                   <>
-                    <Typography variant='h6'>{albumInfo.title}</Typography>
+                    <Typography variant='h6' className={classes.title}>{albumInfo.title}</Typography>
                     <Typography variant='body2'>{albumInfo.date}</Typography>
                     {albumInfo.circleThing && <Typography variant='body2'>{albumInfo.circleThing}</Typography>}
                     {albumInfo.otherThing && <Typography variant='body2'>{albumInfo.otherThing}</Typography>}

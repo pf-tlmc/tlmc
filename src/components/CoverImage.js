@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { File } from 'ls-serialize/src/structures'
 import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core/styles'
-import { urlEncode, isImage } from '../utils'
+import { urlEncode, getNodeType } from '../utils'
 import COVER_IMAGE_MAP from '../cover-image-map'
 
 const COVER_REGEX = /^(image|img|jacket).*0*1\.(jpe?g|png|gif)$/i
@@ -50,7 +50,9 @@ function findCoverImage (cueFile) {
   }
 
   // Use any image in the current directory, sorted by name
-  const img = [...directory.files].filter(isImage).sort((a, b) => a.base.localeCompare(b.base))[0]
+  const img = [...directory.files]
+    .filter((file) => getNodeType(file) === 'IMAGE')
+    .sort((a, b) => a.base.localeCompare(b.base))[0]
   if (img) {
     return img
   }

@@ -1,20 +1,21 @@
 import { useReducer } from 'react'
 
 const IMAGE_REGEX = /\.(jpe?g|png|bmp|tiff|gif)$/i
+const ALBUM_REGEX = /\.cue$/i
 
-export function isImage (node) {
-  return node.isFile && IMAGE_REGEX.test(node.base)
+export function getNodeType (node) {
+  if (node.isFile) {
+    if (IMAGE_REGEX.test(node.ext)) return 'IMAGE'
+    if (ALBUM_REGEX.test(node.ext)) return 'ALBUM'
+  }
+  return 'UNKNOWN'
 }
 
 export function hasAlbum (node, deep) {
   if (!node.isDirectory) return false
   for (const file of node) {
-    if (file.isFile && file.ext.toLowerCase() === '.cue') {
-      return true
-    }
-    if (deep && file.isDirectory && hasAlbum(file, deep)) {
-      return true
-    }
+    if (getNodeType(file) === 'ALBUM') return true
+    if (deep && file.isDirectory && hasAlbum(file, deep)) return true
   }
   return false
 }
@@ -27,19 +28,6 @@ export function urlEncode (url) {
   // return url.split('/').map(encodeURIComponent).join('/')
 }
 
-function parseLine (line) {
-  const indent = line.search(/\S/) >> 1
-
-  const args = []
-  const regex = /"([^"\\]*(?:\\.[^"\\]*)*)"|([^\s]+)/g
-  let match
-  while ((match = regex.exec(line))) {
-    args.push(match[1] || match[2])
-  }
-
-  return { indent, args }
-}
-
 export function parseCue (cueStr) {
   const cue = {}
   let currIndent = 0
@@ -47,13 +35,22 @@ export function parseCue (cueStr) {
 
   for (const line of Array.isArray(cueStr) ? cueStr : cueStr.split('\n')) {
     if (!line.trim()) continue
-    const { indent, args: [command, ...args] } = parseLine(line)
 
+    // Parse line
+    const indent = line.search(/\S/) >> 1
+    const tokens = []
+    const regex = /"([^"\\]*(?:\\.[^"\\]*)*)"|([^\s]+)/g
+    let match
+    while ((match = regex.exec(line))) {
+      tokens.push(match[1] || match[2])
+    }
+    const [command, ...args] = tokens
+
+    // Go to level
     while (indent < currIndent) {
       node = node._parent
       --currIndent
     }
-
     if (indent > currIndent) {
       node = node.TRACK
         ? node.TRACK[node.TRACK.length - 1]
@@ -61,6 +58,7 @@ export function parseCue (cueStr) {
       currIndent = indent
     }
 
+    // Execute command
     switch (command) {
       case 'REM':
         (node.REM || (node.REM = {}))[args[0]] = args[1]
@@ -92,10 +90,10 @@ export function parseCue (cueStr) {
   return cue
 }
 
-const ALBUM_REGEX = /^(\d{4}\.\d{2}\.\d{2})(?: \[(.+?)\])? (.+?)(?: \[(.+?)\])?$/
+const ALBUM_TITLE_REGEX = /^(\d{4}\.\d{2}\.\d{2})(?: \[(.+?)\])? (.+?)(?: \[(.+?)\])?$/
 
 export function getAlbumInfo (cueFile) {
-  const match = cueFile.parent.base.match(ALBUM_REGEX)
+  const match = cueFile.parent.base.match(ALBUM_TITLE_REGEX)
   if (!match) {
     console.error('Could not parse album info: ', cueFile)
     return null
