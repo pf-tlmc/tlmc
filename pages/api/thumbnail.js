@@ -88,7 +88,7 @@ function thumbnail (req, res) {
   if (!coverImage) return sendDefault(res)
 
   return http.get(
-    `http://serve.tlmc.pf-n.co:3000/tlmc${urlEncode(coverImage.path)}?size=thumbnail`,
+    `${process.env.TLMC_SERVE}/tlmc${urlEncode(coverImage.path)}?size=thumbnail`,
     (httpRes) => {
       res.writeHead(httpRes.statusCode, httpRes.headers)
       httpRes.pipe(res)
