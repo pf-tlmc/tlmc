@@ -2,10 +2,11 @@ import fs from 'fs'
 
 const LS_CACHE = './.cache/ls'
 
-export default (req, res) => {
+function ls (req, res) {
   fs.createReadStream(LS_CACHE).pipe(res)
 }
 
+export default ls
 export const config = {
   api: {
     externalResolver: true
