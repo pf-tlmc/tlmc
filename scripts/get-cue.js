@@ -6,20 +6,25 @@ const CUE_URL = 'http://serve.tlmc.pf-n.co:3000/cue'
 const CUE_CACHE_PATH = path.resolve(__dirname, '../.cache/cue')
 
 module.exports = () => {
+  if (!fs.existsSync(path.resolve(__dirname, '../.cache'))) {
+    fs.mkdirSync(path.resolve(__dirname, '../.cache'))
+  }
+
   return new Promise((resolve, reject) => {
     fs.access(CUE_CACHE_PATH, (err) => {
       if (err) {
         console.log('Fetching CUE_CACHE...')
         http.get(CUE_URL, (res) => {
-          const ls = fs.createWriteStream(CUE_CACHE_PATH)
-          res.pipe(ls)
-          ls.on('finish', () => {
-            ls.close(() => {
+          const cue = fs.createWriteStream(CUE_CACHE_PATH)
+          res.pipe(cue)
+          cue.on('finish', () => {
+            cue.close(() => {
               console.log('Fetched CUE_CACHE!')
               console.log()
               resolve()
             })
           })
+          cue.on('error', (err) => { reject(err) })
         })
       } else {
         console.log('CUE_CACHE exists!')

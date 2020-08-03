@@ -6,6 +6,10 @@ const LS_URL = 'http://serve.tlmc.pf-n.co:3000/ls'
 const LS_CACHE_PATH = path.resolve(__dirname, '../.cache/ls')
 
 module.exports = () => {
+  if (!fs.existsSync(path.resolve(__dirname, '../.cache'))) {
+    fs.mkdirSync(path.resolve(__dirname, '../.cache'))
+  }
+
   return new Promise((resolve, reject) => {
     fs.access(LS_CACHE_PATH, (err) => {
       if (err) {
@@ -20,6 +24,7 @@ module.exports = () => {
               resolve()
             })
           })
+          ls.on('error', (err) => { reject(err) })
         })
       } else {
         console.log('LS_CACHE exists!')
