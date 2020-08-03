@@ -12,7 +12,7 @@ const About = () => {
       <Section>
         <Typography variant='h4' gutterBottom>About</Typography>
         <Typography paragraph>
-          This website hosts the <MuiLink href='http://www.tlmc.eu/2018/01/tlmc-v19.html'>Touhou Lossless Music Collection v.19</MuiLink> and supplementary materials.
+          This website hosts the <MuiLink href='http://www.tlmc.eu/2018/01/tlmc-v19.html'>Touhou Lossless Music Collection v.19</MuiLink> and supplementary materials. Files were also converted to .mp3.
         </Typography>
         <ul>
           <li>
@@ -32,7 +32,7 @@ const About = () => {
           </li>
         </ul>
         <Typography paragraph>
-          Files were also converted to .mp3.
+          All files are served from <MuiLink href='http://serve.tlmc.pf-n.co:3000/tlmc'>http://serve.tlmc.pf-n.co/tlmc</MuiLink>.
         </Typography>
       </Section>
 

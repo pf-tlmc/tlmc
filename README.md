@@ -2,13 +2,13 @@
 
 **[https://tlmc.pf-n.co/](https://tlmc.pf-n.co/)**
 
-This website hosts the [Touhou Lossless Music Collection v.19](http://www.tlmc.eu/2018/01/tlmc-v19.html) and supplementary materials.
+This website hosts the [Touhou Lossless Music Collection v.19](http://www.tlmc.eu/2018/01/tlmc-v19.html) and supplementary materials. Files were also converted to .mp3.
 
  - [Touhou Lossless Music Collection v.19 (torrent)](https://sites.google.com/site/tlmcfiles/Touhou%20lossless%20music%20collection%20v.19.torrent)
  - [TLMC album images v.19 (torrent)](https://sites.google.com/site/tlmcfiles/Touhou%20album%20image%20collection%20v.19.torrent)
  - [TLMC supplementary materials v.19 (torrent)](https://sites.google.com/site/tlmcfiles/TLMC%20supplementary%20materials%20v.19.torrent)
 
-Files were also converted to .mp3.
+All files are served from [http://serve.tlmc.pf-n.co/tlmc](http://serve.tlmc.pf-n.co:3000/tlmc).
 
 ## Errors
 
@@ -26,7 +26,7 @@ Three songs could not be converted to .mp3.
 [DiGiTAL WiNG]\2013.05.26 [DWCD-0008] BEST OF WiNG [例大祭10]\16. 止まるなかれ、進むなかれ.mp3
 ```
 
-[See error.txt](http://localhost:3000/tlmc/error.txt)
+[See error.txt](https://tlmc.pf-n.co/tlmc/error.txt)
 
 ## Questions
 

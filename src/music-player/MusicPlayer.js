@@ -77,7 +77,7 @@ const MusicPlayer = connect(
           <Grid container spacing={2}>
             {!isSmall &&
               <Grid item className={classes.coverImage}>
-                <CoverImage cueFile={song} size={125} />
+                <CoverImage key={song.path} cueFile={song} size={125} />
               </Grid>}
             <Grid item className={classes.interface}>
               <AutoSizer className={classes.autoSizer}>
