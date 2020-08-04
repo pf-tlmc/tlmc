@@ -8,7 +8,6 @@ import ImageIcon from '@material-ui/icons/Image'
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf'
 import DescriptionIcon from '@material-ui/icons/Description'
 import CodeIcon from '@material-ui/icons/Code'
-import ArchiveIcon from '@material-ui/icons/Archive'
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile'
 
 const FileIcon = ({ file }) => {
@@ -20,22 +19,22 @@ const FileIcon = ({ file }) => {
         return <AudiotrackIcon />
       case '.tta':
         return <AlbumIcon />
-      case '.jpg':
       case '.gif':
+      case '.jpeg':
+      case '.jpg':
       case '.png':
         return <ImageIcon />
       case '.pdf':
         return <PictureAsPdfIcon />
       case '.cue':
-      case '.txt':
-      case '.log':
       case '.html':
+      case '.log':
+      case '.lrc':
+      case '.txt':
         return <DescriptionIcon />
-      case '.exe':
       case '.dll':
+      case '.exe':
         return <CodeIcon />
-      case '.7z':
-        return <ArchiveIcon />
       default:
         console.log('Unknown extension:', file.ext)
         return <InsertDriveFileIcon />

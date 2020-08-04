@@ -11,13 +11,15 @@ const FileViewer = ({ file }) => {
   switch (file.ext.toLowerCase()) {
     case '.mp3':
       return <AudioFileViewer file={file} />
-    case '.jpg':
     case '.gif':
+    case '.jpeg':
+    case '.jpg':
     case '.png':
       return <ImageFileViewer file={file} />
     case '.cue':
-    case '.txt':
     case '.log':
+    case '.lrc':
+    case '.txt':
       return <TextFileViewer file={file} />
     case '.pdf':
       return <PDFFileViewer file={file} />
