@@ -2,15 +2,13 @@ import React, { useRef, useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import clsx from 'clsx'
 import { connect } from 'react-redux'
-import { setSearchOptions } from '../redux/actions'
 import { makeStyles } from '@material-ui/core/styles'
-import Box from '@material-ui/core/Box'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
 import Typography from '@material-ui/core/Typography'
 import { DataConsumer } from '../components/DataContext'
 import PageContainer from '../components/PageContainer'
+import Section from '../components/Section'
+import Options from './Options'
 import ResultsSection from './ResultsSection'
 import useSearch from './use-search'
 
@@ -38,10 +36,9 @@ const ResultsContainer = () => {
 }
 
 const Results = connect(
-  (state) => ({ search: state.search, options: state.searchOptions }),
-  { setSearchOptions }
+  (state) => ({ search: state.search, options: state.searchOptions })
 )(
-  ({ ls, search, options, setSearchOptions }) => {
+  ({ ls, search, options }) => {
     const searchResults = useSearch(ls, search, options)
     const [expandCircles, setExpandCircles] = useState(false)
     const [expandAlbums, setExpandAlbums] = useState(false)
@@ -72,22 +69,14 @@ const Results = connect(
       <>
         <LinearProgress
           variant='determinate'
+          color='secondary'
           value={progress * 100}
           className={clsx(classes.progress, progress >= 1 && classes.progressComplete)}
         />
         <PageContainer>
-          <Box p={2}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={options.romaji}
-                  onChange={() => { setSearchOptions('SET_ROMAJI', !options.romaji) }}
-                  color='primary'
-                />
-              }
-              label='Romanize hiragana/katakana when searching'
-            />
-          </Box>
+          <Section>
+            <Options />
+          </Section>
           {circles.length + albums.length + songs.length + other.length === 0 ? (
             <Typography variant='h5' className={classes.header}>
               {progress < 1 ? 'Searching…' : 'No results'}
