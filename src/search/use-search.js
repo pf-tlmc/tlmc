@@ -2,8 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import japanese from 'japanese'
 import { getNodeType } from '../utils'
 
-const CHUNK_SIZE = 25
-const SEARCH_DELAY = 1
+const CHUNK_TIME = 25
 const JAPANESE_REGEX = /[ぁ-んァ-ン]+/g
 
 // TODO: Expanding sections while searching causes it to stop
@@ -24,32 +23,37 @@ function useSearch (ls, search, options) {
   })
 
   useEffect(() => {
+    function tick (searchResults) {
+      const start = Date.now()
+      const { files } = searchStatus.current
+      const normalizedSearch = normalize(search, options)
+
+      let { index } = searchStatus.current
+      while (index < files.length && Date.now() - start < CHUNK_TIME) {
+        processNode(files[index], normalizedSearch, searchResults, options)
+        ++index
+      }
+
+      searchStatus.current.index = index
+      searchStatus.current.timeout = null
+      setSearchResults({ ...searchResults })
+    }
+
     if (search !== searchStatus.current.search || options !== searchStatus.current.options) {
       searchStatus.current.search = search
       searchStatus.current.options = options
-      searchStatus.current.index = CHUNK_SIZE
+      searchStatus.current.index = 0
       if (searchStatus.current.timeout) {
         clearTimeout(searchStatus.current.timeout)
         searchStatus.current.timeout = null
       }
-      const searchResults = { circles: [], albums: [], songs: [], other: [] }
-      const { files } = searchStatus.current
-      for (let i = 0; i < CHUNK_SIZE && i < files.length; ++i) {
-        processNode(files[i], search, searchResults, options)
-      }
-      setSearchResults(searchResults)
+      tick({ circles: [], albums: [], songs: [], other: [] })
     } else {
-      const { files, index, timeout } = searchStatus.current
+      const { index, files, timeout } = searchStatus.current
       if (index < files.length && !timeout) {
         searchStatus.current.timeout = setTimeout(() => {
-          const normalizedSearch = normalize(search, options)
-          for (let i = 0; i < CHUNK_SIZE && index + i < files.length; ++i) {
-            processNode(files[index + i], normalizedSearch, searchResults, options)
-          }
-          searchStatus.current.index += CHUNK_SIZE
-          searchStatus.current.timeout = null
-          setSearchResults({ ...searchResults })
-        }, SEARCH_DELAY)
+          tick(searchResults)
+        }, 1)
       }
     }
 
@@ -58,8 +62,7 @@ function useSearch (ls, search, options) {
     }
   })
 
-  const { index, files } = searchStatus.current
-  return [searchResults, Math.min(index / files.length, 1)]
+  return [searchResults, searchStatus.current.index / searchStatus.current.files.length]
 }
 
 function processNode (node, search, searchResults, options) {
@@ -88,12 +91,10 @@ function processNode (node, search, searchResults, options) {
 
 function nodeMatches (node, search, options) {
   const fileName = normalize(node.base, options)
-
-  if (options.metadata) {
-    if (fileName.indexOf(search) > -1) return true
-    return metaMatches(node.meta, search, options)
+  if (fileName.indexOf(search) > -1) {
+    return true
   } else {
-    return fileName.indexOf(search) > -1
+    return metaMatches(node.meta, search, options)
   }
 }
 

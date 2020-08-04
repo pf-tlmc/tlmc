@@ -19,7 +19,7 @@ const Options = connect(
               color='primary'
             />
           }
-          label='Romanize hiragana/katakana when searching'
+          label='Romanize hiragana/katakana'
         />
         <FormControlLabel
           control={
