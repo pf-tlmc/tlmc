@@ -2,11 +2,16 @@ import { useReducer } from 'react'
 
 const IMAGE_REGEX = /\.(jpe?g|png|bmp|tiff|gif)$/i
 const ALBUM_REGEX = /\.cue$/i
+const SONG_REGEX = /\.mp3$/i
 
 export function getNodeType (node) {
+  if (node.isDirectory) {
+    if (!node.isRoot && node.parent.isRoot) return 'CIRCLE'
+  }
   if (node.isFile) {
     if (IMAGE_REGEX.test(node.ext)) return 'IMAGE'
     if (ALBUM_REGEX.test(node.ext)) return 'ALBUM'
+    if (SONG_REGEX.test(node.ext)) return 'SONG'
   }
   return 'UNKNOWN'
 }

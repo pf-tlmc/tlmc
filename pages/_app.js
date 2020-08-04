@@ -1,30 +1,30 @@
 import React, { useEffect } from 'react'
-import { Provider, connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
-import { ThemeProvider } from '@material-ui/core/styles'
+import Router, { useRouter } from 'next/router'
 import CssBaseline from '@material-ui/core/CssBaseline'
-import store from '../src/redux/store'
-import { setTheme, clearSearch } from '../src/redux/actions'
-import { lightTheme, darkTheme } from '../src/themes'
+import Box from '@material-ui/core/Box'
+import Container from '@material-ui/core/Container'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Alert from '@material-ui/lab/Alert'
+import AlertTitle from '@material-ui/lab/AlertTitle'
+import Button from '@material-ui/core/Button'
+import { DataProvider, DataConsumer } from '../src/components/DataContext'
+import { StoreProvider } from '../src/components/StoreContext'
+import { ThemeProvider } from '../src/components/ThemeContext'
+import { clearSearch } from '../src/redux/actions'
 
 // Polyfill the path.parse() function
 import path from 'path'
 import pathParse from 'path-parse'
 path.parse = path.parse || pathParse
 
-const Main = connect(
-  (state) => ({ theme: state.theme }),
-  { setTheme, clearSearch }
-)(
-  ({ theme, setTheme, clearSearch, children }) => {
+const Main = connect(null, { clearSearch })(
+  ({ clearSearch, children }) => {
     const router = useRouter()
 
     useEffect(() => {
-      const initialTheme = (typeof window !== 'undefined' && window.localStorage.getItem('theme')) || 'light'
-      setTheme(initialTheme)
-
       router.events.on('routeChangeStart', clearSearch)
       return () => {
         router.events.off('routeChangeStart', clearSearch)
@@ -32,9 +32,35 @@ const Main = connect(
     }, [])
 
     return (
-      <ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
-        {children}
-      </ThemeProvider>
+      <DataConsumer>
+        {({ data, error, isPending }) => {
+          if (isPending) {
+            return (
+              <Box pt={10} textAlign='center'>
+                <CircularProgress size={100} thickness={5} />
+              </Box>
+            )
+          }
+
+          if (error) {
+            console.error(error)
+            return (
+              <Container>
+                <Alert
+                  severity='error'
+                  elevation={2}
+                  action={<Button color='inherit' onClick={() => { Router.reload() }}>Refresh Page</Button>}
+                >
+                  <AlertTitle><b>Error</b></AlertTitle>
+                  Could not load directory structure.
+                </Alert>
+              </Container>
+            )
+          }
+
+          return children
+        }}
+      </DataConsumer>
     )
   }
 )
@@ -64,12 +90,16 @@ const App = ({ Component, pageProps }) => {
           }}
         />
       </Head>
-      <Provider store={store}>
-        <Main>
-          <CssBaseline />
-          <Component {...pageProps} />
-        </Main>
-      </Provider>
+      <DataProvider>
+        <StoreProvider>
+          <ThemeProvider>
+            <CssBaseline />
+            <Main>
+              <Component {...pageProps} />
+            </Main>
+          </ThemeProvider>
+        </StoreProvider>
+      </DataProvider>
     </>
   )
 }
