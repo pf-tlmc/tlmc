@@ -3,7 +3,7 @@ import { urlEncode } from '../../../src/utils'
 
 export default (req, res) => {
   return http.get(
-    `${process.env.TLMC_SERVE}/tlmc${urlEncode(req.query.tlmc_path.join('/'))}`,
+    `${process.env.TLMC_SERVE}/tlmc/${urlEncode(req.query.tlmc_path.join('/'))}`,
     (httpRes) => {
       res.writeHead(httpRes.statusCode, httpRes.headers)
       httpRes.pipe(res)

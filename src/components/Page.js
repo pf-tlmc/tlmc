@@ -1,11 +1,10 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { useRouter } from 'next/router'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
-import Container from '@material-ui/core/Container'
 import TopBar from './TopBar'
-import SearchResults from '../search/SearchResults'
+import Results from '../search/Results'
 import MusicPlayer from '../music-player/MusicPlayer'
 
 const useStyles = makeStyles((theme) => ({
@@ -15,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
       height: '100%'
     }
   },
-  container: {
+  root: {
     width: '100%',
     height: '100%',
     display: 'flex',
@@ -31,8 +30,7 @@ const useStyles = makeStyles((theme) => ({
     flexBasis: '0px',
     flexGrow: 1,
     flexShrink: 1,
-    overflow: 'auto',
-    padding: ({ noPadding }) => noPadding ? 0 : theme.spacing(2, 0)
+    overflow: 'auto'
   },
   footer: {
     flexBasis: 'auto',
@@ -47,35 +45,29 @@ const Page = connect(
     song: state.musicPlayer.playlist[state.musicPlayer.index]
   })
 )(
-  ({ noPadding, contained, breadcrumbs, ls, search, song, children }) => {
+  ({ search, song, children }) => {
+    const classes = useStyles()
+    const router = useRouter()
     const theme = useTheme()
     const isMedium = useMediaQuery(theme.breakpoints.up('md'))
-    const showSearch = ls && isMedium
-    const classes = useStyles({ noPadding: noPadding && !(showSearch && search) })
+    const showSearch = search && isMedium && router.pathname !== '/search'
 
     return (
-      <div className={classes.container}>
+      <div className={classes.root}>
         <header className={classes.header}>
-          <TopBar breadcrumbs={breadcrumbs} showSearch={showSearch} />
+          <TopBar />
         </header>
         <main className={classes.main}>
-          {(showSearch && search)
-            ? <SearchResults ls={ls} />
-            : (contained ? <Container>{children}</Container> : children)}
+          {showSearch ? <Results /> : children}
         </main>
-        {song &&
+        {song && (
           <footer className={classes.footer}>
             <MusicPlayer />
-          </footer>}
+          </footer>
+        )}
       </div>
     )
   }
 )
-
-Page.propTypes = {
-  noPadding: PropTypes.bool,
-  breadcrumbs: PropTypes.any,
-  ls: PropTypes.object
-}
 
 export default Page

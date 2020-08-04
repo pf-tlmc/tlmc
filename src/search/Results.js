@@ -1,21 +1,21 @@
 import React, { useRef, useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import cn from 'classnames'
+import clsx from 'clsx'
 import { connect } from 'react-redux'
-import { clearSearch, setSearchOptions } from '../redux/actions'
+import { setSearchOptions } from '../redux/actions'
 import { makeStyles } from '@material-ui/core/styles'
 import Box from '@material-ui/core/Box'
-import Container from '@material-ui/core/Container'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
 import Typography from '@material-ui/core/Typography'
-import SearchResultsSection from './SearchResultsSection'
+import { DataConsumer } from '../components/DataContext'
+import PageContainer from '../components/PageContainer'
+import ResultsSection from './ResultsSection'
 import useSearch from './use-search'
 
 const useStyles = makeStyles((theme) => ({
   progress: {
-    marginTop: theme.spacing(-2),
     '& > div': {
       transition: 'none'
     }
@@ -29,11 +29,19 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const SearchResults = connect(
+const ResultsContainer = () => {
+  return (
+    <DataConsumer>
+      {({ data: { ls } }) => <Results ls={ls} />}
+    </DataConsumer>
+  )
+}
+
+const Results = connect(
   (state) => ({ search: state.search, options: state.searchOptions }),
-  { clearSearch, setSearchOptions }
+  { setSearchOptions }
 )(
-  ({ ls, search, options, clearSearch, setSearchOptions }) => {
+  ({ ls, search, options, setSearchOptions }) => {
     const searchResults = useSearch(ls, search, options)
     const [expandCircles, setExpandCircles] = useState(false)
     const [expandAlbums, setExpandAlbums] = useState(false)
@@ -65,9 +73,9 @@ const SearchResults = connect(
         <LinearProgress
           variant='determinate'
           value={progress * 100}
-          className={cn(classes.progress, progress >= 1 && classes.progressComplete)}
+          className={clsx(classes.progress, progress >= 1 && classes.progressComplete)}
         />
-        <Container>
+        <PageContainer>
           <Box p={2}>
             <FormControlLabel
               control={
@@ -80,52 +88,46 @@ const SearchResults = connect(
               label='Romanize hiragana/katakana when searching'
             />
           </Box>
-          {circles.length + albums.length + songs.length + other.length === 0
-            ? (
-              <Typography variant='h5' className={classes.header}>
-                {progress < 1 ? 'Searching…' : 'No results'}
-              </Typography>
-            )
-            : (
-              <>
-                <SearchResultsSection
-                  title='Circles'
-                  list={circles}
-                  expand={expandCircles}
-                  setExpand={setExpandCircles}
-                  clearSearch={clearSearch}
-                />
-                <SearchResultsSection
-                  title='Albums'
-                  list={albums}
-                  expand={expandAlbums}
-                  setExpand={setExpandAlbums}
-                  clearSearch={clearSearch}
-                />
-                <SearchResultsSection
-                  title='Songs'
-                  list={songs}
-                  expand={expandSongs}
-                  setExpand={setExpandSongs}
-                  clearSearch={clearSearch}
-                />
-                <SearchResultsSection
-                  title='Other'
-                  list={other}
-                  expand={expandOther}
-                  setExpand={setExpandOther}
-                  clearSearch={clearSearch}
-                />
-              </>
-            )}
-        </Container>
+          {circles.length + albums.length + songs.length + other.length === 0 ? (
+            <Typography variant='h5' className={classes.header}>
+              {progress < 1 ? 'Searching…' : 'No results'}
+            </Typography>
+          ) : (
+            <>
+              <ResultsSection
+                title='Circles'
+                list={circles}
+                expand={expandCircles}
+                setExpand={setExpandCircles}
+              />
+              <ResultsSection
+                title='Albums'
+                list={albums}
+                expand={expandAlbums}
+                setExpand={setExpandAlbums}
+              />
+              <ResultsSection
+                title='Songs'
+                list={songs}
+                expand={expandSongs}
+                setExpand={setExpandSongs}
+              />
+              <ResultsSection
+                title='Other'
+                list={other}
+                expand={expandOther}
+                setExpand={setExpandOther}
+              />
+            </>
+          )}
+        </PageContainer>
       </>
     )
   }
 )
 
-SearchResults.propTypes = {
+Results.propTypes = {
   ls: PropTypes.object.isRequired
 }
 
-export default SearchResults
+export default ResultsContainer

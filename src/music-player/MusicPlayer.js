@@ -15,7 +15,7 @@ import { nextSong } from '../redux/actions'
 import { useForceUpdate, urlEncode, getAlbumInfo } from '../utils'
 
 const useStyles = makeStyles((theme) => ({
-  player: {
+  root: {
     borderTop: `1px solid ${theme.palette.primary.main}`,
     padding: theme.spacing(1, 2)
   },
@@ -72,27 +72,29 @@ const MusicPlayer = connect(
     }, [song])
 
     return (
-      <div className={classes.player}>
+      <div className={classes.root}>
         <Container>
           <Grid container spacing={2}>
-            {!isSmall &&
+            {!isSmall && (
               <Grid item className={classes.coverImage}>
                 <CoverImage key={song.path} cueFile={song} size={125} />
-              </Grid>}
+              </Grid>
+            )}
             <Grid item className={classes.interface}>
               <AutoSizer className={classes.autoSizer}>
-                {({ width }) =>
+                {({ width }) => (
                   <div style={{ width }}>
                     <Progress musicPlayer={musicPlayer} />
                     <Box textAlign='center' mt={isSmall ? 2 : 0} pt={0.5} pb={0.5}>
                       <Typography variant='h6' noWrap>
                         {song ? song.name : <i>No song selected</i>}
                       </Typography>
-                      {albumInfo &&
+                      {albumInfo && (
                         <Typography variant='body2' noWrap>
                           {albumInfo.circleThing && `[${albumInfo.circleThing}]${String.fromCharCode(8193)}`}
                           {albumInfo.title}
-                        </Typography>}
+                        </Typography>
+                      )}
                     </Box>
                     {isSmall ? (
                       <Box textAlign='center'>
@@ -113,7 +115,8 @@ const MusicPlayer = connect(
                         </Grid>
                       </Grid>
                     )}
-                  </div>}
+                  </div>
+                )}
               </AutoSizer>
             </Grid>
           </Grid>

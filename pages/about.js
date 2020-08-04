@@ -1,14 +1,18 @@
 import React from 'react'
+import Head from 'next/head'
 import MuiLink from '@material-ui/core/Link'
 import Typography from '@material-ui/core/Typography'
-import Page from '../src/components/Page'
+import PageContainer from '../src/components/PageContainer'
 import Section from '../src/components/Section'
 import Code from '../src/components/Code'
 import Link from '../src/components/Link'
 
 const About = () => {
   return (
-    <Page contained>
+    <PageContainer>
+      <Head>
+        <title>About TLMC</title>
+      </Head>
       <Section>
         <Typography variant='h4' gutterBottom>About</Typography>
         <Typography paragraph>
@@ -61,7 +65,7 @@ const About = () => {
           Please submit all questions, comments, and issues through <MuiLink href='https://github.com/pf-tlmc/tlmc/issues'>GitHub</MuiLink>. You can also email me at <MuiLink href='mailto:thebluepillow@gmail.com'>thebluepillow@gmail.com</MuiLink>.
         </Typography>
       </Section>
-    </Page>
+    </PageContainer>
   )
 }
 

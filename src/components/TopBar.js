@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { setTheme } from '../redux/actions'
+import { useRouter } from 'next/router'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import Grid from '@material-ui/core/Grid'
@@ -21,6 +21,7 @@ import Brightness5Icon from '@material-ui/icons/Brightness5'
 import Breadcrumbs from './Breadcrumbs'
 import Link from './Link'
 import Search from '../search/Search'
+import { setTheme } from '../redux/actions'
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -72,8 +73,9 @@ const TopBar = connect(
   (state) => ({ theme: state.theme }),
   { setTheme }
 )(
-  ({ breadcrumbs, showSearch, theme, setTheme }) => {
+  ({ theme, setTheme }) => {
     const classes = useStyles()
+    const router = useRouter()
     const muiTheme = useTheme()
     const isSmall = useMediaQuery(muiTheme.breakpoints.down('sm'))
 
@@ -93,24 +95,27 @@ const TopBar = connect(
           </Grid>
           <Grid item>
             <Toolbar className={classes.toolbar}>
-              {showSearch && <Search />}
-              {!isSmall &&
-                <div className={classes.buttonContainer}>
-                  <TopBarButton
-                    isExternal
-                    href='http://www.tlmc.eu/search/label/TLMC'
-                    icon={<PublicIcon />}
-                  >
-                    tlmc.eu
-                  </TopBarButton>
-                  <TopBarButton
-                    isExternal
-                    href='https://github.com/pf-tlmc/tlmc'
-                    icon={<GitHubIcon />}
-                  >
-                    GitHub
-                  </TopBarButton>
-                </div>}
+              {!isSmall && (
+                <>
+                  {router.pathname !== '/search' && <Search />}
+                  <div className={classes.buttonContainer}>
+                    <TopBarButton
+                      isExternal
+                      href='http://www.tlmc.eu/search/label/TLMC'
+                      icon={<PublicIcon />}
+                    >
+                      tlmc.eu
+                    </TopBarButton>
+                    <TopBarButton
+                      isExternal
+                      href='https://github.com/pf-tlmc/tlmc'
+                      icon={<GitHubIcon />}
+                    >
+                      GitHub
+                    </TopBarButton>
+                  </div>
+                </>
+              )}
               <Brightness5Icon />
               <Switch
                 checked={theme === 'dark'}
@@ -120,20 +125,13 @@ const TopBar = connect(
             </Toolbar>
           </Grid>
         </Grid>
-        {breadcrumbs && <Breadcrumbs breadcrumbs={breadcrumbs} />}
+        <Breadcrumbs />
       </AppBar>
     )
   }
 )
 
 TopBar.propTypes = {
-  breadcrumbs: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      href: PropTypes.string.isRequired,
-      as: PropTypes.string
-    }).isRequired
-  ),
   showSearch: PropTypes.bool
 }
 

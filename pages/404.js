@@ -1,11 +1,19 @@
 import React from 'react'
-import Page from '../src/components/Page'
+import Head from 'next/head'
+import Typography from '@material-ui/core/Typography'
+import PageContainer from '../src/components/PageContainer'
+import Section from '../src/components/Section'
 
 const Error404 = () => {
   return (
-    <Page contained>
-      <h1>404</h1>
-    </Page>
+    <PageContainer>
+      <Head>
+        <title>404</title>
+      </Head>
+      <Section>
+        <Typography variant='h4' gutterBottom>404</Typography>
+      </Section>
+    </PageContainer>
   )
 }
 

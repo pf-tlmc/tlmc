@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 
 const useStyles = makeStyles((theme) => ({
-  container: {
+  root: {
     position: 'relative'
   },
   progress: {
@@ -88,7 +88,7 @@ const Progress = ({ musicPlayer }) => {
       onMouseMove={handleMouseOver}
       onMouseEnter={setIsHover.bind(null, true)}
       onMouseLeave={setIsHover.bind(null, false)}
-      className={classes.container}
+      className={classes.root}
     >
       <div className={classes.progress}>
         {Array(timeRanges.length).fill().map((_, index) => {

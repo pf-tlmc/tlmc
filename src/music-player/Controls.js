@@ -11,7 +11,7 @@ import SkipNextIcon from '@material-ui/icons/SkipNext'
 import { previousSong, nextSong } from '../redux/actions'
 
 const useStyles = makeStyles((theme) => ({
-  controls: {
+  root: {
     whiteSpace: 'nowrap'
   }
 }))
@@ -44,7 +44,7 @@ const Controls = connect(
     const handleClickNext = nextSong
 
     return (
-      <div className={classes.controls}>
+      <div className={classes.root}>
         <Tooltip title='Previous'>
           <IconButton onClick={handleClickPrevious}>
             <SkipPreviousIcon />

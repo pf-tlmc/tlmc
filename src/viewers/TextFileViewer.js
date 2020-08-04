@@ -22,6 +22,7 @@ async function fetchFile ({ file }) {
 }
 
 const TextFileViewer = ({ file }) => {
+  console.log(file)
   const { data, error, isPending } = useAsync(fetchFile, { file })
   const classes = useStyles()
 

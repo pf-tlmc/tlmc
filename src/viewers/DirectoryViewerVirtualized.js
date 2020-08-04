@@ -33,7 +33,7 @@ const paddedList = forwardRef(({ style, children }, ref) => {
   return <div ref={ref} style={style}>{children}</div>
 })
 
-const DirectoryViewerVirtualized = ({ title, directory, filter, onSelect = () => {} }) => {
+const DirectoryViewerVirtualized = ({ contained, title, directory, filter }) => {
   const classes = useStyles()
   const files = Array.isArray(directory) ? directory : [...directory.files]
   const filteredFiles = filter ? files.filter(filter) : files
@@ -47,11 +47,17 @@ const DirectoryViewerVirtualized = ({ title, directory, filter, onSelect = () =>
     if (title && index === 0) {
       return (
         <div style={adjustedStyle}>
-          <Container>
+          {contained ? (
+            <Container>
+              <ListItem className={classes.listItem}>
+                <ListItemText><Typography variant='h5' noWrap>{title}</Typography></ListItemText>
+              </ListItem>
+            </Container>
+          ) : (
             <ListItem className={classes.listItem}>
               <ListItemText><Typography variant='h5' noWrap>{title}</Typography></ListItemText>
             </ListItem>
-          </Container>
+          )}
         </div>
       )
     }
@@ -60,12 +66,19 @@ const DirectoryViewerVirtualized = ({ title, directory, filter, onSelect = () =>
     return (
       <Link href='/tlmc/[...tlmc_path]' as={'/tlmc' + urlEncode(file.path)} underline='none'>
         <div style={adjustedStyle}>
-          <Container>
-            <ListItem button onClick={onSelect} className={classes.listItem}>
+          {contained ? (
+            <Container>
+              <ListItem button className={classes.listItem}>
+                <ListItemIcon className={classes.listIcon}><FileIcon file={file} /></ListItemIcon>
+                <ListItemText><Typography noWrap>{file.base}</Typography></ListItemText>
+              </ListItem>
+            </Container>
+          ) : (
+            <ListItem button className={classes.listItem}>
               <ListItemIcon className={classes.listIcon}><FileIcon file={file} /></ListItemIcon>
               <ListItemText><Typography noWrap>{file.base}</Typography></ListItemText>
             </ListItem>
-          </Container>
+          )}
         </div>
       </Link>
     )
@@ -89,6 +102,7 @@ const DirectoryViewerVirtualized = ({ title, directory, filter, onSelect = () =>
 }
 
 DirectoryViewerVirtualized.propTypes = {
+  contained: PropTypes.bool,
   title: PropTypes.string,
   directory: PropTypes.oneOfType([
     PropTypes.instanceOf(Directory).isRequired,

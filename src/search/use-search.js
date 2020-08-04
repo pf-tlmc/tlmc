@@ -2,8 +2,9 @@ import { useState, useRef, useEffect } from 'react'
 import japanese from 'japanese'
 import { getNodeType } from '../utils'
 
-const CHUNK_SIZE = 50
+const CHUNK_SIZE = 25
 const SEARCH_DELAY = 1
+const JAPANESE_REGEX = /[ぁ-んァ-ン]+/g
 
 // TODO: Expanding sections while searching causes it to stop
 function useSearch (ls, search, options) {
@@ -15,7 +16,12 @@ function useSearch (ls, search, options) {
     timeout: null
   })
 
-  const [searchResults, setSearchResults] = useState({ circles: [], albums: [], songs: [], other: [] })
+  const [searchResults, setSearchResults] = useState({
+    circles: [],
+    albums: [],
+    songs: [],
+    other: []
+  })
 
   useEffect(() => {
     if (search !== searchStatus.current.search || options !== searchStatus.current.options) {
@@ -76,7 +82,6 @@ function nodeMatches (node, search, options) {
   return fileName.indexOf(search.toLowerCase()) > -1
 }
 
-const JAPANESE_REGEX = /[ぁ-んァ-ン]+/g
 function romanize (str) {
   return str.replace(JAPANESE_REGEX, (chars) => japanese.romanize(chars))
 }

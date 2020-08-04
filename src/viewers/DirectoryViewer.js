@@ -12,7 +12,7 @@ import Link from '../components/Link'
 import { urlEncode } from '../utils'
 
 const useStyles = makeStyles((theme) => ({
-  list: {
+  root: {
     padding: 0
   },
   listItem: {
@@ -29,7 +29,7 @@ const DirectoryViewer = ({ directory, filter }) => {
   const filteredFiles = filter ? files.filter(filter) : files
 
   return (
-    <List className={classes.list}>
+    <List className={classes.root}>
       {filteredFiles.map((file, index) =>
         <Link key={index} href='/tlmc/[...tlmc_path]' as={'/tlmc' + urlEncode(file.path)} underline='none'>
           <ListItem button className={classes.listItem}>

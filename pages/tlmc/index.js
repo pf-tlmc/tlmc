@@ -2,7 +2,7 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { DataConsumer } from '../../src/components/DataContext'
-import Page from '../../src/components/Page'
+import PageContainer from '../../src/components/PageContainer'
 import Section from '../../src/components/Section'
 import DirectoryViewer from '../../src/viewers/DirectoryViewer'
 import DirectoryViewerVirtualized from '../../src/viewers/DirectoryViewerVirtualized'
@@ -10,7 +10,7 @@ import AlbumViewer from '../../src/viewers/AlbumViewer'
 import AlbumListViewer from '../../src/viewers/AlbumListViewer'
 import FileViewer from '../../src/viewers/FileViewer'
 import Error404 from '../404'
-import { hasAlbum, urlEncode } from '../../src/utils'
+import { hasAlbum } from '../../src/utils'
 
 const TLMC = () => {
   const router = useRouter()
@@ -21,17 +21,13 @@ const TLMC = () => {
         // Get the path from the URL and the corresponding node
         let node = ls
         const { tlmc_path: tlmcPath } = router.query
-        const breadcrumbs = [{ title: 'TLMC', href: '/tlmc' }]
+        let circle
 
         if (tlmcPath) {
           for (let i = 0; i < tlmcPath.length; ++i) {
             node = node.get(tlmcPath[i])
             if (node) {
-              breadcrumbs.push({
-                title: node.base,
-                href: '/tlmc/[...tlmc_path]',
-                as: '/tlmc' + urlEncode(node.path)
-              })
+              circle = circle || node.base
             } else {
               return <Error404 />
             }
@@ -42,62 +38,58 @@ const TLMC = () => {
         return (
           <>
             <Head>
-              <title>{node.isRoot ? 'Touhou Lossless Music Collection' : breadcrumbs[1].title}</title>
+              <title>{node.isRoot ? 'Touhou Lossless Music Collection' : circle}</title>
             </Head>
-            <Page breadcrumbs={breadcrumbs} ls={ls} noPadding={node.isRoot} contained={!node.isRoot}>
-              {(() => {
-                if (node.isDirectory) {
-                  if (node.isRoot) {
-                    return (
-                      <DirectoryViewerVirtualized
-                        title='Touhou Lossess Music Collection'
-                        directory={node}
-                        filter={(node) => node.isDirectory}
-                      />
-                    )
-                  } else if (hasAlbum(node)) {
-                    return (
-                      <>
-                        {[...node.files]
-                          .filter((file) => file.ext.toLowerCase() === '.cue')
-                          .map((file) =>
-                            <Section key={file.base}>
-                              <AlbumViewer cueSheets={cue} cueFile={file} />
-                            </Section>
-                          )}
-                        <Section title='All Files'>
-                          <DirectoryViewer directory={node} />
-                        </Section>
-                      </>
-                    )
-                  } else {
-                    let showAlbums = false
-                    for (const file of node) {
-                      if (hasAlbum(file, true)) {
-                        showAlbums = true
-                        break
-                      }
-                    }
-                    return (
-                      <>
-                        <Section>
-                          {showAlbums && <AlbumListViewer directory={node} />}
-                        </Section>
-                        <Section title='All Files'>
-                          <DirectoryViewer directory={node} />
-                        </Section>
-                      </>
-                    )
+            {(() => {
+              if (node.isRoot) {
+                return (
+                  <DirectoryViewerVirtualized
+                    contained
+                    title='Touhou Lossess Music Collection'
+                    directory={node}
+                    filter={(node) => node.isDirectory}
+                  />
+                )
+              } else if (node.isDirectory) {
+                let showAlbums = false
+                for (const file of node) {
+                  if (hasAlbum(file, true)) {
+                    showAlbums = true
+                    break
                   }
-                } else {
-                  return (
+                }
+
+                return (
+                  <PageContainer>
+                    {showAlbums && (
+                      <Section>
+                        <AlbumListViewer directory={node} />
+                      </Section>
+                    )}
+                    {hasAlbum(node) && (
+                      [...node.files]
+                        .filter((file) => file.ext.toLowerCase() === '.cue')
+                        .map((file) =>
+                          <Section key={file.path}>
+                            <AlbumViewer cueFile={file} />
+                          </Section>
+                        )
+                    )}
+                    <Section title='All Files'>
+                      <DirectoryViewer directory={node} />
+                    </Section>
+                  </PageContainer>
+                )
+              } else {
+                return (
+                  <PageContainer>
                     <Section title={node.base}>
                       <FileViewer file={node} />
                     </Section>
-                  )
-                }
-              })()}
-            </Page>
+                  </PageContainer>
+                )
+              }
+            })()}
           </>
         )
       }}

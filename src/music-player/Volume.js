@@ -33,7 +33,7 @@ const Volume = memo(({ musicPlayer, volume }) => {
       lastVolume.current = volume
       setIsMute(true)
     } else {
-      musicPlayer.volume = lastVolume
+      musicPlayer.volume = lastVolume.current
       setIsMute(false)
     }
   }

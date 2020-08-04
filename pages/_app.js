@@ -13,6 +13,7 @@ import Button from '@material-ui/core/Button'
 import { DataProvider, DataConsumer } from '../src/components/DataContext'
 import { StoreProvider } from '../src/components/StoreContext'
 import { ThemeProvider } from '../src/components/ThemeContext'
+import Page from '../src/components/Page'
 import { clearSearch } from '../src/redux/actions'
 
 // Polyfill the path.parse() function
@@ -58,7 +59,7 @@ const Main = connect(null, { clearSearch })(
             )
           }
 
-          return children
+          return <Page>{children}</Page>
         }}
       </DataConsumer>
     )
