@@ -106,7 +106,12 @@ DirectoryViewerVirtualized.propTypes = {
   title: PropTypes.string,
   directory: PropTypes.oneOfType([
     PropTypes.instanceOf(Directory).isRequired,
-    PropTypes.arrayOf(PropTypes.instanceOf(File).isRequired).isRequired
+    PropTypes.arrayOf(
+      PropTypes.oneOf([
+        PropTypes.instanceOf(File).isRequired,
+        PropTypes.instanceOf(Directory).isRequired
+      ]).isRequired
+    ).isRequired
   ]).isRequired,
   filter: PropTypes.func
 }

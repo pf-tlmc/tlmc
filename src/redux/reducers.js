@@ -28,6 +28,11 @@ function searchOptions (state = {}, action) {
         ...state,
         romaji: action.payload
       }
+    case 'searchOptions.SET_METADATA':
+      return {
+        ...state,
+        metadata: action.payload
+      }
     default:
       return state
   }

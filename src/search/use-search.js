@@ -42,8 +42,9 @@ function useSearch (ls, search, options) {
       const { files, index, timeout } = searchStatus.current
       if (index < files.length && !timeout) {
         searchStatus.current.timeout = setTimeout(() => {
+          const normalizedSearch = normalize(search, options)
           for (let i = 0; i < CHUNK_SIZE && index + i < files.length; ++i) {
-            processNode(files[index + i], search, searchResults, options)
+            processNode(files[index + i], normalizedSearch, searchResults, options)
           }
           searchStatus.current.index += CHUNK_SIZE
           searchStatus.current.timeout = null
@@ -64,10 +65,18 @@ function useSearch (ls, search, options) {
 function processNode (node, search, searchResults, options) {
   if (nodeMatches(node, search, options)) {
     switch (getNodeType(node)) {
-      case 'CIRCLE': searchResults.circles.push(node); break
-      case 'ALBUM': searchResults.albums.push(node); break
-      case 'SONG': searchResults.songs.push(node); break
-      default: searchResults.other.push(node); break
+      case 'CIRCLE':
+        searchResults.circles.push(node)
+        break
+      case 'ALBUM':
+        searchResults.albums.push(node)
+        break
+      case 'SONG':
+        searchResults.songs.push(node)
+        break
+      default:
+        searchResults.other.push(node)
+        break
     }
   }
   if (node.isDirectory) {
@@ -78,12 +87,35 @@ function processNode (node, search, searchResults, options) {
 }
 
 function nodeMatches (node, search, options) {
-  const fileName = options.romaji ? romanize(node.base).toLowerCase() : node.base.toLowerCase()
-  return fileName.indexOf(search.toLowerCase()) > -1
+  const fileName = normalize(node.base, options)
+
+  if (options.metadata) {
+    if (fileName.indexOf(search) > -1) return true
+    return metaMatches(node.meta, search, options)
+  } else {
+    return fileName.indexOf(search) > -1
+  }
 }
 
-function romanize (str) {
-  return str.replace(JAPANESE_REGEX, (chars) => japanese.romanize(chars))
+function metaMatches (metaNode, search, options) {
+  for (const key in metaNode) {
+    if (key === 'REM') {
+      metaMatches(metaNode.REM, search, options)
+    } else if (key === key.toUpperCase()) {
+      const value = metaNode[key]
+      if (typeof value === 'string' && normalize(value, options).indexOf(search) > -1) {
+        return true
+      }
+    }
+  }
+  return false
+}
+
+function normalize (str, options) {
+  if (options.romaji) {
+    return str.replace(JAPANESE_REGEX, (chars) => japanese.romanize(chars)).toLowerCase()
+  }
+  return str.toLowerCase()
 }
 
 export default useSearch

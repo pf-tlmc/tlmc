@@ -36,7 +36,8 @@ const DirectoryViewer = ({ directory, filter }) => {
             <ListItemIcon className={classes.listIcon}><FileIcon file={file} /></ListItemIcon>
             <ListItemText><Typography>{file.base}</Typography></ListItemText>
           </ListItem>
-        </Link>)}
+        </Link>
+      )}
     </List>
   )
 }
@@ -44,7 +45,12 @@ const DirectoryViewer = ({ directory, filter }) => {
 DirectoryViewer.propTypes = {
   directory: PropTypes.oneOfType([
     PropTypes.instanceOf(Directory).isRequired,
-    PropTypes.arrayOf(PropTypes.instanceOf(File).isRequired).isRequired
+    PropTypes.arrayOf(
+      PropTypes.oneOf([
+        PropTypes.instanceOf(File).isRequired,
+        PropTypes.instanceOf(Directory).isRequired
+      ]).isRequired
+    ).isRequired
   ]).isRequired,
   filter: PropTypes.func
 }

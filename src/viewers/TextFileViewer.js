@@ -22,17 +22,16 @@ async function fetchFile ({ file }) {
 }
 
 const TextFileViewer = ({ file }) => {
-  console.log(file)
   const { data, error, isPending } = useAsync(fetchFile, { file })
   const classes = useStyles()
 
-  return (
-    <>
-      {isPending && <div className={classes.loading}><CircularProgress /></div>}
-      {error && JSON.stringify(error)}
-      {data && <Code>{data}</Code>}
-    </>
-  )
+  if (isPending) {
+    return <div className={classes.loading}><CircularProgress /></div>
+  } else if (error) {
+    return 'Error'
+  } else {
+    return <Code>{data}</Code>
+  }
 }
 
 TextFileViewer.propTypes = {

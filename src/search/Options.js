@@ -10,16 +10,28 @@ const Options = connect(
 )(
   ({ options, setSearchOptions }) => {
     return (
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={options.romaji}
-            onChange={() => { setSearchOptions('SET_ROMAJI', !options.romaji) }}
-            color='primary'
-          />
-        }
-        label='Romanize hiragana/katakana when searching'
-      />
+      <>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={options.romaji}
+              onChange={() => { setSearchOptions('SET_ROMAJI', !options.romaji) }}
+              color='primary'
+            />
+          }
+          label='Romanize hiragana/katakana when searching'
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={options.metadata}
+              onChange={() => { setSearchOptions('SET_METADATA', !options.metadata) }}
+              color='primary'
+            />
+          }
+          label='Include data from cue sheets'
+        />
+      </>
     )
   }
 )
