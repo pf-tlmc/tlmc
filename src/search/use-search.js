@@ -1,9 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
-import japanese from 'japanese'
+import hepburn from 'hepburn'
 import { getNodeType } from '../utils'
 
 const CHUNK_TIME = 25
-const JAPANESE_REGEX = /[ぁ-んァ-ン]+/g
 
 // TODO: Expanding sections while searching causes it to stop
 function useSearch (ls, search, options) {
@@ -12,7 +11,8 @@ function useSearch (ls, search, options) {
     options,
     files: [...ls.files],
     index: 0,
-    timeout: null
+    timeout: null,
+    start: 0
   })
 
   const [searchResults, setSearchResults] = useState({
@@ -36,6 +36,7 @@ function useSearch (ls, search, options) {
 
       searchStatus.current.index = index
       searchStatus.current.timeout = null
+      console.log(Date.now() - searchStatus.current.start)
       setSearchResults({ ...searchResults })
     }
 
@@ -43,6 +44,7 @@ function useSearch (ls, search, options) {
       searchStatus.current.search = search
       searchStatus.current.options = options
       searchStatus.current.index = 0
+      searchStatus.current.start = Date.now()
       if (searchStatus.current.timeout) {
         clearTimeout(searchStatus.current.timeout)
         searchStatus.current.timeout = null
@@ -114,7 +116,7 @@ function metaMatches (metaNode, search, options) {
 
 function normalize (str, options) {
   if (options.romaji) {
-    return str.replace(JAPANESE_REGEX, (chars) => japanese.romanize(chars)).toLowerCase()
+    return hepburn.fromKana(str).toLowerCase()
   }
   return str.toLowerCase()
 }
