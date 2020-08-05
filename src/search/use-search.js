@@ -11,8 +11,7 @@ function useSearch (ls, search, options) {
     options,
     files: [...ls.files],
     index: 0,
-    timeout: null,
-    start: 0
+    timeout: null
   })
 
   const [searchResults, setSearchResults] = useState({
@@ -36,7 +35,6 @@ function useSearch (ls, search, options) {
 
       searchStatus.current.index = index
       searchStatus.current.timeout = null
-      console.log(Date.now() - searchStatus.current.start)
       setSearchResults({ ...searchResults })
     }
 
@@ -44,7 +42,6 @@ function useSearch (ls, search, options) {
       searchStatus.current.search = search
       searchStatus.current.options = options
       searchStatus.current.index = 0
-      searchStatus.current.start = Date.now()
       if (searchStatus.current.timeout) {
         clearTimeout(searchStatus.current.timeout)
         searchStatus.current.timeout = null
