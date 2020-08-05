@@ -92,8 +92,10 @@ function nodeMatches (node, search, options) {
   const fileName = normalize(node.base, options)
   if (fileName.indexOf(search) > -1) {
     return true
-  } else {
+  } else if (options.metadata) {
     return metaMatches(node.meta, search, options)
+  } else {
+    return false
   }
 }
 
