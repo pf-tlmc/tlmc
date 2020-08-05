@@ -67,7 +67,9 @@ const AlbumListViewer = ({ directory }) => {
                     {albumInfo.circleThing && <Typography variant='body2'>{albumInfo.circleThing}</Typography>}
                     {albumInfo.otherThing && <Typography variant='body2'>{albumInfo.otherThing}</Typography>}
                   </>
-                ) : <Typography variant='h6'>{album.base}</Typography>}
+                ) : (
+                  <Typography variant='h6' className={classes.title}>{album.base}</Typography>
+                )}
               </ListItemText>
             </ListItem>
           </Link>

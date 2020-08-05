@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     flex: '1 1 0px'
   },
   table: {
-    minWidth: 500,
+    minWidth: 600,
     '& th': {
       fontWeight: 'bold',
       paddingTop: theme.spacing(1),
@@ -115,13 +115,13 @@ const AlbumViewer = connect(
                   <Grid item className={classes.title}>
                     {albumInfo ? (
                       <>
-                        <Typography variant='h4'>{albumInfo.title}</Typography>
+                        <Typography variant='h5'>{albumInfo.title}</Typography>
                         <Typography>{albumInfo.date}</Typography>
                         {albumInfo.circleThing && <Typography>{albumInfo.circleThing}</Typography>}
                         {albumInfo.otherThing && <Typography>{albumInfo.otherThing}</Typography>}
                       </>
                     ) : (
-                      <Typography variant='h4'>{cueFile.name}</Typography>
+                      <Typography variant='h5'>{cueFile.name}</Typography>
                     )}
                     <div className={classes.buttons}>
                       <Button variant='outlined' onClick={queueAll}>Queue All</Button>

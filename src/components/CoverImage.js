@@ -7,6 +7,7 @@ import { urlEncode } from '../utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    display: 'inline-block',
     width: ({ size }) => size,
     height: ({ size }) => size,
     backgroundColor: theme.palette.action.hover
