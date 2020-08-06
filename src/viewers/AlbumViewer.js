@@ -139,6 +139,7 @@ const AlbumViewer = connect(
                         <TableCell>Title</TableCell>
                         <TableCell>Performer</TableCell>
                         <TableCell />
+                        <TableCell>Super Secret ID</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -166,6 +167,7 @@ const AlbumViewer = connect(
                               </Link>
                             </Tooltip>
                           </TableCell>
+                          <TableCell>{track.ASDF}</TableCell>
                         </TableRow>
                       )}
                     </TableBody>

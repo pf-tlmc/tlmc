@@ -31,6 +31,7 @@ async function fetchData () {
   }, {})
 
   // Attach metadata
+  let index = 0
   ;(function attach (node = ls) {
     for (const file of node) {
       if (file.isDirectory) {
@@ -50,6 +51,7 @@ async function fetchData () {
               console.error(`Duplicate file found at ${file.path}:`, track)
             } else {
               audioFile.meta = track
+              track.ASDF = ++index
             }
           }
         }
